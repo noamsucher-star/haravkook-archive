@@ -482,6 +482,10 @@ html, body { margin: 0; }
   .today details.biur:not([open]) { margin-right: var(--qright, 0px); }
 }
 @media (max-width: 900px) { .today .in > div, .today .q, .today .ref { text-align: center; } }
+/* "9 מתוך 40" בכרטיסים: באותו גודל ובאותו גובה כמו הכותרת שמימין */
+.cardtop { align-items: center; }
+.card .num { font-size: 20px; line-height: 1.3; }
+.card .cardtop .title { line-height: 1.3; }
 /* "חצי דקה להיום" בטלפון: גרשיים גדולות ודהויות, וציטוט גדול ובבולד */
 @media (max-width: 900px) {
   .today .in { position: relative; }
