@@ -56,6 +56,14 @@ function todayHTML(q, base) {
 
   // ---------- האור: רק בפתיח, רק על מה שהעכבר קרוב אליו ----------
   var homeEl = $('.home');
+  // ניסוי רקע לפתיח: index.html?bg=1/2/3 (0 = הרקע הנוכחי). מוחקים אחרי שנועם בוחר
+  var hbv = new URLSearchParams(location.search).get('bg');
+  if (homeEl && hbv !== null) {
+    if (/^[1-9]$/.test(hbv)) homeEl.classList.add('hb' + hbv);
+    var sw = document.createElement('nav'); sw.className = 'hbswitch'; sw.setAttribute('aria-label', 'בחירת רקע לניסיון');
+    sw.innerHTML = [['0', 'היום'], ['1', '1'], ['2', '2'], ['3', '3']].map(function (o) { return '<a href="?bg=' + o[0] + '"' + (o[0] === hbv ? ' aria-current="true"' : '') + '>' + o[1] + '</a>'; }).join('');
+    document.body.appendChild(sw);
+  }
   if (homeEl) {
     var hadMouse = false, raf = 0, ptr = null;
     var paint = function (x, y) { $$('.home .lit').forEach(function (el) { var r = el.getBoundingClientRect(); el.style.setProperty('--lx', (x - r.left) + 'px'); el.style.setProperty('--ly', (y - r.top) + 'px'); }); };
