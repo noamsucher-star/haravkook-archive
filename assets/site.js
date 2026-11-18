@@ -56,12 +56,12 @@ function todayHTML(q, base) {
 
   // ---------- האור: רק בפתיח, רק על מה שהעכבר קרוב אליו ----------
   var homeEl = $('.home');
-  // ניסוי רקע לפתיח: index.html?bg=1/2/3 (0 = הרקע הנוכחי). מוחקים אחרי שנועם בוחר
-  var hbv = new URLSearchParams(location.search).get('bg');
-  if (homeEl && hbv !== null) {
-    if (/^[1-9]$/.test(hbv)) homeEl.classList.add('hb' + hbv);
-    var sw = document.createElement('nav'); sw.className = 'hbswitch'; sw.setAttribute('aria-label', 'בחירת רקע לניסיון');
-    sw.innerHTML = [['0', 'היום'], ['1', '1'], ['2', '2'], ['3', '3']].map(function (o) { return '<a href="?bg=' + o[0] + '"' + (o[0] === hbv ? ' aria-current="true"' : '') + '>' + o[1] + '</a>'; }).join('');
+  // ניסוי פריסה ל"חצי דקה להיום" במחשב: index.html?today=1/2 (0 = הפריסה הנוכחית). מוחקים אחרי שנועם בוחר
+  var tlv = new URLSearchParams(location.search).get('today'), todayEl = $('.today');
+  if (todayEl && tlv !== null) {
+    if (/^[1-9]$/.test(tlv)) todayEl.classList.add('tl' + tlv);
+    var sw = document.createElement('nav'); sw.className = 'trialswitch'; sw.setAttribute('aria-label', 'בחירת פריסה לניסיון');
+    sw.innerHTML = [['0', 'היום'], ['1', '1'], ['2', '2']].map(function (o) { return '<a href="?today=' + o[0] + '#today"' + (o[0] === tlv ? ' aria-current="true"' : '') + '>' + o[1] + '</a>'; }).join('');
     document.body.appendChild(sw);
   }
   if (homeEl) {
@@ -72,6 +72,7 @@ function todayHTML(q, base) {
       // רק מחשב עם עכבר אמיתי עובר לאור שעוקב אחרי העכבר; טלפון וטאבלט נשארים עם האור שזז בגלילה
       if (e.pointerType === 'touch' || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
       hadMouse = true;
+      if (!reduce) { homeEl.style.setProperty('--sx', ((e.clientX / innerWidth - .5) * 26).toFixed(1) + 'px'); homeEl.style.setProperty('--sy', ((e.clientY / innerHeight - .5) * 16).toFixed(1) + 'px'); }
       if (e.clientY > homeEl.getBoundingClientRect().bottom) { rest(); return; }
       ptr = e; if (!raf) raf = requestAnimationFrame(function () { raf = 0; paint(ptr.clientX, ptr.clientY); });
     });

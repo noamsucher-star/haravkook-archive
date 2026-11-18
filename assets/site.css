@@ -437,188 +437,115 @@ html, body { margin: 0; }
 .bookrow.now > span:first-child::after { content: "השבוע"; display: inline-block; margin-right: 10px; padding: 1px 8px 0; font-size: 14px; font-weight: 700; line-height: 1.5; color: #26190a; background: linear-gradient(180deg, #edcd8a, #c9973f); vertical-align: middle; }
 @media (max-width: 560px) { .weekly { font-size: 20px; } .bookrow.now > span:first-child::after { margin-right: 7px; padding-inline: 6px; font-size: 13px; } }
 
-/* ===== ניסוי רקע לפתיח (18.11): רק עם ?bg=1/2/3. ברירת המחדל לא השתנתה ===== */
-.home[class*="hb"] { position: relative; isolation: isolate; overflow: hidden; }
-.home[class*="hb"]::before, .home[class*="hb"]::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-/* 1: אלומת אור מלמעלה שנופלת על הרצפה */
-.home.hb1 { background:
-    radial-gradient(64% 17% at 50% 97%, rgba(248,220,158,.66) 0%, rgba(214,168,94,.30) 48%, rgba(120,84,36,0) 80%),
-    radial-gradient(120% 34% at 50% 104%, rgba(150,106,48,.50) 0%, rgba(70,46,20,0) 72%),
-    linear-gradient(180deg, #0c0704 0%, #150e06 46%, #241709 80%, #2e1e0c 100%); }
-.home.hb1::after { inset: -4% 0 0 0; background: conic-gradient(from 150deg at 50% -4%, rgba(240,208,142,0) 0deg, rgba(240,208,142,.13) 9deg, rgba(240,208,142,.34) 19deg, rgba(250,224,164,.50) 30deg, rgba(240,208,142,.34) 41deg, rgba(240,208,142,.13) 51deg, rgba(240,208,142,0) 60deg, rgba(240,208,142,0) 360deg);
-  -webkit-mask: linear-gradient(180deg, #000 0%, rgba(0,0,0,.85) 45%, rgba(0,0,0,.35) 82%, transparent 100%); mask: linear-gradient(180deg, #000 0%, rgba(0,0,0,.85) 45%, rgba(0,0,0,.35) 82%, transparent 100%); }
-.home.hb1::before { z-index: -1; background-image:
-    radial-gradient(circle at 61.43% 38.52%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 50.54% 58.38%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 62.89% 55.80%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 41.99% 68.21%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 38.64% 37.24%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 43.41% 16.60%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 48.79% 23.01%, rgba(255,238,200,0.60) 0, rgba(255,238,200,0.60) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 40.43% 33.27%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 41.99% 35.74%, rgba(255,238,200,0.30) 0, rgba(255,238,200,0.30) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 56.19% 79.96%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 49.35% 3.00%, rgba(255,238,200,0.31) 0, rgba(255,238,200,0.31) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 56.73% 48.27%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 38.96% 49.65%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 46.48% 0.44%, rgba(255,238,200,0.23) 0, rgba(255,238,200,0.23) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 42.35% 30.16%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 43.60% 28.16%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 43.41% 53.40%, rgba(255,238,200,0.58) 0, rgba(255,238,200,0.58) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 47.10% 15.38%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 54.96% 4.89%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 43.34% 13.49%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 55.30% 40.72%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 38.24% 66.40%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 58.47% 24.71%, rgba(255,238,200,0.39) 0, rgba(255,238,200,0.39) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 57.99% 28.59%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 45.46% 44.30%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 52.59% 78.68%, rgba(255,238,200,0.36) 0, rgba(255,238,200,0.36) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 43.54% 23.85%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 50.79% 15.17%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 39.27% 74.66%, rgba(255,238,200,0.35) 0, rgba(255,238,200,0.35) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 46.16% 17.78%, rgba(255,238,200,0.41) 0, rgba(255,238,200,0.41) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 1.71% 47.37%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 71.46% 2.04%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 78.94% 6.41%, rgba(255,238,200,0.46) 0, rgba(255,238,200,0.46) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 56.35% 52.00%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 48.84% 13.70%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 67.39% 44.24%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 89.82% 2.17%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 6.86% 2.45%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 39.08% 21.80%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 96.21% 3.94%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.75px, transparent 1.35px); }
-/* 2: מדבר. דיונות בתחתית, אור עולה מימין למטה, ואבק זהב */
-.home.hb2 { background:
-    radial-gradient(66% 46% at 88% 100%, rgba(255,234,176,.95) 0%, rgba(240,194,112,.58) 34%, rgba(196,138,62,.22) 62%, rgba(120,80,30,0) 80%),
-    radial-gradient(150% 62% at 70% 112%, rgba(190,134,60,.55) 0%, rgba(110,72,28,.26) 50%, rgba(50,32,12,0) 78%),
-    linear-gradient(180deg, #0e0804 0%, #1a1108 38%, #36230f 72%, #5a3d1b 100%); }
-.home.hb2::after { inset: auto 0 0 0; height: clamp(80px, 13vw, 170px); background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20300%22%20preserveAspectRatio%3D%22none%22%3E%20%3Cdefs%3E%20%3ClinearGradient%20id%3D%22far%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%237a5526%22%2F%3E%3Cstop%20offset%3D%22.55%22%20stop-color%3D%22%23b98a44%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23e6bd72%22%2F%3E%3C%2FlinearGradient%3E%20%3ClinearGradient%20id%3D%22farv%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23000%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%233a260f%22%20stop-opacity%3D%22.55%22%2F%3E%3C%2FlinearGradient%3E%20%3ClinearGradient%20id%3D%22near%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%231c1208%22%2F%3E%3Cstop%20offset%3D%22.3%22%20stop-color%3D%22%233a2610%22%2F%3E%3Cstop%20offset%3D%22.62%22%20stop-color%3D%22%238a6230%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c2924a%22%2F%3E%3C%2FlinearGradient%3E%20%3ClinearGradient%20id%3D%22nearv%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23000%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231a1107%22%20stop-opacity%3D%22.7%22%2F%3E%3C%2FlinearGradient%3E%20%3ClinearGradient%20id%3D%22ridge%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ffe9b8%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%22.25%22%20stop-color%3D%22%23ffe9b8%22%20stop-opacity%3D%22.9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ffe9b8%22%20stop-opacity%3D%22.15%22%2F%3E%3C%2FlinearGradient%3E%20%3C%2Fdefs%3E%20%3Cpath%20d%3D%22M380%20300%20C%20620%20262%20900%20232%201200%20238%20L1200%20300%20Z%22%20fill%3D%22url(%23far)%22%2F%3E%20%3Cpath%20d%3D%22M380%20300%20C%20620%20262%20900%20232%201200%20238%20L1200%20300%20Z%22%20fill%3D%22url(%23farv)%22%2F%3E%20%3Cpath%20d%3D%22M0%20300%20L0%20150%20C%2060%20128%20120%20128%20185%20158%20C%20330%20226%20520%20280%20760%20300%20Z%22%20fill%3D%22url(%23near)%22%2F%3E%20%3Cpath%20d%3D%22M0%20300%20L0%20150%20C%2060%20128%20120%20128%20185%20158%20C%20330%20226%20520%20280%20760%20300%20Z%22%20fill%3D%22url(%23nearv)%22%2F%3E%20%3Cpath%20d%3D%22M50%20134%20C%20105%20126%20140%20138%20185%20158%20C%20330%20226%20520%20280%20760%20300%22%20fill%3D%22none%22%20stroke%3D%22url(%23ridge)%22%20stroke-width%3D%221.4%22%20vector-effect%3D%22non-scaling-stroke%22%2F%3E%20%3C%2Fsvg%3E") bottom / 100% 100% no-repeat; }
-.home.hb2::before { background-image:
-    radial-gradient(circle at 53.61% 25.05%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 72.83% 37.59%, rgba(255,238,200,0.60) 0, rgba(255,238,200,0.60) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 74.67% 41.70%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 63.93% 53.91%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 55.23% 39.68%, rgba(255,238,200,0.43) 0, rgba(255,238,200,0.43) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 62.18% 25.96%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 68.56% 22.54%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 57.69% 25.76%, rgba(255,238,200,0.24) 0, rgba(255,238,200,0.24) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 68.20% 52.89%, rgba(255,238,200,0.50) 0, rgba(255,238,200,0.50) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 60.16% 15.24%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 69.54% 26.39%, rgba(255,238,200,0.26) 0, rgba(255,238,200,0.26) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 81.97% 28.33%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 70.42% 37.01%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 59.66% 39.96%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 52.73% 27.48%, rgba(255,238,200,0.30) 0, rgba(255,238,200,0.30) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 76.94% 28.90%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 56.38% 39.42%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 41.48% 38.11%, rgba(255,238,200,0.59) 0, rgba(255,238,200,0.59) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 58.73% 17.65%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 73.58% 36.67%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 67.62% 13.31%, rgba(255,238,200,0.46) 0, rgba(255,238,200,0.46) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 50.17% 29.21%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 40.61% 29.77%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 44.53% 48.06%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 56.57% 18.60%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 67.69% 54.76%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 43.06% 31.05%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 54.78% 16.58%, rgba(255,238,200,0.40) 0, rgba(255,238,200,0.40) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 49.54% 43.93%, rgba(255,238,200,0.29) 0, rgba(255,238,200,0.29) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 61.25% 29.81%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 79.22% 40.75%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 73.98% 34.60%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 69.72% 19.93%, rgba(255,238,200,0.30) 0, rgba(255,238,200,0.30) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 80.49% 29.21%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 67.78% 42.46%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 76.59% 23.00%, rgba(255,238,200,0.39) 0, rgba(255,238,200,0.39) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 58.50% 10.88%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 57.61% 34.32%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 58.81% 11.22%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 69.86% 5.45%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 87.31% 51.26%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 42.77% 12.65%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 60.44% 31.50%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 15.31% 2.59%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 35.61% 0.01%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 56.06% 47.88%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 66.94% 9.98%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 87.66% 27.52%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 37.49% 0.06%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 96.80% 46.90%, rgba(255,238,200,0.29) 0, rgba(255,238,200,0.29) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 49.64% 11.68%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 11.80% 0.79%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 22.21% 18.76%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 63.64% 0.20%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 19.07% 44.51%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 76.94% 15.55%, rgba(255,238,200,0.31) 0, rgba(255,238,200,0.31) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 53.84% 12.04%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 67.55% 6.21%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 21.68% 6.18%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 13.60% 2.39%, rgba(255,238,200,0.56) 0, rgba(255,238,200,0.56) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 10.12% 0.22%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 48.89% 7.41%, rgba(255,238,200,0.42) 0, rgba(255,238,200,0.42) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 42.26% 50.05%, rgba(255,238,200,0.23) 0, rgba(255,238,200,0.23) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 81.44% 45.29%, rgba(255,238,200,0.50) 0, rgba(255,238,200,0.50) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 64.82% 21.41%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 98.91% 41.02%, rgba(255,238,200,0.43) 0, rgba(255,238,200,0.43) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 15.03% 25.44%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 65.42% 47.37%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 42.11% 35.90%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 74.72% 38.02%, rgba(255,238,200,0.50) 0, rgba(255,238,200,0.50) 0.5px, transparent 1.1px); }
-/* 3: זריחה מלמטה באמצע */
-.home.hb3 { background:
-    radial-gradient(85% 22% at 50% 103%, rgba(255,228,164,.86) 0%, rgba(236,186,102,.50) 42%, rgba(200,140,60,0) 78%),
-    radial-gradient(150% 70% at 50% 112%, rgba(196,138,60,.60) 0%, rgba(120,78,30,.30) 48%, rgba(60,38,14,0) 76%),
-    linear-gradient(180deg, #0e0804 0%, #191007 36%, #38250f 74%, #5c3e1b 100%); }
-.home.hb3::before { background-image:
-    radial-gradient(circle at 26.34% 33.56%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 81.81% 10.07%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 88.09% 0.40%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 21.72% 25.33%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 16.50% 4.22%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 20.64% 53.39%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 30.07% 42.70%, rgba(255,238,200,0.50) 0, rgba(255,238,200,0.50) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 42.67% 7.19%, rgba(255,238,200,0.41) 0, rgba(255,238,200,0.41) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 13.92% 30.52%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 21.44% 32.00%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 48.36% 4.65%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 15.07% 52.51%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 2.48% 47.90%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 96.74% 30.64%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 8.35% 6.75%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 96.49% 11.74%, rgba(255,238,200,0.59) 0, rgba(255,238,200,0.59) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 20.80% 28.79%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 1.53% 47.65%, rgba(255,238,200,0.49) 0, rgba(255,238,200,0.49) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 14.99% 19.29%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 95.41% 0.28%, rgba(255,238,200,0.31) 0, rgba(255,238,200,0.31) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 93.84% 0.13%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 0.25% 48.31%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 79.34% 4.01%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 1.51% 12.13%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 92.61% 5.53%, rgba(255,238,200,0.40) 0, rgba(255,238,200,0.40) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 85.79% 54.39%, rgba(255,238,200,0.46) 0, rgba(255,238,200,0.46) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 64.71% 0.10%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 26.63% 22.40%, rgba(255,238,200,0.40) 0, rgba(255,238,200,0.40) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 91.13% 3.85%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 32.83% 11.56%, rgba(255,238,200,0.43) 0, rgba(255,238,200,0.43) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 29.18% 29.39%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 14.98% 0.13%, rgba(255,238,200,0.49) 0, rgba(255,238,200,0.49) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 2.33% 14.25%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
-    radial-gradient(circle at 36.76% 53.89%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 29.04% 18.66%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 89.03% 23.23%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 81.72% 5.91%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 85.63% 0.42%, rgba(255,238,200,0.26) 0, rgba(255,238,200,0.26) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 86.52% 44.37%, rgba(255,238,200,0.43) 0, rgba(255,238,200,0.43) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 32.64% 35.90%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 90.15% 24.08%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.5px, transparent 1.1px),
-    radial-gradient(circle at 90.85% 37.35%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 26.86% 9.51%, rgba(255,238,200,0.60) 0, rgba(255,238,200,0.60) 0.75px, transparent 1.35px),
-    radial-gradient(circle at 21.43% 38.56%, rgba(255,238,200,0.28) 0, rgba(255,238,200,0.28) 0.5px, transparent 1.1px); }
-@media (max-width: 900px) {
-  .home.hb1::after { background: conic-gradient(from 140deg at 50% -3%, rgba(240,208,142,0) 0deg, rgba(240,208,142,.13) 12deg, rgba(240,208,142,.34) 26deg, rgba(250,224,164,.50) 40deg, rgba(240,208,142,.34) 54deg, rgba(240,208,142,.13) 68deg, rgba(240,208,142,0) 80deg, rgba(240,208,142,0) 360deg); }
-  .home.hb2::after { height: clamp(70px, 24vw, 150px); }
+/* ===== סבב 5 (18.11) ===== */
+/* סרגל עליון: הלוגו בצד שמאל, התפריט בצד ימין */
+.bar .box { flex-direction: row-reverse; }
+/* משפט הפתיח ממורכז בדיוק מעל החיפוש (קודם גלש שמאלה ברוחבים מסוימים) */
+@media (min-width: 901px) { .s1 .hero .hv2 .lede { max-width: none; width: max-content; justify-self: center; } }
+/* "חצי דקה להיום" במחשב: שתי פריסות לניסיון (?today=1/2). גרשיים גדולות ודהויות בצד ימין למעלה */
+@media (min-width: 901px) {
+  .today[class*="tl"] .in { position: relative; justify-items: stretch; text-align: right; row-gap: 14px; }
+  .today[class*="tl"] .in::before { content: '"'; position: absolute; z-index: 0; top: -.2em; right: -.04em; font-size: clamp(240px, 26vw, 380px); font-weight: 700; line-height: 1; color: var(--bronze); opacity: .11; pointer-events: none; }
+  .today[class*="tl"] .in > * { position: relative; z-index: 1; }
+  .today[class*="tl"] .q a::before, .today[class*="tl"] .q a::after { content: none; }
+  .today[class*="tl"] .q { max-width: none; margin-inline: 0; font-size: clamp(30px, 3.3vw, 46px); line-height: 1.22; }
+  .today[class*="tl"] .kicker { font-size: 22px; }
+  .today[class*="tl"] .ref { font-size: 21px; margin-top: 10px; }
+  .today[class*="tl"] details.biur { margin-top: 0; max-width: none; width: auto; }
+  .today[class*="tl"] details.biur summary { justify-content: flex-start; }
+  .today[class*="tl"] .todaybar { justify-content: flex-start; margin-top: 0; }
+  /* 1: רחב. הציטוט לכל הרוחב, ומתחתיו שורה אחת: ביאור מימין, שיתוף משמאל */
+  .today.tl1 .in { grid-template-columns: minmax(0, 1fr) auto; column-gap: 40px; padding-right: clamp(40px, 7vw, 110px); }
+  .today.tl1 .kicker, .today.tl1 .in > div { grid-column: 1 / -1; }
+  .today.tl1 details.biur { grid-column: 1; margin-top: 14px; }
+  .today.tl1 .todaybar { grid-column: 2; grid-row: 3; align-self: start; margin-top: 14px; justify-content: flex-end; }
+  .today.tl1 details.biur[open] { grid-column: 1 / -1; }
+  .today.tl1 details.biur[open] ~ .todaybar { grid-row: 4; grid-column: 1 / -1; justify-content: flex-start; margin-top: 0; }
+  /* 2: שני טורים. הציטוט מימין, הביאור והשיתוף בטור משמאל, עם קו דק ביניהם */
+  .today.tl2 .in { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); column-gap: 0; align-items: start; }
+  .today.tl2 .kicker { grid-column: 1; grid-row: 1; padding-right: clamp(40px, 6vw, 90px); }
+  .today.tl2 .in > div { grid-column: 1; grid-row: 2; padding-left: 56px; padding-right: clamp(40px, 6vw, 90px); }
+  .today.tl2 details.biur { grid-column: 2; grid-row: 1 / 3; align-self: center; border-right: 1px solid #d9c79f; padding: 14px 44px 0 0; }
+  .today.tl2 .todaybar { grid-column: 2; grid-row: 3; border-right: 1px solid #d9c79f; padding: 4px 44px 10px 0; }
+  .today.tl2 details.biur summary { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .today.tl2 .biurbox .biurtext { font-size: 18px; }
 }
-.hbswitch { position: fixed; z-index: 50; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 6px; padding: 6px; background: rgba(20,13,6,.88); border-radius: 8px; font-family: "Heebo", Arial, sans-serif; }
-.hbswitch a { min-width: 40px; height: 40px; display: grid; place-items: center; padding: 0 10px; color: #f3d998; text-decoration: none; font-size: 15px; font-weight: 700; border: 1px solid rgba(233,207,148,.45); border-radius: 5px; }
-.hbswitch a[aria-current] { background: #e9cf94; color: #26190a; }
+.trialswitch { position: fixed; z-index: 50; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 6px; padding: 6px; background: rgba(20,13,6,.88); border-radius: 8px; font-family: "Heebo", Arial, sans-serif; }
+.trialswitch a { min-width: 40px; height: 40px; display: grid; place-items: center; padding: 0 10px; color: #f3d998; text-decoration: none; font-size: 15px; font-weight: 700; border: 1px solid rgba(233,207,148,.45); border-radius: 5px; }
+.trialswitch a[aria-current] { background: #e9cf94; color: #26190a; }
+
+/* ===== רקע הפתיח: מדבר (נבחר 18.11). תמונה ממגניפיק: אחת למחשב ואחת לטלפון (9:16), ומעליה אבק זהב שזז מעט עם העכבר ===== */
+.home { position: relative; isolation: isolate; overflow: hidden; background: #150d06 url(hero-desk.webp) right bottom / cover no-repeat; }
+.home::before { content: ""; position: absolute; z-index: -1; pointer-events: none; inset: -28px; transform: translate3d(var(--sx, 0px), var(--sy, 0px), 0); transition: transform .9s cubic-bezier(.2, .8, .2, 1); will-change: transform; background-image:
+    radial-gradient(circle at 40.51% 36.76%, rgba(255,238,200,0.55) 0, rgba(255,238,200,0.55) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 59.99% 16.74%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 55.17% 12.08%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 68.93% 23.86%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 58.54% 34.84%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 63.78% 41.15%, rgba(255,238,200,0.33) 0, rgba(255,238,200,0.33) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 58.60% 49.52%, rgba(255,238,200,0.60) 0, rgba(255,238,200,0.60) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 56.83% 37.32%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 53.74% 37.15%, rgba(255,238,200,0.30) 0, rgba(255,238,200,0.30) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 79.80% 33.94%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 76.22% 37.75%, rgba(255,238,200,0.31) 0, rgba(255,238,200,0.31) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 46.93% 21.42%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 56.60% 28.38%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 70.62% 34.33%, rgba(255,238,200,0.23) 0, rgba(255,238,200,0.23) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 56.08% 40.35%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 56.29% 42.42%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 56.23% 22.87%, rgba(255,238,200,0.58) 0, rgba(255,238,200,0.58) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 66.39% 46.72%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 81.56% 42.70%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 64.58% 39.06%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 43.50% 32.85%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 66.28% 25.44%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 54.29% 55.87%, rgba(255,238,200,0.39) 0, rgba(255,238,200,0.39) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 49.08% 51.79%, rgba(255,238,200,0.37) 0, rgba(255,238,200,0.37) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 50.09% 29.39%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 78.45% 32.11%, rgba(255,238,200,0.36) 0, rgba(255,238,200,0.36) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 59.39% 43.21%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 68.04% 50.67%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 71.37% 29.41%, rgba(255,238,200,0.35) 0, rgba(255,238,200,0.35) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 63.98% 46.38%, rgba(255,238,200,0.41) 0, rgba(255,238,200,0.41) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 82.81% 36.46%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 60.38% 26.13%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 64.63% 22.54%, rgba(255,238,200,0.46) 0, rgba(255,238,200,0.46) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 42.10% 24.78%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 48.19% 35.11%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 52.58% 14.02%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 68.01% 29.09%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 69.09% 37.59%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 49.50% 45.26%, rgba(255,238,200,0.52) 0, rgba(255,238,200,0.52) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 96.21% 3.73%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 62.26% 7.79%, rgba(255,238,200,0.54) 0, rgba(255,238,200,0.54) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 4.66% 7.06%, rgba(255,238,200,0.60) 0, rgba(255,238,200,0.60) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 8.03% 14.81%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 23.31% 29.43%, rgba(255,238,200,0.53) 0, rgba(255,238,200,0.53) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 39.63% 3.01%, rgba(255,238,200,0.43) 0, rgba(255,238,200,0.43) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 75.39% 1.91%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 83.95% 9.11%, rgba(255,238,200,0.22) 0, rgba(255,238,200,0.22) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 66.69% 3.15%, rgba(255,238,200,0.24) 0, rgba(255,238,200,0.24) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 19.48% 29.72%, rgba(255,238,200,0.50) 0, rgba(255,238,200,0.50) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 73.29% 24.64%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 88.19% 5.23%, rgba(255,238,200,0.26) 0, rgba(255,238,200,0.26) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 95.98% 42.85%, rgba(255,238,200,0.44) 0, rgba(255,238,200,0.44) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 4.99% 3.39%, rgba(255,238,200,0.38) 0, rgba(255,238,200,0.38) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 31.47% 1.00%, rgba(255,238,200,0.45) 0, rgba(255,238,200,0.45) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 59.05% 6.50%, rgba(255,238,200,0.30) 0, rgba(255,238,200,0.30) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 95.21% 18.70%, rgba(255,238,200,0.51) 0, rgba(255,238,200,0.51) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 38.54% 2.04%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 47.13% 44.32%, rgba(255,238,200,0.59) 0, rgba(255,238,200,0.59) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 71.56% 17.20%, rgba(255,238,200,0.57) 0, rgba(255,238,200,0.57) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 3.29% 8.08%, rgba(255,238,200,0.25) 0, rgba(255,238,200,0.25) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 79.62% 36.93%, rgba(255,238,200,0.46) 0, rgba(255,238,200,0.46) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 55.62% 9.80%, rgba(255,238,200,0.32) 0, rgba(255,238,200,0.32) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 52.83% 50.12%, rgba(255,238,200,0.34) 0, rgba(255,238,200,0.34) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 39.95% 49.56%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.75px, transparent 1.35px),
+    radial-gradient(circle at 69.11% 16.53%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 20.34% 37.41%, rgba(255,238,200,0.85) 0, rgba(255,238,200,0.85) 1.1px, transparent 1.7000000000000002px),
+    radial-gradient(circle at 52.24% 34.17%, rgba(255,238,200,0.47) 0, rgba(255,238,200,0.47) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 68.19% 25.75%, rgba(255,238,200,0.40) 0, rgba(255,238,200,0.40) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 40.02% 17.78%, rgba(255,238,200,0.29) 0, rgba(255,238,200,0.29) 0.5px, transparent 1.1px),
+    radial-gradient(circle at 71.89% 0.29%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.75px, transparent 1.35px); }
+@media (max-width: 900px) { .home { background-image: url(hero-phone.webp); background-position: center bottom; } }
+@media (prefers-reduced-motion: reduce) { .home::before { transition: none; transform: none; } }
