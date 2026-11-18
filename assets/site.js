@@ -74,7 +74,7 @@ function todayHTML(q, base) {
   function alignToday() {
     var box = $('.today .in'), bar = box && $('.todaybar', box), qa = box && $('.q a', box);
     if (!bar || !qa) return;
-    if (!matchMedia('(min-width: 901px)').matches) { box.style.removeProperty('--qleft'); return; }
+    if (!matchMedia('(min-width: 901px)').matches) { box.style.removeProperty('--qleft'); box.style.removeProperty('--qright'); return; }
     var r = document.createRange(); r.selectNodeContents(qa);
     var rects = [].slice.call(r.getClientRects()).filter(function (x) { return x.width > 1; });
     if (!rects.length) return;
@@ -82,6 +82,9 @@ function todayHTML(q, base) {
     var bb = box.getBoundingClientRect(), padL = parseFloat(getComputedStyle(box).paddingLeft) || 0;
     var d = Math.max(0, Math.min(minL - (bb.left + padL), bb.width * .4));
     box.style.setProperty('--qleft', d.toFixed(1) + 'px');
+    var maxR = Math.max.apply(null, rects.map(function (x) { return x.right; })), padR = parseFloat(getComputedStyle(box).paddingRight) || 0;
+    var d2 = Math.max(0, Math.min(bb.right - padR - maxR, bb.width * .4));
+    box.style.setProperty('--qright', d2.toFixed(1) + 'px');
   }
   window.__alignToday = alignToday;
   addEventListener('resize', alignToday);

@@ -474,7 +474,14 @@ html, body { margin: 0; }
   .today .todaybar { align-self: end; gap: 0 34px; font-size: 22px; margin-left: var(--qleft, 0px); }
   .today .todaybar a, .today .todaybar button { align-items: flex-end; padding: 0 0 4px; text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
   .today details.biur[open] ~ .todaybar { margin-left: 0; }
+  /* הציטוט והמקור ממורכזים (נועם, 18.11) */
+  .today .in > div, .today .q, .today .ref { text-align: center; }
+  /* כל הבלוק ממורכז: אותו מרווח בשני הצדדים, הכותרת באמצע, והביאור מתחיל בדיוק בתחילת שורת הציטוט */
+  .today .in { padding-left: max(20px, clamp(40px, 7vw, 110px)); }
+  .today .kicker { text-align: center; }
+  .today details.biur:not([open]) { margin-right: var(--qright, 0px); }
 }
+@media (max-width: 900px) { .today .in > div, .today .q, .today .ref { text-align: center; } }
 /* "חצי דקה להיום" בטלפון: גרשיים גדולות ודהויות, וציטוט גדול ובבולד */
 @media (max-width: 900px) {
   .today .in { position: relative; }
