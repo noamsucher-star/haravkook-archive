@@ -56,14 +56,6 @@ function todayHTML(q, base) {
 
   // ---------- האור: רק בפתיח, רק על מה שהעכבר קרוב אליו ----------
   var homeEl = $('.home');
-  // ניסוי פריסה ל"חצי דקה להיום" במחשב: index.html?today=1/2 (0 = הפריסה הנוכחית). מוחקים אחרי שנועם בוחר
-  var tlv = new URLSearchParams(location.search).get('today'), todayEl = $('.today');
-  if (todayEl && tlv !== null) {
-    if (/^[1-9]$/.test(tlv)) todayEl.classList.add('tl' + tlv);
-    var sw = document.createElement('nav'); sw.className = 'trialswitch'; sw.setAttribute('aria-label', 'בחירת פריסה לניסיון');
-    sw.innerHTML = [['0', 'היום'], ['1', '1'], ['2', '2']].map(function (o) { return '<a href="?today=' + o[0] + '#today"' + (o[0] === tlv ? ' aria-current="true"' : '') + '>' + o[1] + '</a>'; }).join('');
-    document.body.appendChild(sw);
-  }
   if (homeEl) {
     var hadMouse = false, raf = 0, ptr = null;
     var paint = function (x, y) { $$('.home .lit').forEach(function (el) { var r = el.getBoundingClientRect(); el.style.setProperty('--lx', (x - r.left) + 'px'); el.style.setProperty('--ly', (y - r.top) + 'px'); }); };

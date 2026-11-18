@@ -442,37 +442,31 @@ html, body { margin: 0; }
 .bar .box { flex-direction: row-reverse; }
 /* משפט הפתיח ממורכז בדיוק מעל החיפוש (קודם גלש שמאלה ברוחבים מסוימים) */
 @media (min-width: 901px) { .s1 .hero .hv2 .lede { max-width: none; width: max-content; justify-self: center; } }
-/* "חצי דקה להיום" במחשב: שתי פריסות לניסיון (?today=1/2). גרשיים גדולות ודהויות בצד ימין למעלה */
+/* "חצי דקה להיום" במחשב: פריסה רחבה (נבחרה 18.11). גרשיים גדולות ודהויות בצד ימין למעלה, ומתחת לציטוט שורה אחת: ביאור מימין, שיתוף משמאל */
 @media (min-width: 901px) {
-  .today[class*="tl"] .in { position: relative; justify-items: stretch; text-align: right; row-gap: 14px; }
-  .today[class*="tl"] .in::before { content: '"'; position: absolute; z-index: 0; top: -.2em; right: -.04em; font-size: clamp(240px, 26vw, 380px); font-weight: 700; line-height: 1; color: var(--bronze); opacity: .11; pointer-events: none; }
-  .today[class*="tl"] .in > * { position: relative; z-index: 1; }
-  .today[class*="tl"] .q a::before, .today[class*="tl"] .q a::after { content: none; }
-  .today[class*="tl"] .q { max-width: none; margin-inline: 0; font-size: clamp(30px, 3.3vw, 46px); line-height: 1.22; }
-  .today[class*="tl"] .kicker { font-size: 22px; }
-  .today[class*="tl"] .ref { font-size: 21px; margin-top: 10px; }
-  .today[class*="tl"] details.biur { margin-top: 0; max-width: none; width: auto; }
-  .today[class*="tl"] details.biur summary { justify-content: flex-start; }
-  .today[class*="tl"] .todaybar { justify-content: flex-start; margin-top: 0; }
-  /* 1: רחב. הציטוט לכל הרוחב, ומתחתיו שורה אחת: ביאור מימין, שיתוף משמאל */
-  .today.tl1 .in { grid-template-columns: minmax(0, 1fr) auto; column-gap: 40px; padding-right: clamp(40px, 7vw, 110px); }
-  .today.tl1 .kicker, .today.tl1 .in > div { grid-column: 1 / -1; }
-  .today.tl1 details.biur { grid-column: 1; margin-top: 14px; }
-  .today.tl1 .todaybar { grid-column: 2; grid-row: 3; align-self: start; margin-top: 14px; justify-content: flex-end; }
-  .today.tl1 details.biur[open] { grid-column: 1 / -1; }
-  .today.tl1 details.biur[open] ~ .todaybar { grid-row: 4; grid-column: 1 / -1; justify-content: flex-start; margin-top: 0; }
-  /* 2: שני טורים. הציטוט מימין, הביאור והשיתוף בטור משמאל, עם קו דק ביניהם */
-  .today.tl2 .in { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); column-gap: 0; align-items: start; }
-  .today.tl2 .kicker { grid-column: 1; grid-row: 1; padding-right: clamp(40px, 6vw, 90px); }
-  .today.tl2 .in > div { grid-column: 1; grid-row: 2; padding-left: 56px; padding-right: clamp(40px, 6vw, 90px); }
-  .today.tl2 details.biur { grid-column: 2; grid-row: 1 / 3; align-self: center; border-right: 1px solid #d9c79f; padding: 14px 44px 0 0; }
-  .today.tl2 .todaybar { grid-column: 2; grid-row: 3; border-right: 1px solid #d9c79f; padding: 4px 44px 10px 0; }
-  .today.tl2 details.biur summary { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .today.tl2 .biurbox .biurtext { font-size: 18px; }
+  .today .in { position: relative; justify-items: stretch; text-align: right; row-gap: 14px; grid-template-columns: minmax(0, 1fr) auto; column-gap: 40px; padding-right: max(20px, clamp(40px, 7vw, 110px)); }
+  .today .in::before { content: '"'; position: absolute; z-index: 0; top: -.2em; right: -.04em; font-size: clamp(240px, 26vw, 380px); font-weight: 700; line-height: 1; color: var(--bronze); opacity: .11; pointer-events: none; }
+  .today .in > * { position: relative; z-index: 1; }
+  .today .q a::before, .today .q a::after { content: none; }
+  .today .q { max-width: none; margin-inline: 0; font-size: clamp(30px, 3.3vw, 46px); line-height: 1.22; }
+  .today .kicker { font-size: 22px; }
+  .today .ref { font-size: 21px; margin-top: 10px; }
+  .today .kicker, .today .in > div { grid-column: 1 / -1; }
+  .today details.biur { grid-column: 1; margin-top: 14px; max-width: none; width: auto; }
+  .today details.biur summary { justify-content: flex-start; }
+  .today .todaybar { grid-column: 2; grid-row: 3; align-self: start; margin-top: 14px; justify-content: flex-end; }
+  .today details.biur[open] { grid-column: 1 / -1; }
+  .today details.biur[open] ~ .todaybar { grid-row: 4; grid-column: 1 / -1; justify-content: flex-start; margin-top: 0; }
 }
-.trialswitch { position: fixed; z-index: 50; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 6px; padding: 6px; background: rgba(20,13,6,.88); border-radius: 8px; font-family: "Heebo", Arial, sans-serif; }
-.trialswitch a { min-width: 40px; height: 40px; display: grid; place-items: center; padding: 0 10px; color: #f3d998; text-decoration: none; font-size: 15px; font-weight: 700; border: 1px solid rgba(233,207,148,.45); border-radius: 5px; }
-.trialswitch a[aria-current] { background: #e9cf94; color: #26190a; }
+/* ===== סבב 6 (18.11) ===== */
+/* משפט הפתיח: קטן מעט, עם צל רך שמפריד אותו מהדיונות שמאחוריו */
+.s1 .hero .lede { text-shadow: 0 1px 2px rgba(14, 8, 3, .55), 0 2px 14px rgba(14, 8, 3, .6); }
+@media (min-width: 901px) { .s1 .hero .hv2 .lede { font-size: clamp(20px, 2.05vw, 25px); } }
+/* טלפון: הקשת קטנה יותר ולא נוגעת בלבן. אותו מרווח מעליה (מהחיפוש) ומתחתיה (עד הלבן) */
+@media (max-width: 900px) {
+  .s1 .hero-in { padding-bottom: 38px; }
+  .s1 .stage { max-width: 214px; margin-top: 12px; }
+}
 
 /* ===== רקע הפתיח: מדבר (נבחר 18.11). תמונה ממגניפיק: אחת למחשב ואחת לטלפון (9:16), ומעליה אבק זהב שזז מעט עם העכבר ===== */
 .home { position: relative; isolation: isolate; overflow: hidden; background: #150d06 url(hero-desk.webp) right bottom / cover no-repeat; }
