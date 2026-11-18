@@ -32,7 +32,7 @@ function todayHTML(q, base) {
   return '<p class="kicker">חצי דקה להיום</p>'
     + '<div><p class="q"><a href="' + (base || '') + 'q/' + q.i + '.html">' + esc(q.q) + '</a></p><p class="ref">' + esc(q.r) + '</p></div>'
     + biurHTML(q, false, 'לביאור')
-    + '<p class="todaybar"><a href="' + (base || '') + 'q/' + q.i + '.html" data-wa="' + q.i + '" target="_blank" rel="noopener">שיתוף בוואטסאפ</a><button type="button" data-copy="' + q.i + '">העתקה</button><button type="button" data-another>ציטוט נוסף</button></p>';
+    + '<p class="todaybar"><a href="' + (base || '') + 'q/' + q.i + '.html" data-wa="' + q.i + '" target="_blank" rel="noopener">שיתוף בוואטסאפ</a><button type="button" data-another>ציטוט נוסף</button></p>';
 }
 
 // הקוד של האתר בדפדפן. card.js מודבק לפני הקובץ הזה בבנייה.
@@ -49,8 +49,44 @@ function todayHTML(q, base) {
   // ---------- הגדלת מלל ----------
   var big = false;
   try { big = localStorage.getItem('big') === '1'; } catch (e) {}
-  function setBig(v) { big = v; document.body.classList.toggle('big', v); var b = $('#bigger'); if (b) b.setAttribute('aria-pressed', String(v)); }
+  function setBig(v) { big = v; document.body.classList.toggle('big', v); var b = $('#bigger'); if (b) b.setAttribute('aria-pressed', String(v)); var w = $('[data-a11y="big"]'); if (w) syncA11yBtn(w, v); }
+  function syncA11yBtn(b, on) { b.setAttribute('aria-pressed', String(on)); var s = $('.st', b); if (s) s.textContent = on ? 'פעיל' : ''; }
+
+  // ---------- תפריט נגישות (סבב 7) ----------
+  var A11Y = ['contrast', 'links', 'font', 'still'], a11y = {};
+  try { a11y = JSON.parse(localStorage.getItem('a11y') || '{}') || {}; } catch (e) { a11y = {}; }
+  function setA11y(k, on) { a11y[k] = on; document.body.classList.toggle('a-' + k, on); var b = $('[data-a11y="' + k + '"]'); if (b) syncA11yBtn(b, on); try { localStorage.setItem('a11y', JSON.stringify(a11y)); } catch (e) {} }
+  A11Y.forEach(function (k) { setA11y(k, !!a11y[k]); });
   setBig(big);
+  var a11yBtn = $('#a11y-btn'), a11yPanel = $('#a11y-panel');
+  function a11yOpen(v, focusBack) { if (!a11yBtn || !a11yPanel) return; a11yPanel.hidden = !v; a11yBtn.setAttribute('aria-expanded', String(v)); if (v) { var f = $('button', a11yPanel); if (f) f.focus(); } else if (focusBack) a11yBtn.focus(); }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && a11yPanel && !a11yPanel.hidden) a11yOpen(false, true); });
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.closest('#a11y-btn')) { a11yOpen(a11yPanel.hidden); return; }
+    var ab = t.closest('[data-a11y]');
+    if (ab) { var k = ab.getAttribute('data-a11y'); if (k === 'big') { setBig(!big); try { localStorage.setItem('big', big ? '1' : '0'); } catch (err) {} } else setA11y(k, !a11y[k]); if (k === 'big' || k === 'font') setTimeout(alignToday, 60); return; }
+    if (t.closest('[data-a11y-reset]')) { A11Y.forEach(function (k) { setA11y(k, false); }); setBig(false); try { localStorage.setItem('big', '0'); } catch (err) {} setTimeout(alignToday, 60); return; }
+    if (a11yPanel && !a11yPanel.hidden && !t.closest('#a11y-panel')) a11yOpen(false);
+  });
+
+  // ---------- "חצי דקה להיום" במחשב: השיתוף לא יוצא שמאלה מסוף שורת הציטוט ----------
+  function alignToday() {
+    var box = $('.today .in'), bar = box && $('.todaybar', box), qa = box && $('.q a', box);
+    if (!bar || !qa) return;
+    if (!matchMedia('(min-width: 901px)').matches) { box.style.removeProperty('--qleft'); return; }
+    var r = document.createRange(); r.selectNodeContents(qa);
+    var rects = [].slice.call(r.getClientRects()).filter(function (x) { return x.width > 1; });
+    if (!rects.length) return;
+    var minL = Math.min.apply(null, rects.map(function (x) { return x.left; }));
+    var bb = box.getBoundingClientRect(), padL = parseFloat(getComputedStyle(box).paddingLeft) || 0;
+    var d = Math.max(0, Math.min(minL - (bb.left + padL), bb.width * .4));
+    box.style.setProperty('--qleft', d.toFixed(1) + 'px');
+  }
+  window.__alignToday = alignToday;
+  addEventListener('resize', alignToday);
+  addEventListener('load', alignToday);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignToday);
 
   function toast(msg) { var old = $('.toast'); if (old) old.remove(); var t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg; document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2200); }
 
@@ -104,7 +140,7 @@ function todayHTML(q, base) {
     try {
       var P = JSON.parse(pool.textContent);
       var d = P[Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5) % P.length];
-      if (d && String(d.i) !== todayBox.getAttribute('data-i')) { todayBox.innerHTML = todayHTML(d, BASE); todayBox.setAttribute('data-i', d.i); todayBox.setAttribute('data-t', d.t); }
+      if (d && String(d.i) !== todayBox.getAttribute('data-i')) { todayBox.innerHTML = todayHTML(d, BASE); todayBox.setAttribute('data-i', d.i); todayBox.setAttribute('data-t', d.t); alignToday(); }
     } catch (e) {}
   }
 
@@ -355,7 +391,7 @@ function todayHTML(q, base) {
     if (wa) { var q = getQ(wa.getAttribute('data-wa')); if (q) wa.href = 'https://wa.me/?text=' + encodeURIComponent(shareText(q)); return; }
     var cp = t.closest('[data-copy]');
     if (cp) { var q2 = getQ(cp.getAttribute('data-copy')); if (!q2) return; (navigator.clipboard ? navigator.clipboard.writeText(shareText(q2)) : Promise.reject()).then(function () { toast('הועתק'); }, function () { toast('לא הצלחנו להעתיק. אפשר לסמן את הטקסט ולהעתיק ידנית'); }); return; }
-    if (t.closest('[data-another]') && pool && todayBox) { try { var PP = JSON.parse(pool.textContent), cur = todayBox.getAttribute('data-i'), nx; do { nx = PP[Math.floor(Math.random() * PP.length)]; } while (String(nx.i) === cur && PP.length > 1); todayBox.innerHTML = todayHTML(nx, BASE).replace('חצי דקה להיום', 'ועוד חצי דקה'); todayBox.setAttribute('data-i', nx.i); todayBox.setAttribute('data-t', nx.t); var b2 = $('[data-another]', todayBox); if (b2) b2.focus(); var lv = $('.today .q'); if (lv) lv.setAttribute('aria-live', 'polite'); } catch (err) {} return; }
+    if (t.closest('[data-another]') && pool && todayBox) { try { var PP = JSON.parse(pool.textContent), cur = todayBox.getAttribute('data-i'), nx; do { nx = PP[Math.floor(Math.random() * PP.length)]; } while (String(nx.i) === cur && PP.length > 1); todayBox.innerHTML = todayHTML(nx, BASE).replace('חצי דקה להיום', 'ועוד חצי דקה'); todayBox.setAttribute('data-i', nx.i); todayBox.setAttribute('data-t', nx.t); alignToday(); var b2 = $('[data-another]', todayBox); if (b2) b2.focus(); var lv = $('.today .q'); if (lv) lv.setAttribute('aria-live', 'polite'); } catch (err) {} return; }
     var cl = t.closest('[data-copylink]');
     if (cl) { (navigator.clipboard ? navigator.clipboard.writeText(cl.getAttribute('data-copylink')) : Promise.reject()).then(function () { toast('הקישור הועתק'); }, function () {}); }
   });

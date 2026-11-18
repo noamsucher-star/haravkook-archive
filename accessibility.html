@@ -21,7 +21,7 @@
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 <link rel="preload" href="assets/fonts/platforma-bold.otf" as="font" type="font/otf" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=mwm70uyd">
+<link rel="stylesheet" href="assets/site.css?v=mwm7dndk">
 
 </head>
 <body>
@@ -46,7 +46,8 @@
 <ul>
   <li>אפשר לגלוש בכל האתר עם מקלדת בלבד. הרכיב שבפוקוס מסומן במסגרת זהב בולטת.</li>
   <li>בראש כל עמוד יש קישור "דילוג לתוכן", שמוביל ישר לתוכן העמוד.</li>
-  <li>כפתור "א+" בסרגל העליון מגדיל את המלל. הבחירה נשמרת גם בכניסות הבאות.</li>
+  <li>בפינה השמאלית התחתונה של כל עמוד יש כפתור נגישות (סמל האדם). הוא פותח תפריט התאמות: הגדלת מלל, ניגודיות גבוהה, הדגשת קישורים, גופן קריא ועצירת אנימציות. הבחירה נשמרת גם בכניסות הבאות, ויש כפתור איפוס.</li>
+  <li>כפתור "א+" בסרגל העליון מגדיל את המלל גם הוא.</li>
   <li>האתר כתוב בעברית ומוגדר לקריאה מימין לשמאל, כדי שקורא המסך יקרא אותו נכון.</li>
   <li>לכל עמוד יש כותרת ראשית אחת וכותרות משנה מסודרות, וסימון של אזורי העמוד (סרגל, תוכן, תפריט צד, תחתית).</li>
   <li>לכל תמונה יש תיאור. לשדה החיפוש יש תווית.</li>
@@ -55,7 +56,8 @@
   <li>כפתורים וקישורים גדולים ונוחים ללחיצה, גם בטלפון.</li>
   <li>מי שהגדיר במכשיר "הפחתת תנועה" לא יראה אנימציות.</li>
   <li>האתר עובד גם בהגדלה של הדפדפן עד 200%, בלי שתוכן ייחתך.</li>
-  <li>האתר לא משתמש בתוסף נגישות חיצוני. ההנגשה בנויה בתוך האתר עצמו.</li>
+  <li>האתר לא משתמש בתוסף נגישות חיצוני. ההנגשה בנויה בתוך האתר עצמו, ותפריט ההתאמות הוא תוספת נוחות מעליה.</li>
+  <li>האתר נבדק בדפדפן Chrome, בגודל מחשב ובגודל טלפון.</li>
 </ul>
 
 <h2>מגבלות ידועות</h2>
@@ -81,8 +83,20 @@
   <p>לקבלת הציטוט היומי: <a href="https://whatsapp.com/channel/0029VagNtvjLI8YQk5ZISj2o" target="_blank" rel="noopener">ערוץ הוואטסאפ</a></p>
   <p><a href="accessibility.html">הצהרת נגישות</a> · <a href="about.html">על האתר</a></p>
 </div></footer>
+<button class="a11y-btn" type="button" id="a11y-btn" aria-expanded="false" aria-controls="a11y-panel" aria-label="תפריט נגישות" title="נגישות"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="4.2" r="2.1" fill="currentColor"/><path d="M4.5 8.2 12 9.6l7.5-1.4" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9.6v5.2M12 14.8l-3.2 6.4M12 14.8l3.2 6.4" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<section class="a11y-panel" id="a11y-panel" aria-labelledby="a11y-h" hidden>
+  <h2 id="a11y-h">התאמות נגישות</h2>
+  <ul>
+    <li><button type="button" data-a11y="big" aria-pressed="false">הגדלת מלל <span class="st" aria-hidden="true"></span></button></li>
+    <li><button type="button" data-a11y="contrast" aria-pressed="false">ניגודיות גבוהה <span class="st" aria-hidden="true"></span></button></li>
+    <li><button type="button" data-a11y="links" aria-pressed="false">הדגשת קישורים <span class="st" aria-hidden="true"></span></button></li>
+    <li><button type="button" data-a11y="font" aria-pressed="false">גופן קריא <span class="st" aria-hidden="true"></span></button></li>
+    <li><button type="button" data-a11y="still" aria-pressed="false">עצירת אנימציות <span class="st" aria-hidden="true"></span></button></li>
+  </ul>
+  <div class="row"><button type="button" data-a11y-reset>איפוס</button><a href="accessibility.html">הצהרת נגישות</a></div>
+</section>
 
 
-<script src="assets/site.js?v=mwm70uyd" defer></script>
+<script src="assets/site.js?v=mwm7dndk" defer></script>
 </body>
 </html>
