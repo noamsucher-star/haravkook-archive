@@ -398,7 +398,7 @@ function todayHTML(q, base) {
     if (wa) { var q = getQ(wa.getAttribute('data-wa')); if (q) wa.href = 'https://wa.me/?text=' + encodeURIComponent(shareText(q)); return; }
     var cp = t.closest('[data-copy]');
     if (cp) { var q2 = getQ(cp.getAttribute('data-copy')); if (!q2) return; (navigator.clipboard ? navigator.clipboard.writeText(shareText(q2)) : Promise.reject()).then(function () { toast('הועתק'); }, function () { toast('לא הצלחנו להעתיק. אפשר לסמן את הטקסט ולהעתיק ידנית'); }); return; }
-    if (t.closest('[data-another]') && pool && todayBox) { try { var PP = JSON.parse(pool.textContent), cur = todayBox.getAttribute('data-i'), nx; do { nx = PP[Math.floor(Math.random() * PP.length)]; } while (String(nx.i) === cur && PP.length > 1); todayBox.innerHTML = todayHTML(nx, BASE).replace('חצי דקה להיום', 'ועוד חצי דקה'); todayBox.setAttribute('data-i', nx.i); todayBox.setAttribute('data-t', nx.t); alignToday(); var b2 = $('[data-another]', todayBox); if (b2) b2.focus(); var lv = $('.today .q'); if (lv) lv.setAttribute('aria-live', 'polite'); } catch (err) {} return; }
+    if (t.closest('[data-another]') && pool && todayBox) { try { var PP = JSON.parse(pool.textContent), cur = todayBox.getAttribute('data-i'), nx, seen = []; try { seen = JSON.parse(sessionStorage.getItem('seenQ') || '[]'); } catch (e2) {} if (seen.indexOf(cur) < 0) seen.push(cur); var left = PP.filter(function (x) { return seen.indexOf(String(x.i)) < 0; }); if (!left.length) { seen = [cur]; left = PP.filter(function (x) { return String(x.i) !== cur; }); } nx = left[Math.floor(Math.random() * left.length)]; seen.push(String(nx.i)); try { sessionStorage.setItem('seenQ', JSON.stringify(seen)); } catch (e3) {} /* סבב 14: בלי חזרות עד שעוברים על כל ה-50 */ todayBox.classList.remove('swap'); void todayBox.offsetWidth; todayBox.classList.add('swap'); todayBox.innerHTML = todayHTML(nx, BASE).replace('חצי דקה להיום', 'ועוד חצי דקה'); todayBox.setAttribute('data-i', nx.i); todayBox.setAttribute('data-t', nx.t); alignToday(); var b2 = $('[data-another]', todayBox); if (b2) b2.focus(); var lv = $('.today .q'); if (lv) lv.setAttribute('aria-live', 'polite'); } catch (err) {} return; }
     var cl = t.closest('[data-copylink]');
     if (cl) { (navigator.clipboard ? navigator.clipboard.writeText(cl.getAttribute('data-copylink')) : Promise.reject()).then(function () { toast('הקישור הועתק'); }, function () {}); }
   });
@@ -415,7 +415,8 @@ function todayHTML(q, base) {
   // ---------- נושאים שנפתחים ----------
   var mq = window.matchMedia('(max-width: 700px)');
   var blocks = [].slice.call(document.querySelectorAll('#topics .famblock'));
-  function accOn() { return mq.matches && H.classList.contains('acc'); }
+  // סבב 14: השערים פועלים גם במחשב (4 שערים בשורה, הפאנל נפתח מתחת)
+  function accOn() { return H.classList.contains('acc'); }
   function setOpen(b, on) {
     b.classList.toggle('open', on);
     var t = b.querySelector('.famtog'); if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
@@ -430,6 +431,8 @@ function todayHTML(q, base) {
     });
   }
   if (blocks.length) {
+    // במחשב השער הראשון פתוח מההתחלה, כדי שהנושאים ייראו מיד
+    if (!mq.matches) setOpen(blocks[0], true);
     syncAcc();
     if (mq.addEventListener) mq.addEventListener('change', syncAcc); else if (mq.addListener) mq.addListener(syncAcc);
     document.addEventListener('click', function (e) {
@@ -438,7 +441,7 @@ function todayHTML(q, base) {
       blocks.forEach(function (x) { if (x !== b) setOpen(x, false); });
       setOpen(b, !was);
       // אחרי שהשער הקודם נסגר, להשאיר את השער שנפתח בראש המסך
-      if (!was) setTimeout(function () {
+      if (!was && mq.matches) setTimeout(function () {
         var r = t.getBoundingClientRect();
         if (r.top < 8 || r.top > innerHeight * .45) window.scrollTo({ top: window.pageYOffset + r.top - 14, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('a-still')) ? 'auto' : 'smooth' });
       }, 520);

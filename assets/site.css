@@ -914,3 +914,97 @@ body.a-cursor, body.a-cursor * { cursor: url("data:image/svg+xml,%3Csvg xmlns='h
 details.biur summary .bbtn { font-size: 21px; padding: 10px 22px 10px 18px; }
 .btn:not(.joinin .btn) { font-size: 22px; padding: 14px 34px; }
 @media (max-width: 560px) { .search button, details.biur summary .bbtn { font-size: 20px; } }
+
+/* ================= סבב 14 (20.11.26) =================
+   פינות חדות לשערים, אייקונים שזזים כשהשער נפתח, שערים גם במחשב, ונגיעות תנועה קטנות. */
+
+/* ---------- פינות חדות (טלפון) ---------- */
+@media (max-width: 700px) {
+  html.acc #topics .famtog { border-radius: 0; }
+  html.acc #topics .famblock .fold > .tgrid { border-radius: 0; }
+}
+
+/* ---------- האייקונים זזים כשהשער נפתח (ובמחשב גם במעבר עכבר) ---------- */
+#topics .famtog svg * { transform-box: fill-box; }
+/* להבה: גדלה מעט מהבסיס ומהבהבת פעמיים */
+#topics .ic-fire .fl { transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.34, 1.56, .64, 1); }
+#topics .famtog[aria-expanded="true"] .ic-fire .fl { transform: scale(1.16); animation: r14flick 1.1s ease-in-out .5s 2; }
+@keyframes r14flick { 0%, 100% { transform: scale(1.16); } 35% { transform: scale(1.08, 1.2); } 70% { transform: scale(1.2, 1.12); } }
+/* שמש: עולה מעל קו האופק, והקרניים נדלקות */
+#topics .ic-sun .sn { transform: translateY(5px); transition: transform .9s cubic-bezier(.22, 1, .36, 1); }
+#topics .ic-sun .ry { opacity: .35; transition: opacity .6s .3s; }
+#topics .famtog[aria-expanded="true"] .ic-sun .sn { transform: translateY(-1px); }
+#topics .famtog[aria-expanded="true"] .ic-sun .ry { opacity: 1; }
+/* כדור: מסתובב סיבוב אחד */
+#topics .ic-globe .mr { transform-origin: 50% 50%; }
+#topics .famtog[aria-expanded="true"] .ic-globe .mr { animation: r14spin 1.4s cubic-bezier(.45, 0, .2, 1) 1; }
+@keyframes r14spin { 0% { transform: scaleX(1); } 25% { transform: scaleX(.15); } 50% { transform: scaleX(-1); } 75% { transform: scaleX(-.15); } 100% { transform: scaleX(1); } }
+/* מגן דוד: סיבוב שלם ורך */
+#topics .ic-star .st { transform-origin: 50% 50%; transition: transform 1.2s cubic-bezier(.45, 0, .2, 1); }
+#topics .famtog[aria-expanded="true"] .ic-star .st { transform: rotate(360deg); }
+@media (hover: hover) and (min-width: 701px) {
+  html.acc #topics .famtog:hover .ic-fire .fl { transform: scale(1.16); }
+  html.acc #topics .famtog:hover .ic-sun .sn { transform: translateY(-1px); }
+  html.acc #topics .famtog:hover .ic-sun .ry { opacity: 1; }
+  html.acc #topics .famtog:hover .ic-star .st { transform: rotate(360deg); }
+  html.acc #topics .famtog:hover .ic-globe .mr { animation: r14spin 1.4s cubic-bezier(.45, 0, .2, 1) 1; }
+}
+
+/* ---------- שערים במחשב: 4 בשורה, הפאנל נפתח מתחת לכל השורה ---------- */
+@media (min-width: 701px) {
+  html.acc #topics .in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 16px; }
+  html.acc #topics .in > h2, html.acc #topics .in > .sub { grid-column: 1 / -1; }
+  html.acc #topics .famblock, html.acc #topics .famblock > .fam { display: contents; }
+  html.acc #topics .famblock:nth-child(3) .famtog { order: 1; } html.acc #topics .famblock:nth-child(4) .famtog { order: 2; }
+  html.acc #topics .famblock:nth-child(5) .famtog { order: 3; } html.acc #topics .famblock:nth-child(6) .famtog { order: 4; }
+  html.acc #topics .famblock .fold { order: 5; grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease); }
+  html.acc #topics .famblock.open .fold { grid-template-rows: 1fr; }
+  html.acc #topics .famtog { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; margin-top: 30px; padding: 30px 18px 22px; min-height: 250px; cursor: pointer; position: relative; overflow: hidden; color: #f3d998;
+    background: radial-gradient(120% 70% at 50% 0, #4a3016 0%, #24170a 65%); transition: transform .35s var(--ease), box-shadow .35s; }
+  html.acc #topics .famtog::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(233, 207, 148, .3); pointer-events: none; transition: border-color .4s; }
+  html.acc #topics .famtog::after { content: ""; position: absolute; right: 0; left: 0; bottom: 0; height: 3px; background: #d9b467; transform: scaleX(0); transition: transform .5s var(--ease); }
+  html.acc #topics .famtog[aria-expanded="true"]::after { transform: scaleX(1); }
+  html.acc #topics .famtog[aria-expanded="true"]::before, html.acc #topics .famtog:hover::before { border-color: rgba(243, 217, 152, .8); }
+  html.acc #topics .famtog:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -18px rgba(40, 24, 8, .7); }
+  html.acc #topics .famtog:focus-visible { outline: 3px solid #c2944a; outline-offset: 3px; }
+  html.acc #topics .famtog .ico { display: block; width: 60px; height: 60px; margin-bottom: 8px; color: #e2be73; }
+  html.acc #topics .famtog .ico svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  html.acc #topics .famtog .t { font-size: clamp(26px, 2.4vw, 32px); font-weight: 700; line-height: 1.1; }
+  html.acc #topics .famtog .c { display: block; font-size: 16px; color: #dccbaa; }
+  html.acc #topics .famtog .teaser { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15.5px; font-weight: 300; line-height: 1.4; color: #cdbb98; max-width: 24ch; }
+  html.acc #topics .famtog .chev { display: block; position: relative; width: 30px; height: 30px; margin-top: auto; border: 1px solid rgba(233, 207, 148, .5); border-radius: 50%; }
+  html.acc #topics .famtog .chev::before, html.acc #topics .famtog .chev::after { content: ""; position: absolute; top: 50%; left: 50%; width: 11px; height: 1.5px; background: #f3d998; transform: translate(-50%, -50%); transition: transform .4s var(--ease); }
+  html.acc #topics .famtog .chev::after { transform: translate(-50%, -50%) rotate(90deg); }
+  html.acc #topics .famtog[aria-expanded="true"] .chev::after { transform: translate(-50%, -50%) rotate(0deg); }
+  /* החץ הקטן מעל השער הפתוח, שמחבר אותו לפאנל */
+  html.acc #topics .famtog[aria-expanded="true"] { box-shadow: 0 0 0 1px #d9b467; }
+  html.acc #topics .famblock .fold > .tgrid { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility 0s .55s; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 36px; padding: 0 30px; margin-top: 18px; background: #fffdf8; border: 1px solid var(--line); border-top: 3px solid #d9b467; }
+  html.acc #topics .famblock.open .fold > .tgrid { visibility: visible; transition: visibility 0s; padding-block: 14px 18px; }
+  html.acc #topics .famblock:not(.open) .fold > .tgrid { border-color: transparent; margin-top: 0; }
+  html.acc #topics .topic { padding: 16px 0; opacity: 0; transform: translateY(8px); transition: opacity .4s var(--ease), transform .4s var(--ease); border-bottom: 1px solid #efe5cf; }
+  html.acc #topics .famblock.open .topic { opacity: 1; transform: none; transition-delay: calc(80ms + var(--n, 0) * 40ms); }
+  html.acc #topics .topic .count::after { content: ""; display: inline-block; width: .6em; height: .6em; margin-right: 9px; background: #b88a3e; -webkit-mask: var(--arw) center / contain no-repeat; mask: var(--arw) center / contain no-repeat; transition: transform .25s var(--ease); }
+  html.acc #topics .topic:hover .count::after { transform: translateX(-4px); }
+  html.acc #topics .topic:hover .name { color: var(--bronze); }
+}
+@media (min-width: 701px) and (max-width: 1000px) { html.acc #topics .famblock .fold > .tgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- נגיעות תנועה קטנות ---------- */
+/* "ציטוט נוסף": הציטוט החדש עולה בעדינות */
+.today .in.swap > * { animation: r14rise .5s var(--ease) both; }
+.today .in.swap > *:nth-child(2) { animation-delay: .05s; } .today .in.swap > *:nth-child(3) { animation-delay: .1s; } .today .in.swap > *:nth-child(4) { animation-delay: .15s; }
+@keyframes r14rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+/* ביאור שנפתח: יורד בעדינות */
+details.biur[open] > .biurbox { animation: r14rise .4s var(--ease) both; }
+/* חץ בשורות הנושאים בטלפון: זז מעט במגע */
+.topic .count::after { transition: transform .25s var(--ease); }
+.topic:active .count::after { transform: translateX(-4px); }
+/* ספרים ומועדים: קו זהב שנמתח מתחת לשורה */
+.bookrow { position: relative; }
+.bookrow::after { content: ""; position: absolute; right: 0; bottom: -1px; height: 2px; width: 100%; background: #c9a35a; transform: scaleX(0); transform-origin: 100% 50%; transition: transform .45s var(--ease); pointer-events: none; }
+.bookrow:hover::after, .bookrow:focus-visible::after { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  #topics .famtog svg *, .today .in.swap > *, details.biur[open] > .biurbox, .bookrow::after { animation: none !important; transition: none !important; }
+}
+body.a-still #topics .famtog svg *, body.a-still .today .in.swap > *, body.a-still details.biur[open] > .biurbox { animation: none !important; transition: none !important; }
