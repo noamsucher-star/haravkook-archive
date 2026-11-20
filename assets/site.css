@@ -774,7 +774,7 @@ html .today .q a::after { margin-right: .05em; }
 .bar.stuck { box-shadow: 0 6px 18px -12px rgba(40, 24, 8, .5); }
 .bar.away { transform: translateY(-105%); }
 .bar .box { gap: 10px; padding-block: 9px; }
-.bar .a11y-top { margin-right: auto; }
+.bar .logo { margin-right: auto; }
 .bar .logo img { height: 46px; }
 
 .menubtn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px 0 14px; border: 1px solid #cbb58a; background: #fffdf8; color: var(--bark); font-size: 19px; font-weight: 700; cursor: pointer; transition: background-color .2s, border-color .2s;
@@ -848,39 +848,17 @@ html.menu-on, html.menu-on body { overflow: hidden; }
 .mfoot { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin-top: 20px; font-family: "Heebo", Arial, sans-serif; font-size: 15px; letter-spacing: .02em; }
 .mfoot a, .mfoot button { color: inherit; background: none; border: 0; padding: 6px 0; font: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--macc); cursor: pointer; opacity: .85; }
 
-/* ---------- 1: מגירה כהה מימין ---------- */
-html.m1 .mpanel { --mline: rgba(233, 207, 148, .2); --macc: #e2be73; top: 0; bottom: 0; right: 0; width: min(88vw, 430px); color: #f4e8cf;
-  background: radial-gradient(120% 50% at 100% 0, #4b3015 0%, rgba(75, 48, 21, 0) 70%), linear-gradient(170deg, #241709 0%, #170f06 100%); transform: translateX(102%); box-shadow: -20px 0 50px -20px rgba(0, 0, 0, .6); }
+/* ---------- המגירה: בהירה, נכנסת מימין (נועם בחר) ---------- */
+html.m1 .mpanel { --mline: #e6dac0; --macc: #a87a35; top: 0; bottom: 0; right: 0; width: min(88vw, 430px); color: var(--ink);
+  background: radial-gradient(120% 40% at 100% 0, #f6e7c6 0%, rgba(246, 231, 198, 0) 70%), var(--ivory); border-left: 3px solid #c9a35a; transform: translateX(102%); box-shadow: -20px 0 50px -20px rgba(40, 24, 8, .45); }
 html.m1 .menu.on .mpanel { transform: none; }
-html.m1 .mlogo img { filter: brightness(0) invert(.88) sepia(.55) saturate(1.8) hue-rotate(-8deg); }
-html.m1 .mlinks a { color: #efe2c4; }
-html.m1 .mgroup summary, html.m1 .mrow { color: #f3d998; }
-
-/* ---------- 2: מסך מלא בהיר ---------- */
-html.m2 .mback { display: none; }
-html.m2 .mpanel { --mline: #e6dac0; --macc: #a87a35; inset: 0; color: var(--ink); background: linear-gradient(180deg, #fbf3e2 0%, var(--ivory) 30%); opacity: 0; transform: translateY(14px); padding-inline: max(22px, calc((100vw - 640px) / 2)); }
-html.m2 .menu.on .mpanel { opacity: 1; transform: none; }
-html.m2 .mgroup summary, html.m2 .mrow { font-size: 26px; color: var(--bark); }
-html.m2 .mlinks:not(.two) { display: flex; flex-wrap: wrap; gap: 8px; padding-right: 34px; margin-top: 6px; }
-html.m2 .mlinks:not(.two) a { padding: 7px 14px; font-size: 17.5px; border: 1px solid #dcc89c; background: #fffdf8; border-radius: 999px; }
-html.m2 .mlinks:not(.two) a:hover { border-color: #b88a3e; color: var(--bark); }
-html.m2 .mgive { color: var(--bark); }
-
-/* ---------- 3: נפתח מלמעלה ---------- */
-html.m3 .mpanel { --mline: #e6dac0; --macc: #a87a35; top: 0; left: 0; right: 0; max-height: 92vh; max-height: 92dvh; color: var(--ink); background: var(--ivory); border-bottom: 3px solid #c9a35a; border-radius: 0 0 18px 18px; transform: translateY(-104%); box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .5); padding-inline: max(22px, calc((100vw - 760px) / 2)); }
-html.m3 .menu.on .mpanel { transform: none; }
-html.m3 .mgroup summary, html.m3 .mrow { color: var(--bark); }
-html.m3 .mfam { display: grid; grid-template-columns: 28px minmax(0, 1fr); column-gap: 10px; }
-html.m3 .mfh { grid-column: 1 / -1; }
-html.m3 .mlinks:not(.two) { grid-column: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
-html.m3 .mlinks:not(.two) a { padding-right: 0; font-size: 18px; }
-html.m3 .mgive { color: var(--bark); }
-
+html.m1 .mgroup summary, html.m1 .mrow { color: var(--bark); }
+html.m1 .mgive { color: var(--bark); }
 @media (prefers-reduced-motion: reduce) { .mpanel, .mback, .bar { transition: none !important; } }
 body.a-still .mpanel, body.a-still .mback, body.a-still .bar { transition: none !important; }
 
 /* ---------- תפריט הנגישות: נפתח מהסרגל למעלה ---------- */
-.a11y-panel { top: calc(72px + env(safe-area-inset-top, 0px)); bottom: auto; left: max(12px, env(safe-area-inset-left, 0px)); width: min(340px, calc(100vw - 24px)); max-height: calc(100vh - 90px); max-height: calc(100dvh - 90px); z-index: 75; }
+.a11y-panel { width: min(340px, calc(100vw - 28px)); z-index: 75; }
 .a11y-panel .ahead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .a11y-panel .ahead h2 { margin: 0; }
 .a11y-panel .aclose { position: relative; width: 40px; height: 40px; border: 1px solid #c9a35a; border-radius: 50%; background: none; cursor: pointer; }
@@ -900,20 +878,10 @@ body.a-heads .s1 :is(h1, h2, h3) { text-decoration: underline !important; text-d
 body.a-heads .s1 :is(h2, h3) { background: rgba(255, 236, 170, .45); }
 body.a-cursor, body.a-cursor * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M4 3 L4 36 L13 28 L19 41 L26 38 L20 25 L32 25 Z' fill='%23000' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, auto !important; }
 
-/* ---------- מתג הגרסאות הזמני ---------- */
-.r8-btn { position: fixed; z-index: 50; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font-family: "Heebo", Arial, sans-serif; font-size: 15px; font-weight: 700; padding: 11px 18px; border: 1px solid #c9a35a; border-radius: 999px; background: #1d1206; color: #f3d998; box-shadow: 0 6px 20px rgba(0, 0, 0, .28); }
-.r8-panel { position: fixed; z-index: 51; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(68px + env(safe-area-inset-bottom, 0px)); width: min(330px, calc(100vw - 28px)); background: #fff; color: #1d1206; border: 1px solid #d9c9a3; border-radius: 12px; padding: 14px 16px 16px; box-shadow: 0 14px 40px rgba(0, 0, 0, .3); font-family: "Heebo", Arial, sans-serif; font-size: 15px; }
-.r8-panel h2 { font-family: inherit; font-size: 17px; font-weight: 700; margin: 0 0 4px; }
-.r8-panel p { font-size: 13.5px; color: #6a5a40; margin: 0 0 10px; }
-.r8-panel .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.r8-panel .opts button { font: inherit; font-size: 14px; padding: 9px 4px; border: 1px solid #d9c9a3; border-radius: 8px; background: #faf6ee; color: #1d1206; }
-.r8-panel .opts button[aria-pressed="true"] { background: #2b1b0b; color: #f3d998; border-color: #2b1b0b; font-weight: 700; }
 @media print { .r8-btn, .r8-panel, .menu, .menubtn, .a11y-top { display: none !important; } .bar { position: static; } }
 
-/* ================= סבב 11 (20.11.26) =================
-   במתג "גרסאות": i1-i3 אייקוני השערים, d1-d3 אזור התרומה, t1-t3 המלל בכפתורים. */
-.r8-panel h3 { font-family: inherit; font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
-.r8-panel { max-height: calc(100vh - 100px); overflow: auto; }
+/* ================= סבבים 11-12 (20.11.26) =================
+   נועם בחר: אייקון קו דק (i1, כמו קודם), תרומה בשורה בהירה (d2), מלל גדול בכפתורים (t1). */
 
 /* ---------- חצי דקה להיום: הכותרת והמקור ממורכזים לדף ---------- */
 .today .kicker, .today .ref { text-align: center !important; justify-self: center !important; width: 100%; }
@@ -923,79 +891,19 @@ body.a-cursor, body.a-cursor * { cursor: url("data:image/svg+xml,%3Csvg xmlns='h
 @media (max-width: 700px) {
   html.acc #topics .topic { border-top: 0 !important; border-bottom: 0 !important; }
   html.acc #topics .famblock.open .fold > .tgrid { padding-block: 4px; }
-
-  /* אייקונים: 2 מטבע זהב */
-  html.acc.i2 #topics .famtog { grid-template-columns: 54px minmax(0, 1fr) 30px; }
-  html.acc.i2 #topics .famtog .ico { width: 52px; height: 52px; padding: 10px; border-radius: 50%; color: #2a1a0a;
-    background: radial-gradient(circle at 35% 30%, #fff3d0 0%, #ecc97f 38%, #c9973f 72%, #a8772c 100%); box-shadow: 0 0 0 1px rgba(255, 240, 200, .5) inset, 0 0 0 3px #24170a, 0 0 0 4px rgba(233, 207, 148, .55); }
-  html.acc.i2 #topics .famtog .ico svg { stroke-width: 2.3; }
-  /* אייקונים: 3 בתוך קשת, כמו הקשת של תמונת הרב */
-  html.acc.i3 #topics .famtog { grid-template-columns: 46px minmax(0, 1fr) 30px; }
-  html.acc.i3 #topics .famtog .ico { width: 46px; height: 56px; padding: 11px 7px 7px; border: 1.5px solid rgba(226, 190, 115, .75); border-radius: 23px 23px 3px 3px;
-    background: radial-gradient(90% 70% at 50% 15%, rgba(233, 190, 110, .28), transparent 70%); }
-  html.acc.i3 #topics .famtog .ico svg { stroke-width: 1.8; }
 }
 
-/* ---------- תרומה: 3 פריסות נמוכות (כשליש מהגובה הקודם) ---------- */
-html:is(.d1, .d2, .d3) .give { padding-block: 0 48px; }
-html:is(.d1, .d2, .d3) .givebox .sub { display: none; }
-html:is(.d1, .d3) .givebox { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "ico k btn" "ico h btn"; align-items: center; column-gap: 16px; row-gap: 0; text-align: right; padding: 20px 26px; max-width: 820px; }
-html:is(.d1, .d3) .givebox .giveico { grid-area: ico; width: 38px; height: 38px; margin: 0; }
-html:is(.d1, .d3) .givebox .kicker { grid-area: k; font-size: 15px; align-self: end; }
-html:is(.d1, .d3) .givebox h2 { grid-area: h; margin: 0; font-size: clamp(23px, 3vw, 30px); padding: .05em 0; align-self: start; }
-html:is(.d1, .d3) .givebtn { grid-area: btn; margin: 0; padding: 12px 22px; min-height: 50px; font-size: 20px; white-space: nowrap; }
-/* 1: פס כהה */
-html.d1 .givebox::before { inset: 6px; }
-/* 3: מסגרת זהב בהירה, כפתור כהה */
-html.d3 .givebox { color: var(--ink); background: linear-gradient(180deg, #fffdf8, #fbf2df); clip-path: none; border: 2px solid #d4ad62; }
-html.d3 .givebox::before { inset: 5px; border-color: rgba(201, 163, 90, .45); }
-html.d3 .givebox .giveico { color: #b88a3e; }
-html.d3 .givebox .kicker { color: var(--bronze); }
-html.d3 .givebox h2 { background: none; color: var(--bark); -webkit-text-fill-color: currentColor; }
-html.d3 .givebtn { background: #24170a; color: #f3d998; }
-html.d3 .givebtn:hover { background: #3a2610; }
-/* 2: שורה בהירה בין שני קווי זהב, בלי קופסה */
-html.d2 .givebox { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; padding: 20px 0; max-width: 760px; color: var(--ink); background: none; clip-path: none; border-top: 1px solid #d9c18a; border-bottom: 1px solid #d9c18a; }
-html.d2 .givebox::before { display: none; }
-html.d2 .givebox .giveico { width: 30px; height: 30px; margin: 0; color: #b88a3e; }
-html.d2 .givebox .kicker { display: none; }
-html.d2 .givebox h2 { margin: 0; font-size: clamp(24px, 3vw, 30px); background: none; color: var(--bark); -webkit-text-fill-color: currentColor; padding: 0; }
-html.d2 .givebtn { margin: 0; padding: 8px 4px; min-height: 44px; background: none; color: var(--bronze); font-size: 21px; clip-path: none; text-decoration: underline; text-decoration-color: #c9a35a; text-decoration-thickness: 2px; text-underline-offset: 6px; }
-html.d2 .givebtn:hover { background: none; color: var(--bark); }
-@media (max-width: 560px) {
-  html:is(.d1, .d3) .givebox { column-gap: 12px; padding: 16px 16px 16px 14px; }
-  html:is(.d1, .d3) .givebox .giveico { width: 30px; height: 30px; }
-  html:is(.d1, .d3) .givebox .kicker { font-size: 13.5px; }
-  html:is(.d1, .d3) .givebox h2 { font-size: 21px; line-height: 1.1; }
-  html:is(.d1, .d3) .givebtn { padding: 10px 14px; min-height: 46px; font-size: 18px; }
-  html.d2 .givebox { padding: 16px 0; }
-  html.d2 .givebox h2 { font-size: 23px; }
-}
+/* ---------- תרומה: שורה בהירה בין שני קווי זהב, בלי להבה ובלי חץ ---------- */
+.give { padding-block: 0 48px; }
+.givebox { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 16px; padding: 22px 0; max-width: 760px; color: var(--ink); background: none; clip-path: none; border-top: 1px solid #d9c18a; border-bottom: 1px solid #d9c18a; }
+.givebox::before, .givebox .giveico, .givebox .kicker, .givebox .sub, .givebtn .arw { display: none; }
+.givebox h2 { margin: 0; font-size: clamp(28px, 3.4vw, 36px); background: none; color: var(--bark); -webkit-text-fill-color: currentColor; padding: 0; }
+.givebtn { margin: 0; padding: 8px 4px; min-height: 48px; background: none; color: var(--bronze); font-size: clamp(25px, 3vw, 30px); clip-path: none; text-decoration: underline; text-decoration-color: #c9a35a; text-decoration-thickness: 2px; text-underline-offset: 7px; }
+.givebtn:hover { background: none; color: var(--bark); }
+@media (max-width: 560px) { .givebox { padding: 18px 0; } .givebox h2 { font-size: 27px; } .givebtn { font-size: 25px; } }
 
-/* ---------- המלל בכפתורים: גדול יותר, 3 סגנונות ---------- */
-/* 1: גדול ומאוזן */
-html.t1 .search button { font-size: 21px; padding: 0 24px; }
-html.t1 details.biur summary .bbtn { font-size: 21px; padding: 10px 22px 10px 18px; }
-html.t1 .btn:not(.joinin .btn) { font-size: 22px; padding: 14px 34px; }
-html.t1 .givebtn { font-size: 21px; }
-/* 2: אוורירי: אותיות מרווחות וכפתור גבוה */
-html.t2 .search button { font-size: 21px; padding: 0 28px; letter-spacing: .05em; }
-html.t2 details.biur summary .bbtn { font-size: 21px; padding: 13px 26px 13px 20px; letter-spacing: .05em; }
-html.t2 .btn:not(.joinin .btn) { font-size: 22px; padding: 17px 42px; letter-spacing: .05em; }
-html.t2 .givebtn { font-size: 21px; letter-spacing: .05em; padding-block: 14px; }
-/* 3: עם סמל: זכוכית מגדלת בחיפוש, חץ ב"עוד", פלוס בעיגול בביאור */
-html.t3 .search button { font-size: 21px; padding: 0 20px; display: inline-flex; align-items: center; gap: 8px; }
-html.t3 .search button::before { content: ""; width: 19px; height: 19px; background: currentColor; flex: none;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5' fill='none' stroke='%23000' stroke-width='2.6'/%3E%3Cpath d='M15.5 15.5 21 21' stroke='%23000' stroke-width='2.8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5' fill='none' stroke='%23000' stroke-width='2.6'/%3E%3Cpath d='M15.5 15.5 21 21' stroke='%23000' stroke-width='2.8' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat; }
-html.t3 details.biur summary .bbtn { font-size: 21px; padding: 10px 20px 10px 14px; }
-html.t3 details.biur summary .bbtn .pm { display: inline-grid; place-items: center; width: 26px; height: 26px; border: 1.5px solid currentColor; border-radius: 50%; font-size: 20px; }
-html.t3 .btn:not(.joinin .btn) { font-size: 22px; padding: 14px 30px; gap: 12px; }
-html.t3 .btn:not(.joinin .btn)::after { content: ""; width: .55em; height: .55em; background: currentColor; -webkit-mask: var(--arw) center / contain no-repeat; mask: var(--arw) center / contain no-repeat; }
-html.t3 #more::after { transform: rotate(-90deg); }
-html.t3 .givebtn { font-size: 21px; }
-@media (max-width: 560px) {
-  html:is(.t1, .t2, .t3) .search button { font-size: 20px; }
-  html:is(.t1, .t2, .t3) details.biur summary .bbtn { font-size: 20px; }
-  html.t3 .search button { padding: 0 16px; }
-}
+/* ---------- המלל בכפתורים: גדול ומאוזן ---------- */
+.search button { font-size: 21px; padding: 0 24px; }
+details.biur summary .bbtn { font-size: 21px; padding: 10px 22px 10px 18px; }
+.btn:not(.joinin .btn) { font-size: 22px; padding: 14px 34px; }
+@media (max-width: 560px) { .search button, details.biur summary .bbtn { font-size: 20px; } }

@@ -502,24 +502,6 @@ function todayHTML(q, base) {
     bar.addEventListener('focusin', function () { bar.classList.remove('away'); });
   }
 
-  // מתג זמני: m תפריט, i אייקונים, d תרומה, t כפתורים (גם בקישור ?m=2&i=3)
-  var MK = 'r10', KEYS = ['m', 'i', 'd', 't'], st = {};
-  try { st = JSON.parse(localStorage.getItem(MK) || '{}') || {}; } catch (e) { st = {}; }
-  try { var u = new URLSearchParams(location.search), ch = 0; KEYS.forEach(function (k) { var v = +u.get(k); if (v >= 1 && v <= 3) { st[k] = v; ch = 1; } }); if (ch) localStorage.setItem(MK, JSON.stringify(st)); } catch (e) {}
-  var val = function (k) { return +st[k] || 1; };
-  function applyV() { KEYS.forEach(function (k) { [1, 2, 3].forEach(function (n) { H.classList.toggle(k + n, val(k) === n); }); }); }
-  applyV();
-  var rb = document.getElementById('r8-btn'), rp = document.getElementById('r8-panel');
-  if (rb && rp) {
-    var sync = function () { [].forEach.call(rp.querySelectorAll('[data-r8]'), function (b) { var p = b.getAttribute('data-r8').split(':'); b.setAttribute('aria-pressed', val(p[0]) === +p[1] ? 'true' : 'false'); }); };
-    sync();
-    rb.addEventListener('click', function () { rp.hidden = !rp.hidden; rb.setAttribute('aria-expanded', String(!rp.hidden)); });
-    rp.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-r8]'); if (!b) return;
-      var p = b.getAttribute('data-r8').split(':'); st[p[0]] = +p[1];
-      try { localStorage.setItem(MK, JSON.stringify(st)); } catch (err) {}
-      applyV(); sync();
-      if (p[0] === 'm') { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); menuOpen(true); }
-    });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rp.hidden) { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); rb.focus(); } });
-  }})();
+  // סבב 12: הבחירות של נועם קבועות בבנייה (m1 i1 d2 t1). אין יותר מתג.
+  try { localStorage.removeItem('r10'); } catch (e) {}
+})();
