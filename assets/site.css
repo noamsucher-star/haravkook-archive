@@ -648,7 +648,7 @@ body.a-still .home::before { transform: none !important; }
   html.acc #topics .topic .head { align-items: center; }
   html.acc #topics .topic .name { font-size: 23px; }
   html.acc #topics .topic .count { font-size: 16px; letter-spacing: .015em; }
-  html.acc #topics .topic .count::after { content: "←"; display: inline-block; margin-right: 9px; color: #b88a3e; font-weight: 400; }
+  html.acc #topics .topic .count::after { content: ""; display: inline-block; width: .6em; height: .6em; margin-right: 9px; background: #b88a3e; -webkit-mask: var(--arw) center / contain no-repeat; mask: var(--arw) center / contain no-repeat; }
   html.acc #topics .topic .promise { font-size: 16.5px; line-height: 1.35; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: none; }
   html.acc #topics .sub { font-size: 19px; }
 }
@@ -664,22 +664,10 @@ body.a-still #topics .famblock .fold, body.a-still #topics .topic { transition: 
 html.c1 .fs1 .fam, html.c1 #topics .famtog { background-color: #24170a; background-image: none; }
 html.c1 .btn:not(.joinin .btn), html.c1 details.biur summary .bbtn, html.c1 .search button, html.c1 .bookrow.now > span:first-child::after { background: #d9b467; }
 html.c1 .btn:not(.joinin .btn):hover, html.c1 details.biur summary:hover .bbtn, html.c1 .search button:hover { background: #e3c27c; }
-/* 2: כהה אחיד עם מלל זהב */
-html.c2 .fs1 .fam, html.c2 #topics .famtog { background-color: #2b1b0b; background-image: none; }
-html.c2 .btn:not(.joinin .btn), html.c2 details.biur summary .bbtn, html.c2 .search button, html.c2 .bookrow.now > span:first-child::after { background: #2b1b0b; color: #f3d998; }
-html.c2 details.biur summary .bbtn .pm::before, html.c2 details.biur summary .bbtn .pm::after { background: #f3d998; }
-html.c2 .btn:not(.joinin .btn):hover, html.c2 details.biur summary:hover .bbtn, html.c2 .search button:hover { background: #432c13; }
-/* 3: גרדיאנט זהב חדש: ברק אלכסוני רך כמו מתכת מוברשת, וכהה עם אור בפינה */
-html.c3 .fs1 .fam, html.c3 #topics .famtog { background: radial-gradient(120% 190% at 100% 0, #57391a 0%, #2e1d0c 48%, #1c1208 100%); }
-html.c3 .btn:not(.joinin .btn), html.c3 details.biur summary .bbtn, html.c3 .search button, html.c3 .bookrow.now > span:first-child::after { background: linear-gradient(125deg, #cfa252 0%, #e2c07a 38%, #f1dca6 52%, #dfbb72 66%, #c99b4b 100%); }
-html.c3 .btn:not(.joinin .btn):hover, html.c3 details.biur summary:hover .bbtn, html.c3 .search button:hover { background: linear-gradient(125deg, #d6ab5d 0%, #e9ca88 38%, #f6e5b6 52%, #e6c680 66%, #d1a557 100%); }
-html.c3 #topics .famtog::before { display: none; }
 
 /* ---------- ריווח המלל הקטן ----------
    רק מלל קטן בפונט פלטפורמה (מונים, מקורות, שמות, תחתית). הציטוטים והכותרות לא משתנים. */
-html.sp1 { --sp: .012em; --wsp: 0em; }
 html.sp2 { --sp: .024em; --wsp: .02em; }
-html.sp3 { --sp: .036em; --wsp: .05em; }
 html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .cardbar, .wh span, .who, .by, .joinin .alt, .kicker, .qnav .k, .back, .today .ref, .topic .promise, .block .sub, .fam .c, .filters, #count, .side .count, .weekly, .eyebrow, .chumash, .foot) { letter-spacing: var(--sp); word-spacing: var(--wsp); }
 /* גודל מינימלי 15 בטלפון */
 @media (max-width: 560px) {
@@ -696,6 +684,7 @@ html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .card
 .r8-panel h3 { font-family: inherit; font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
 .r8-panel .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .r8-panel .opts.two { grid-template-columns: repeat(2, 1fr); }
+.r8-panel .opts.three { grid-template-columns: repeat(3, 1fr); }
 .r8-panel .opts button { font: inherit; font-size: 14px; padding: 9px 4px; border: 1px solid #d9c9a3; border-radius: 8px; background: #faf6ee; color: #1d1206; }
 .r8-panel .opts button[aria-pressed="true"] { background: #2b1b0b; color: #f3d998; border-color: #2b1b0b; font-weight: 700; }
 @media print { .r8-btn, .r8-panel { display: none !important; } }
@@ -704,8 +693,135 @@ html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .card
 @media (max-width: 560px) { .foot { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } .foot .give { margin-block: 4px; } }
 
 /* משפט הפתיח: ריווח בין האותיות (נועם ביקש, 20.11) */
-html.sp1 .hero .lede { letter-spacing: .02em; word-spacing: .03em; }
 html.sp2 .hero .lede { letter-spacing: .035em; word-spacing: .05em; }
-html.sp3 .hero .lede { letter-spacing: .05em; word-spacing: .08em; }
 
 html:is(.sp1, .sp2, .sp3) .hero .lede { text-wrap: balance; }
+
+/* ================= סבב 9 (20.11.26) =================
+   צבע 1 וריווח 2 קובעו (סבב 8). במתג "גרסאות" נשארו:
+   g1-g3 שערי הנושאים בטלפון, b1-b3 שני ביאורים ויותר, s1-s3 המקור מתחת לציטוט.
+   אחרי הבחירה של נועם: לקבע ולמחוק את השאר ואת המתג. */
+
+/* ---------- החץ המועדף של נועם (שברון עבה, קצוות מעוגלים). מצביע קדימה = שמאלה ---------- */
+:root { --arw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M362 72 150 256 362 440' fill='none' stroke='%23000' stroke-width='74' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.arw { display: inline-block; width: .62em; height: .62em; background: currentColor; -webkit-mask: var(--arw) center / contain no-repeat; mask: var(--arw) center / contain no-repeat; vertical-align: -.02em; }
+.arw.r { transform: scaleX(-1); }
+.joinin .btn .arr { display: inline-flex; align-items: center; }
+.joinin .btn .arr .arw { width: .7em; height: .7em; }
+
+/* ---------- פתיח: משפט צמוד לחיפוש, שורות קרובות ---------- */
+.hero .lede { line-height: 1.25; }
+.hero .lede .lb { display: none; }
+@media (max-width: 560px) {
+  /* שתי שורות ברוחב של תיבת החיפוש שמתחת */
+  .s1 .hero .under { gap: 12px; }
+  .hero .lede .lb { display: inline; }
+  html.sp2 .s1 .hero .lede { max-width: none; width: 100%; font-size: min(28px, calc((100vw - 40px) / 11.9)); letter-spacing: .04em; line-height: 1.2; text-align: justify; text-align-last: center; text-wrap: wrap; }
+}
+
+/* ---------- חצי דקה להיום: גרשיים סביב הציטוט ---------- */
+html .today .q a::before, html .today .q a::after { content: '"'; color: #b88a3e; font-size: 1.25em; line-height: 0; }
+html .today .q a::before { margin-left: .05em; }
+html .today .q a::after { margin-right: .05em; }
+
+/* ---------- המקור מתחת לציטוט: 3 גרסאות ---------- */
+html.s1 :is(.today, .card) .ref::before { content: "("; }
+html.s1 :is(.today, .card) .ref::after { content: ")"; }
+html.s2 :is(.today, .card) .ref::before { content: "מקור: "; font-weight: 700; color: var(--bronze); }
+html.s3 :is(.today, .card) .ref::before { content: ""; display: inline-block; width: 26px; height: 2px; background: #c9a35a; vertical-align: middle; margin-left: 10px; position: relative; top: -.08em; }
+
+/* ---------- ביאורים: שם המבאר בראש כל ביאור ---------- */
+.biurbox .bh { display: none; }
+html:is(.b1, .b2, .b3) .biurbox .bh { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; margin-bottom: 10px; line-height: 1.25; }
+html:is(.b1, .b2, .b3) .biurbox .by { display: none; }
+.biurbox .bh .bk { font-size: 15px; font-weight: 700; letter-spacing: .04em; color: var(--bronze); }
+.biurbox .bh b { font-size: 22px; font-weight: 700; color: var(--bark); }
+.biurbox .bh .br { flex-basis: 100%; font-size: 16px; font-weight: 300; color: #58462d; }
+.biurbox .bh .bn { display: none; }
+@media (max-width: 560px) { .biurbox .bh b { font-size: 21px; } .biurbox .bh .br { font-size: 15.5px; } }
+
+/* 1: כותרת + קו זהב עם יהלום בין ביאור לביאור */
+html.b1 .biurbox .bh { padding-bottom: 9px; border-bottom: 1px solid #e3d3ad; }
+html.b1 .biurbox > .bi + .bi { border-top: 0; padding-top: 30px; position: relative; }
+html.b1 .biurbox > .bi + .bi::before { content: ""; position: absolute; top: 4px; right: 0; left: 0; height: 2px; background: linear-gradient(90deg, transparent, #c9a35a 14%, #c9a35a 86%, transparent); }
+html.b1 .biurbox > .bi + .bi::after { content: ""; position: absolute; top: 0; left: 50%; width: 10px; height: 10px; margin-left: -5px; background: #d9b467; transform: rotate(45deg); box-shadow: 0 0 0 4px var(--ivory); }
+
+/* 2: כל ביאור כרטיס משלו, השם על פס כהה */
+html.b2 .biurbox.multi { background: none; padding: 0; gap: 14px; -webkit-mask: none; mask: none; }
+html.b2 .biurbox > .bi { background: var(--ivory); padding: 0 18px 16px; border: 1px solid #e3d3ad; }
+html.b2 .biurbox:not(.multi) > .bi { background: none; border: 0; padding: 0; }
+html.b2 .biurbox > .bi + .bi { border-top: 1px solid #e3d3ad; padding-top: 0; }
+html.b2 .biurbox.multi .bh { margin: 0 -18px 14px; padding: 11px 18px 10px; background: #24170a; }
+html.b2 .biurbox.multi .bh b { color: #f3d998; }
+html.b2 .biurbox.multi .bh .bk { color: #d9b467; }
+html.b2 .biurbox.multi .bh .br { color: #dccbaa; }
+html.b2 .biurbox.multi .bh .bn { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #d9b467; color: #24170a; font-size: 15px; font-weight: 700; }
+
+/* 3: פס זהב בצד ומספר בעיגול */
+html.b3 .biurbox > .bi { border-right: 3px solid #d9b467; padding-right: 15px; }
+html.b3 .biurbox > .bi + .bi { border-top: 0; padding-top: 0; margin-top: 14px; }
+html.b3 .biurbox.multi .bh .bn { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #c9a35a; color: var(--bronze); font-size: 16px; font-weight: 700; }
+
+/* ---------- שערי הנושאים בטלפון ---------- */
+.famtog .lt { display: none; }
+@media (max-width: 700px) {
+  /* 2: קשתות, שתיים בשורה, כמו הקשת של התמונה בפתיח */
+  html.acc.g2 #topics .in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; }
+  html.acc.g2 #topics .in > h2, html.acc.g2 #topics .in > .sub { grid-column: 1 / -1; }
+  html.acc.g2 #topics .famblock, html.acc.g2 #topics .famblock > .fam { display: contents; }
+  html.acc.g2 #topics .famblock .fold { grid-column: 1 / -1; }
+  html.acc.g2 #topics .famblock:nth-child(3) .famtog { order: 1; } html.acc.g2 #topics .famblock:nth-child(4) .famtog { order: 2; }
+  html.acc.g2 #topics .famblock:nth-child(3) .fold { order: 3; } html.acc.g2 #topics .famblock:nth-child(4) .fold { order: 4; }
+  html.acc.g2 #topics .famblock:nth-child(5) .famtog { order: 5; } html.acc.g2 #topics .famblock:nth-child(6) .famtog { order: 6; }
+  html.acc.g2 #topics .famblock:nth-child(5) .fold { order: 7; } html.acc.g2 #topics .famblock:nth-child(6) .fold { order: 8; }
+  html.acc.g2 #topics .famtog { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; gap: 4px; margin-top: 12px; min-height: 196px; padding: 30px 10px 16px;
+    border-radius: 999px 999px 6px 6px; background: radial-gradient(120% 80% at 50% 0, #4a3016 0%, #24170a 62%); }
+  html.acc.g2 #topics .famtog::before { inset: 6px; border: 1px solid rgba(233, 207, 148, .38); border-radius: 999px 999px 3px 3px; background: none; opacity: 1; transition: border-color .4s; }
+  html.acc.g2 #topics .famtog[aria-expanded="true"]::before { border-color: rgba(243, 217, 152, .95); }
+  html.acc.g2 #topics .famtog .ico { width: 44px; height: 44px; margin-bottom: 4px; }
+  html.acc.g2 #topics .famtog .t { font-size: 23px; line-height: 1.1; }
+  html.acc.g2 #topics .famtog .c { display: block; font-size: 15px; color: #dccbaa; }
+  html.acc.g2 #topics .famtog .teaser { display: none; }
+  html.acc.g2 #topics .famtog .chev { width: 26px; height: 26px; margin-top: auto; }
+  html.acc.g2 #topics .famblock.open .fold { margin-top: 12px; }
+  html.acc.g2 #topics .famblock .fold > .tgrid { border-top: 1px solid var(--line); border-radius: 6px; }
+  html.acc.g2 #topics .famblock:not(.open) .fold > .tgrid { border-color: transparent; }
+
+  /* 3: מדליון זהב, אות גדולה ברקע, פינות חתוכות כמו בשאר האתר */
+  html.acc.g3 #topics .famtog { grid-template-columns: 58px minmax(0, 1fr) 30px; padding: 16px 16px 15px 14px; border-radius: 0;
+    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+    background: repeating-linear-gradient(115deg, rgba(233, 207, 148, .035) 0 2px, transparent 2px 9px), linear-gradient(160deg, #2e1d0c, #1c1208); }
+  html.acc.g3 #topics .famtog::before { background: radial-gradient(90% 140% at 100% 50%, rgba(233, 190, 110, .22), transparent 60%); }
+  html.acc.g3 #topics .famtog .ico { width: 58px; height: 58px; padding: 11px; border-radius: 50%; color: #2a1a0a;
+    background: radial-gradient(circle at 35% 30%, #fff3d0 0%, #ecc97f 38%, #c9973f 72%, #a8772c 100%); box-shadow: 0 0 0 1px rgba(255, 240, 200, .5) inset, 0 0 0 3px #2a1a0a, 0 0 0 4px rgba(233, 207, 148, .55); }
+  html.acc.g3 #topics .famtog .ico svg { stroke-width: 2.2; }
+  html.acc.g3 #topics .famtog .t { background: linear-gradient(180deg, #fff1cc, #e2b867 60%, #c9973f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  html.acc.g3 #topics .famtog .lt { display: block; position: absolute; left: 50px; top: 50%; transform: translateY(-52%); font-size: 92px; font-weight: 700; line-height: 1; color: #e9cf94; opacity: .08; pointer-events: none; }
+  html.acc.g3 #topics .famtog[aria-expanded="true"] .lt { opacity: .16; }
+}
+
+/* ---------- תרומה: מקום משלו בין ההצטרפות לתחתית ---------- */
+.give { background: var(--ivory); padding-block: 8px 64px; }
+.layout + .give, main + .give { padding-top: 0; }
+.givebox { position: relative; max-width: 760px; margin-inline: auto; text-align: center; color: var(--cream); padding: 40px 26px 36px;
+  background: radial-gradient(120% 90% at 50% 0, #4b3015 0%, #2a1a0a 50%, #170f06 100%);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px); }
+.givebox::before { content: ""; position: absolute; inset: 9px; border: 1px solid rgba(233, 207, 148, .4); pointer-events: none; }
+.join.block + .give, main:has(> .join.block:last-child) + .give { margin-top: -28px; }
+.givebox .sub { text-wrap: balance; }
+.givebox .giveico { display: block; width: 40px; height: 40px; margin: 0 auto 8px; color: #e2be73; }
+.givebox .giveico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.givebox .kicker { font-size: 17px; font-weight: 700; color: #d9b467; letter-spacing: .06em; }
+.givebox h2 { margin-top: 4px; font-size: clamp(30px, 4vw, 42px); font-weight: 700; line-height: 1.1; background: linear-gradient(180deg, #fff1cc, #e2b867 60%, #c9973f); -webkit-background-clip: text; background-clip: text; color: transparent; padding: .1em 0; }
+.givebox .sub { margin: 8px auto 0; max-width: 34ch; font-size: 19px; font-weight: 300; line-height: 1.35; color: #e6d7b8; letter-spacing: .02em; }
+.givebtn { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; padding: 14px 34px; min-height: 52px; font-size: 20px; font-weight: 700; text-decoration: none; color: #24170a; background: #d9b467; transition: background-color .25s;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); }
+.givebtn:hover { background: #e3c27c; }
+.givebtn .arw { transition: transform .25s var(--ease); }
+.givebtn:hover .arw { transform: translateX(-4px); }
+@media (max-width: 560px) { .give { padding-bottom: 44px; } .givebox { padding: 34px 20px 30px; } .givebox .sub { font-size: 17.5px; } }
+
+/* ---------- תחתית: שם המיזם בשורה ראשונה, התיאור מתחת ---------- */
+.foot .brand strong { display: block; font-size: 1.12em; }
+.foot .brand span { display: block; }
+@media print { .give { display: none !important; } }

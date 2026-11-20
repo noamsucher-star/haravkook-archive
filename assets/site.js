@@ -8,8 +8,10 @@ function biurHTML(q, open, label) {
   // שם הכותב ותוארו, גם כשהביאור סגור
   var who = q.bi.filter(function (b) { return b.a; }).map(function (b) { return '<span class="wh"><b>' + esc(b.a) + '</b>' + (b.ro ? '<span>' + esc(b.ro) + '</span>' : '') + '</span>'; }).join('');
   return '<details class="biur"' + (open ? ' open' : '') + '><summary><span class="bbtn plaque">' + (label || 'ביאור') + ' <span class="pm" aria-hidden="true"></span></span>' + (who ? ' <span class="who">' + who + '</span>' : '') + '</summary>'
-    + '<div class="biurbox plaque">' + q.bi.map(function (b) {
-      return '<div><p class="biurtext">' + rich(b.x) + '</p>' + (b.a ? '<p class="by"><b>' + esc(b.a) + '</b>' + (b.ro ? ' <span>' + esc(b.ro) + '</span>' : '') + '</p>' : '') + '</div>';
+    + '<div class="biurbox plaque' + (q.bi.length > 1 ? ' multi' : '') + '">' + q.bi.map(function (b, k) {
+      // סבב 9: שם המבאר בראש הביאור, כדי שיהיה ברור מי כתב לפני שקוראים
+      var head = b.a ? '<p class="bh">' + (q.bi.length > 1 ? '<span class="bn">' + (k + 1) + '</span>' : '') + '<span class="bk">ביאור</span><b>' + esc(b.a) + '</b>' + (b.ro ? '<span class="br">' + esc(b.ro) + '</span>' : '') + '</p>' : '';
+      return '<div class="bi">' + head + '<p class="biurtext">' + rich(b.x) + '</p>' + (b.a ? '<p class="by"><b>' + esc(b.a) + '</b>' + (b.ro ? ' <span>' + esc(b.ro) + '</span>' : '') + '</p>' : '') + '</div>';
     }).join('') + '</div></details>';
 }
 function cardHTML(q, o) {
@@ -277,7 +279,7 @@ function todayHTML(q, base) {
         var row = $('.bookrow[data-p="' + hit[0] + '"]'), label = hit[1];
         if (row) { row.classList.add('now'); row.setAttribute('aria-current', 'true'); }
         var wEl = $('#weekly');
-        if (wEl) { wEl.innerHTML = 'השבוע: <a href="' + BASE + 'parasha/' + hit[0] + '.html">פרשת ' + esc(label) + ' <span aria-hidden="true">←</span></a>'; wEl.hidden = false; }
+        if (wEl) { wEl.innerHTML = 'השבוע: <a href="' + BASE + 'parasha/' + hit[0] + '.html">פרשת ' + esc(label) + ' <i class="arw" aria-hidden="true"></i></a>'; wEl.hidden = false; }
       }
     } catch (e) {}
   }
@@ -405,12 +407,14 @@ function todayHTML(q, base) {
 // ברירת המחדל נקבעת בבנייה (class על <html>). הבחירה של הגולש נשמרת בדפדפן.
 (function () {
   var H = document.documentElement;
-  var DEF = { c: 1, sp: 2, acc: 1 }, st = {};
-  try { st = JSON.parse(localStorage.getItem('r8') || '{}') || {}; } catch (e) { st = {}; }
+  // סבב 9: c1 + sp2 + acc קבועים. במתג: g (שערים), b (ביאורים), s (מקור)
+  var DEF = { g: 1, b: 1, s: 1 }, st = {};
+  try { st = JSON.parse(localStorage.getItem('r9') || '{}') || {}; } catch (e) { st = {}; }
+  // קישור ישיר לגרסה: ?g=2&b=3&s=1
+  try { var u = new URLSearchParams(location.search), ch = 0; ['g', 'b', 's'].forEach(function (k) { var v = +u.get(k); if (v >= 1 && v <= 3) { st[k] = v; ch = 1; } }); if (ch) localStorage.setItem('r9', JSON.stringify(st)); } catch (e) {}
   function val(k) { return st[k] == null ? DEF[k] : st[k]; }
   function apply() {
-    [0, 1, 2, 3].forEach(function (n) { H.classList.toggle('c' + n, val('c') === n); H.classList.toggle('sp' + n, val('sp') === n); });
-    H.classList.toggle('acc', val('acc') === 1);
+    ['g', 'b', 's'].forEach(function (k) { [1, 2, 3].forEach(function (n) { H.classList.toggle(k + n, val(k) === n); }); });
   }
   apply();
 
@@ -459,9 +463,8 @@ function todayHTML(q, base) {
   panel.addEventListener('click', function (e) {
     var b = e.target.closest('[data-r8]'); if (!b) return;
     var p = b.getAttribute('data-r8').split(':'); st[p[0]] = +p[1];
-    try { localStorage.setItem('r8', JSON.stringify(st)); } catch (err) {}
+    try { localStorage.setItem('r9', JSON.stringify(st)); } catch (err) {}
     apply(); syncPanel();
-    if (p[0] === 'acc') { blocks.forEach(function (x) { setOpen(x, false); }); syncAcc(); }
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.focus(); } });
 })();
