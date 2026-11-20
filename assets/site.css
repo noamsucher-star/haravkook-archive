@@ -702,3 +702,8 @@ html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .card
 
 /* הכפתורים הקבועים בפינות לא מסתירים את סוף התחתית בטלפון */
 @media (max-width: 560px) { .foot { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } .foot .give { margin-block: 4px; } }
+
+/* משפט הפתיח: ריווח בין האותיות (נועם ביקש, 20.11) */
+html.sp1 .hero .lede { letter-spacing: .02em; word-spacing: .03em; }
+html.sp2 .hero .lede { letter-spacing: .035em; word-spacing: .05em; }
+html.sp3 .hero .lede { letter-spacing: .05em; word-spacing: .08em; }
