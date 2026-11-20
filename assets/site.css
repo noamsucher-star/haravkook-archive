@@ -676,18 +676,7 @@ html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .card
   html:is(.sp1, .sp2, .sp3) details.biur summary .wh span { font-size: 16px; }
 }
 
-/* ---------- מתג הגרסאות (זמני, רק לבחירה של נועם) ---------- */
-.r8-btn { position: fixed; z-index: 50; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font-family: "Heebo", Arial, sans-serif; font-size: 15px; font-weight: 700; padding: 11px 18px; border: 1px solid #c9a35a; border-radius: 999px; background: #1d1206; color: #f3d998; box-shadow: 0 6px 20px rgba(0, 0, 0, .28); }
-.r8-panel { position: fixed; z-index: 51; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(68px + env(safe-area-inset-bottom, 0px)); width: min(330px, calc(100vw - 28px)); background: #fff; color: #1d1206; border: 1px solid #d9c9a3; border-radius: 12px; padding: 14px 16px 16px; box-shadow: 0 14px 40px rgba(0, 0, 0, .3); font-family: "Heebo", Arial, sans-serif; font-size: 15px; }
-.r8-panel h2 { font-family: inherit; font-size: 17px; font-weight: 700; margin: 0 0 4px; }
-.r8-panel p { font-size: 13.5px; color: #6a5a40; margin: 0 0 10px; }
-.r8-panel h3 { font-family: inherit; font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
-.r8-panel .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.r8-panel .opts.two { grid-template-columns: repeat(2, 1fr); }
-.r8-panel .opts.three { grid-template-columns: repeat(3, 1fr); }
-.r8-panel .opts button { font: inherit; font-size: 14px; padding: 9px 4px; border: 1px solid #d9c9a3; border-radius: 8px; background: #faf6ee; color: #1d1206; }
-.r8-panel .opts button[aria-pressed="true"] { background: #2b1b0b; color: #f3d998; border-color: #2b1b0b; font-weight: 700; }
-@media print { .r8-btn, .r8-panel { display: none !important; } }
+
 
 /* הכפתורים הקבועים בפינות לא מסתירים את סוף התחתית בטלפון */
 @media (max-width: 560px) { .foot { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } .foot .give { margin-block: 4px; } }
@@ -698,9 +687,7 @@ html.sp2 .hero .lede { letter-spacing: .035em; word-spacing: .05em; }
 html:is(.sp1, .sp2, .sp3) .hero .lede { text-wrap: balance; }
 
 /* ================= סבב 9 (20.11.26) =================
-   צבע 1 וריווח 2 קובעו (סבב 8). במתג "גרסאות" נשארו:
-   g1-g3 שערי הנושאים בטלפון, b1-b3 שני ביאורים ויותר, s1-s3 המקור מתחת לציטוט.
-   אחרי הבחירה של נועם: לקבע ולמחוק את השאר ואת המתג. */
+   הבחירות של נועם קבועות: לוחית (g1), ביאור ככרטיס (b2), "מקור:" (s2). המתג נמחק. */
 
 /* ---------- החץ המועדף של נועם (שברון עבה, קצוות מעוגלים). מצביע קדימה = שמאלה ---------- */
 :root { --arw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M362 72 150 256 362 440' fill='none' stroke='%23000' stroke-width='74' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
@@ -724,81 +711,33 @@ html .today .q a::before, html .today .q a::after { content: '"'; color: #b88a3e
 html .today .q a::before { margin-left: .05em; }
 html .today .q a::after { margin-right: .05em; }
 
-/* ---------- המקור מתחת לציטוט: 3 גרסאות ---------- */
-html.s1 :is(.today, .card) .ref::before { content: "("; }
-html.s1 :is(.today, .card) .ref::after { content: ")"; }
-html.s2 :is(.today, .card) .ref::before { content: "מקור: "; font-weight: 700; color: var(--bronze); }
-html.s3 :is(.today, .card) .ref::before { content: ""; display: inline-block; width: 26px; height: 2px; background: #c9a35a; vertical-align: middle; margin-left: 10px; position: relative; top: -.08em; }
+/* ---------- המקור מתחת לציטוט: "מקור:" (נועם בחר גרסה 2) ---------- */
+:is(.today, .card) .ref::before { content: "מקור: "; font-weight: 700; color: var(--bronze); }
 
-/* ---------- ביאורים: שם המבאר בראש כל ביאור ---------- */
-.biurbox .bh { display: none; }
-html:is(.b1, .b2, .b3) .biurbox .bh { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; margin-bottom: 10px; line-height: 1.25; }
-html:is(.b1, .b2, .b3) .biurbox .by { display: none; }
-.biurbox .bh .bk { font-size: 15px; font-weight: 700; letter-spacing: .04em; color: var(--bronze); }
-.biurbox .bh b { font-size: 22px; font-weight: 700; color: var(--bark); }
-.biurbox .bh .br { flex-basis: 100%; font-size: 16px; font-weight: 300; color: #58462d; }
+/* ---------- ביאורים: כל ביאור כרטיס משלו (נועם בחר גרסה 2) ----------
+   שורת המבאר: [מספר בעיגול] ביאור: שם המבאר. הכול באותו גובה. התפקיד בשורה מתחת. */
+.biurbox .by { display: none; }
+.biurbox .bh { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 9px; margin-bottom: 12px; font-size: 22px; line-height: 1.15; }
+.biurbox .bh .bk { font-size: 1em; font-weight: 400; color: var(--bronze); }
+.biurbox .bh .bk::after { content: ":"; }
+.biurbox .bh b { font-size: 1em; font-weight: 700; color: var(--bark); }
+.biurbox .bh .br { flex-basis: 100%; font-size: 16px; font-weight: 300; line-height: 1.3; color: #58462d; }
 .biurbox .bh .bn { display: none; }
-@media (max-width: 560px) { .biurbox .bh b { font-size: 21px; } .biurbox .bh .br { font-size: 15.5px; } }
+@media (max-width: 560px) { .biurbox .bh { font-size: 21px; } .biurbox .bh .br { font-size: 15.5px; } }
 
-/* 1: כותרת + קו זהב עם יהלום בין ביאור לביאור */
-html.b1 .biurbox .bh { padding-bottom: 9px; border-bottom: 1px solid #e3d3ad; }
-html.b1 .biurbox > .bi + .bi { border-top: 0; padding-top: 30px; position: relative; }
-html.b1 .biurbox > .bi + .bi::before { content: ""; position: absolute; top: 4px; right: 0; left: 0; height: 2px; background: linear-gradient(90deg, transparent, #c9a35a 14%, #c9a35a 86%, transparent); }
-html.b1 .biurbox > .bi + .bi::after { content: ""; position: absolute; top: 0; left: 50%; width: 10px; height: 10px; margin-left: -5px; background: #d9b467; transform: rotate(45deg); box-shadow: 0 0 0 4px var(--ivory); }
+.biurbox.multi { background: none; padding: 0; gap: 14px; -webkit-mask: none; mask: none; }
+.biurbox.multi > .bi { background: var(--ivory); padding: 0 18px 16px; border: 1px solid #e3d3ad; }
+.biurbox > .bi + .bi { border-top: 1px solid #e3d3ad; padding-top: 0; }
+.biurbox.multi .bh { margin: 0 -18px 14px; padding: 12px 18px 11px; background: #24170a; }
+.biurbox.multi .bh b { color: #f3d998; }
+.biurbox.multi .bh .bk { color: #d9b467; }
+.biurbox.multi .bh .br { color: #dccbaa; }
+/* העיגול בגובה האותיות, המספר גדול בתוכו */
+.biurbox.multi .bh .bn { display: inline-grid; place-items: center; flex: none; width: 23px; height: 23px; border-radius: 50%; background: #d9b467; color: #24170a; font-size: 17.5px; font-weight: 700; line-height: 1; padding-top: 1px; }
+@media (max-width: 560px) { .biurbox.multi .bh .bn { width: 22px; height: 22px; font-size: 17px; } }
 
-/* 2: כל ביאור כרטיס משלו, השם על פס כהה */
-html.b2 .biurbox.multi { background: none; padding: 0; gap: 14px; -webkit-mask: none; mask: none; }
-html.b2 .biurbox > .bi { background: var(--ivory); padding: 0 18px 16px; border: 1px solid #e3d3ad; }
-html.b2 .biurbox:not(.multi) > .bi { background: none; border: 0; padding: 0; }
-html.b2 .biurbox > .bi + .bi { border-top: 1px solid #e3d3ad; padding-top: 0; }
-html.b2 .biurbox.multi .bh { margin: 0 -18px 14px; padding: 11px 18px 10px; background: #24170a; }
-html.b2 .biurbox.multi .bh b { color: #f3d998; }
-html.b2 .biurbox.multi .bh .bk { color: #d9b467; }
-html.b2 .biurbox.multi .bh .br { color: #dccbaa; }
-html.b2 .biurbox.multi .bh .bn { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #d9b467; color: #24170a; font-size: 15px; font-weight: 700; }
-
-/* 3: פס זהב בצד ומספר בעיגול */
-html.b3 .biurbox > .bi { border-right: 3px solid #d9b467; padding-right: 15px; }
-html.b3 .biurbox > .bi + .bi { border-top: 0; padding-top: 0; margin-top: 14px; }
-html.b3 .biurbox.multi .bh .bn { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #c9a35a; color: var(--bronze); font-size: 16px; font-weight: 700; }
-
-/* ---------- שערי הנושאים בטלפון ---------- */
+/* ---------- שערי הנושאים בטלפון: לוחית (נועם בחר גרסה 1, כבר בסבב 8) ---------- */
 .famtog .lt { display: none; }
-@media (max-width: 700px) {
-  /* 2: קשתות, שתיים בשורה, כמו הקשת של התמונה בפתיח */
-  html.acc.g2 #topics .in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 12px; }
-  html.acc.g2 #topics .in > h2, html.acc.g2 #topics .in > .sub { grid-column: 1 / -1; }
-  html.acc.g2 #topics .famblock, html.acc.g2 #topics .famblock > .fam { display: contents; }
-  html.acc.g2 #topics .famblock .fold { grid-column: 1 / -1; }
-  html.acc.g2 #topics .famblock:nth-child(3) .famtog { order: 1; } html.acc.g2 #topics .famblock:nth-child(4) .famtog { order: 2; }
-  html.acc.g2 #topics .famblock:nth-child(3) .fold { order: 3; } html.acc.g2 #topics .famblock:nth-child(4) .fold { order: 4; }
-  html.acc.g2 #topics .famblock:nth-child(5) .famtog { order: 5; } html.acc.g2 #topics .famblock:nth-child(6) .famtog { order: 6; }
-  html.acc.g2 #topics .famblock:nth-child(5) .fold { order: 7; } html.acc.g2 #topics .famblock:nth-child(6) .fold { order: 8; }
-  html.acc.g2 #topics .famtog { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; gap: 4px; margin-top: 12px; min-height: 196px; padding: 30px 10px 16px;
-    border-radius: 999px 999px 6px 6px; background: radial-gradient(120% 80% at 50% 0, #4a3016 0%, #24170a 62%); }
-  html.acc.g2 #topics .famtog::before { inset: 6px; border: 1px solid rgba(233, 207, 148, .38); border-radius: 999px 999px 3px 3px; background: none; opacity: 1; transition: border-color .4s; }
-  html.acc.g2 #topics .famtog[aria-expanded="true"]::before { border-color: rgba(243, 217, 152, .95); }
-  html.acc.g2 #topics .famtog .ico { width: 44px; height: 44px; margin-bottom: 4px; }
-  html.acc.g2 #topics .famtog .t { font-size: 23px; line-height: 1.1; }
-  html.acc.g2 #topics .famtog .c { display: block; font-size: 15px; color: #dccbaa; }
-  html.acc.g2 #topics .famtog .teaser { display: none; }
-  html.acc.g2 #topics .famtog .chev { width: 26px; height: 26px; margin-top: auto; }
-  html.acc.g2 #topics .famblock.open .fold { margin-top: 12px; }
-  html.acc.g2 #topics .famblock .fold > .tgrid { border-top: 1px solid var(--line); border-radius: 6px; }
-  html.acc.g2 #topics .famblock:not(.open) .fold > .tgrid { border-color: transparent; }
-
-  /* 3: מדליון זהב, אות גדולה ברקע, פינות חתוכות כמו בשאר האתר */
-  html.acc.g3 #topics .famtog { grid-template-columns: 58px minmax(0, 1fr) 30px; padding: 16px 16px 15px 14px; border-radius: 0;
-    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
-    background: repeating-linear-gradient(115deg, rgba(233, 207, 148, .035) 0 2px, transparent 2px 9px), linear-gradient(160deg, #2e1d0c, #1c1208); }
-  html.acc.g3 #topics .famtog::before { background: radial-gradient(90% 140% at 100% 50%, rgba(233, 190, 110, .22), transparent 60%); }
-  html.acc.g3 #topics .famtog .ico { width: 58px; height: 58px; padding: 11px; border-radius: 50%; color: #2a1a0a;
-    background: radial-gradient(circle at 35% 30%, #fff3d0 0%, #ecc97f 38%, #c9973f 72%, #a8772c 100%); box-shadow: 0 0 0 1px rgba(255, 240, 200, .5) inset, 0 0 0 3px #2a1a0a, 0 0 0 4px rgba(233, 207, 148, .55); }
-  html.acc.g3 #topics .famtog .ico svg { stroke-width: 2.2; }
-  html.acc.g3 #topics .famtog .t { background: linear-gradient(180deg, #fff1cc, #e2b867 60%, #c9973f); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  html.acc.g3 #topics .famtog .lt { display: block; position: absolute; left: 50px; top: 50%; transform: translateY(-52%); font-size: 92px; font-weight: 700; line-height: 1; color: #e9cf94; opacity: .08; pointer-events: none; }
-  html.acc.g3 #topics .famtog[aria-expanded="true"] .lt { opacity: .16; }
-}
 
 /* ---------- תרומה: מקום משלו בין ההצטרפות לתחתית ---------- */
 .give { background: var(--ivory); padding-block: 8px 64px; }

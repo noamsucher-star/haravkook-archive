@@ -407,16 +407,8 @@ function todayHTML(q, base) {
 // ברירת המחדל נקבעת בבנייה (class על <html>). הבחירה של הגולש נשמרת בדפדפן.
 (function () {
   var H = document.documentElement;
-  // סבב 9: c1 + sp2 + acc קבועים. במתג: g (שערים), b (ביאורים), s (מקור)
-  var DEF = { g: 1, b: 1, s: 1 }, st = {};
-  try { st = JSON.parse(localStorage.getItem('r9') || '{}') || {}; } catch (e) { st = {}; }
-  // קישור ישיר לגרסה: ?g=2&b=3&s=1
-  try { var u = new URLSearchParams(location.search), ch = 0; ['g', 'b', 's'].forEach(function (k) { var v = +u.get(k); if (v >= 1 && v <= 3) { st[k] = v; ch = 1; } }); if (ch) localStorage.setItem('r9', JSON.stringify(st)); } catch (e) {}
-  function val(k) { return st[k] == null ? DEF[k] : st[k]; }
-  function apply() {
-    ['g', 'b', 's'].forEach(function (k) { [1, 2, 3].forEach(function (n) { H.classList.toggle(k + n, val(k) === n); }); });
-  }
-  apply();
+  // סבב 9: הבחירות של נועם קבועות בבנייה (c1 sp2 acc g1 b2 s2). אין יותר מתג.
+  try { localStorage.removeItem('r8'); localStorage.removeItem('r9'); } catch (e) {}
 
   // ---------- נושאים שנפתחים ----------
   var mq = window.matchMedia('(max-width: 700px)');
@@ -454,17 +446,4 @@ function todayHTML(q, base) {
     });
   }
 
-  // ---------- מתג הגרסאות ----------
-  var btn = document.getElementById('r8-btn'), panel = document.getElementById('r8-panel');
-  if (!btn || !panel) return;
-  function syncPanel() { [].forEach.call(panel.querySelectorAll('[data-r8]'), function (b) { var p = b.getAttribute('data-r8').split(':'); b.setAttribute('aria-pressed', val(p[0]) === +p[1] ? 'true' : 'false'); }); }
-  syncPanel();
-  btn.addEventListener('click', function () { var open = panel.hidden; panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); });
-  panel.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-r8]'); if (!b) return;
-    var p = b.getAttribute('data-r8').split(':'); st[p[0]] = +p[1];
-    try { localStorage.setItem('r9', JSON.stringify(st)); } catch (err) {}
-    apply(); syncPanel();
-  });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.focus(); } });
 })();
