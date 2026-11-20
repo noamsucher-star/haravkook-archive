@@ -707,3 +707,5 @@ html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .card
 html.sp1 .hero .lede { letter-spacing: .02em; word-spacing: .03em; }
 html.sp2 .hero .lede { letter-spacing: .035em; word-spacing: .05em; }
 html.sp3 .hero .lede { letter-spacing: .05em; word-spacing: .08em; }
+
+html:is(.sp1, .sp2, .sp3) .hero .lede { text-wrap: balance; }
