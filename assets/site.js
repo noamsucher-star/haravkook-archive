@@ -350,7 +350,7 @@ function todayHTML(q, base) {
         var sw = aw * 1.26, sh = sw * rav.height / rav.width; ctx.drawImage(rav, ax - aw * .25, ay - sh * .024, sw, sh); ctx.restore();
         ctx.strokeStyle = 'rgba(233,207,148,.55)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ax, ay + ah); ctx.lineTo(ax, ay + aw / 2); ctx.arc(ax + aw / 2, ay + aw / 2, aw / 2, Math.PI, 0); ctx.lineTo(ax + aw, ay + ah); ctx.stroke();
         ctx.textAlign = 'center'; ctx.font = '700 46px Platforma'; ctx.fillStyle = gold(ctx, 60, 500, 340, 560);
-        ctx.fillText('אור גדול+', PW / 2, 528); ctx.fillText('בחצי דקה', PW / 2, 578);
+        ctx.fillText('חצי דקה', PW / 2, 528); ctx.fillText('הרב קוק', PW / 2, 578);
         var lw = 230, lh = lw * logo.height / logo.width; ctx.drawImage(logo, W - 60 - lw, 40, lw, lh);
         var X = W - 60, maxW = W - PW - 120;
         ctx.textAlign = 'right';
@@ -379,7 +379,7 @@ function todayHTML(q, base) {
         for (i = 0; i < f2.lines.length; i++) { y += f2.size * 1.42; ctx.fillText(f2.lines[i], W / 2, y - f2.size * .3); }
         if (q.r) { ctx.font = '300 34px Platforma'; ctx.fillStyle = '#58462d'; ctx.fillText(q.r.trim(), W / 2, y + 44, inner); }
         ctx.fillStyle = dark(ctx, 0, H - bandH, W, H); ctx.fillRect(0, H - bandH, W, bandH);
-        ctx.font = '700 64px Platforma'; ctx.fillStyle = gold(ctx, W / 2 - 300, H - 140, W / 2 + 300, H - 60); ctx.fillText('אור גדול+ בחצי דקה', W / 2, H - bandH + 88);
+        ctx.font = '700 64px Platforma'; ctx.fillStyle = gold(ctx, W / 2 - 300, H - 140, W / 2 + 300, H - 60); ctx.fillText('חצי דקה הרב קוק', W / 2, H - bandH + 88);
         ctx.font = '300 32px Platforma'; ctx.fillStyle = '#e2d3b3'; ctx.fillText('ציטוט יומי מכתבי הראי"ה, עם ביאור, בוואטסאפ', W / 2, H - bandH + 145);
       }
       return c;
