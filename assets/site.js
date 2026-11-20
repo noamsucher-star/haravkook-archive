@@ -149,7 +149,7 @@ function todayHTML(q, base) {
 
   // ---------- עמודי רשימה: סינון, מספור ו"עוד" ----------
   var list = $('#list');
-  var STEP = 15, shown = STEP;
+  var STEP = (window.matchMedia && window.matchMedia('(max-width: 700px)').matches) ? 8 : 15, shown = STEP; // סבב 8: בטלפון 8
   function applyList(keepShown) {
     if (!list) return;
     var only = $('#onlybiur') && $('#onlybiur').checked;
@@ -398,4 +398,70 @@ function todayHTML(q, base) {
     var cl = t.closest('[data-copylink]');
     if (cl) { (navigator.clipboard ? navigator.clipboard.writeText(cl.getAttribute('data-copylink')) : Promise.reject()).then(function () { toast('הקישור הועתק'); }, function () {}); }
   });
+})();
+
+
+// ================= סבב 8 (20.11.26): מתג גרסאות + נושאים שנפתחים בטלפון =================
+// ברירת המחדל נקבעת בבנייה (class על <html>). הבחירה של הגולש נשמרת בדפדפן.
+(function () {
+  var H = document.documentElement;
+  var DEF = { c: 1, sp: 2, acc: 1 }, st = {};
+  try { st = JSON.parse(localStorage.getItem('r8') || '{}') || {}; } catch (e) { st = {}; }
+  function val(k) { return st[k] == null ? DEF[k] : st[k]; }
+  function apply() {
+    [0, 1, 2, 3].forEach(function (n) { H.classList.toggle('c' + n, val('c') === n); H.classList.toggle('sp' + n, val('sp') === n); });
+    H.classList.toggle('acc', val('acc') === 1);
+  }
+  apply();
+
+  // ---------- נושאים שנפתחים ----------
+  var mq = window.matchMedia('(max-width: 700px)');
+  var blocks = [].slice.call(document.querySelectorAll('#topics .famblock'));
+  function accOn() { return mq.matches && H.classList.contains('acc'); }
+  function setOpen(b, on) {
+    b.classList.toggle('open', on);
+    var t = b.querySelector('.famtog'); if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
+  }
+  function syncAcc() {
+    var on = accOn();
+    blocks.forEach(function (b) {
+      var t = b.querySelector('.famtog'); if (!t) return;
+      if (on) { t.removeAttribute('tabindex'); t.setAttribute('role', 'button'); t.setAttribute('aria-expanded', b.classList.contains('open') ? 'true' : 'false'); }
+      else { t.setAttribute('tabindex', '-1'); t.removeAttribute('aria-expanded'); t.setAttribute('role', 'presentation'); }
+      [].forEach.call(b.querySelectorAll('.topic'), function (a, i) { a.style.setProperty('--n', i); });
+    });
+  }
+  if (blocks.length) {
+    syncAcc();
+    if (mq.addEventListener) mq.addEventListener('change', syncAcc); else if (mq.addListener) mq.addListener(syncAcc);
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest && e.target.closest('.famtog'); if (!t || !accOn()) return;
+      var b = t.closest('.famblock'), was = b.classList.contains('open');
+      blocks.forEach(function (x) { if (x !== b) setOpen(x, false); });
+      setOpen(b, !was);
+      // אחרי שהשער הקודם נסגר, להשאיר את השער שנפתח בראש המסך
+      if (!was) setTimeout(function () {
+        var r = t.getBoundingClientRect();
+        if (r.top < 8 || r.top > innerHeight * .45) window.scrollTo({ top: window.pageYOffset + r.top - 14, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.classList.contains('a-still')) ? 'auto' : 'smooth' });
+      }, 520);
+    });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('famtog') && accOn()) { e.preventDefault(); e.target.click(); }
+    });
+  }
+
+  // ---------- מתג הגרסאות ----------
+  var btn = document.getElementById('r8-btn'), panel = document.getElementById('r8-panel');
+  if (!btn || !panel) return;
+  function syncPanel() { [].forEach.call(panel.querySelectorAll('[data-r8]'), function (b) { var p = b.getAttribute('data-r8').split(':'); b.setAttribute('aria-pressed', val(p[0]) === +p[1] ? 'true' : 'false'); }); }
+  syncPanel();
+  btn.addEventListener('click', function () { var open = panel.hidden; panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+  panel.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-r8]'); if (!b) return;
+    var p = b.getAttribute('data-r8').split(':'); st[p[0]] = +p[1];
+    try { localStorage.setItem('r8', JSON.stringify(st)); } catch (err) {}
+    apply(); syncPanel();
+    if (p[0] === 'acc') { blocks.forEach(function (x) { setOpen(x, false); }); syncAcc(); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.focus(); } });
 })();

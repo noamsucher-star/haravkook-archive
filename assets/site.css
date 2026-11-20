@@ -594,3 +594,111 @@ body.a-still .home::before { transform: none !important; }
     radial-gradient(circle at 71.89% 0.29%, rgba(255,238,200,0.27) 0, rgba(255,238,200,0.27) 0.75px, transparent 1.35px); }
 @media (max-width: 900px) { .home { background-image: url(hero-phone.webp); background-position: center bottom; } }
 @media (prefers-reduced-motion: reduce) { .home::before { transition: none; transform: none; } }
+
+/* ================= סבב 8 (20.11.26) =================
+   שלוש קבוצות ניסוי, נבחרות במתג "גרסאות" (class על <html>):
+   c0-c3  צבע הלוחיות (c0 = היום)
+   sp0-sp3 ריווח המלל הקטן (sp0 = היום)
+   acc    נושאים שנפתחים, בטלפון בלבד
+   אחרי הבחירה של נועם: לקבע את הנבחר ולמחוק את השאר ואת המתג. */
+
+/* ---------- כפתור המשפחה: בלי מצב acc הוא שקוף לגמרי ---------- */
+.famtog { all: unset; box-sizing: border-box; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; width: 100%; }
+.famtog .ico, .famtog .chev, .famtog .teaser { display: none; }
+.s1 .fam > .famtog { flex: 1; }
+
+/* ---------- תרומה בתחתית ---------- */
+.foot .give a { font-weight: 700; color: var(--gold); text-decoration-color: rgba(233, 207, 148, .65); }
+.foot .give a:hover { color: var(--gold-hi); }
+
+/* ---------- נושאים שנפתחים (טלפון) ---------- */
+@media (max-width: 700px) {
+  html.acc #topics .famblock { margin-top: 12px; }
+  html.acc #topics .sub + .famblock { margin-top: 26px; }
+  html.acc #topics .fam { display: block; padding: 0; margin: 0; -webkit-mask: none; mask: none; background: none; }
+  html.acc #topics .famtog { display: grid; grid-template-columns: 46px minmax(0, 1fr) 30px; grid-template-areas: "ico t chev" "ico teaser chev"; align-items: center; gap: 1px 14px;
+    padding: 17px 16px 15px 14px; cursor: pointer; color: #f3d998; background: #24170a; border-radius: 4px; position: relative; overflow: hidden;
+    -webkit-tap-highlight-color: transparent; transition: background-color .3s; }
+  /* אור רך בפינה, נדלק כשהשער פתוח */
+  html.acc #topics .famtog::before { content: ""; position: absolute; inset: 0; background: radial-gradient(130% 160% at 100% 0, rgba(233, 190, 110, .2), transparent 58%); opacity: .55; transition: opacity .45s; pointer-events: none; }
+  html.acc #topics .famtog[aria-expanded="true"]::before { opacity: 1; }
+  html.acc #topics .famtog::after { content: ""; position: absolute; right: 0; left: 0; bottom: 0; height: 2px; background: #c9a35a; transform: scaleX(0); transform-origin: 100% 50%; transition: transform .5s var(--ease); }
+  html.acc #topics .famtog[aria-expanded="true"]::after { transform: scaleX(1); }
+  html.acc #topics .famtog:focus-visible { outline: 3px solid #c2944a; outline-offset: 2px; }
+  html.acc #topics .famtog .ico { display: block; grid-area: ico; width: 46px; height: 46px; color: #e2be73; }
+  html.acc #topics .famtog .ico svg { width: 100%; height: 100%; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  html.acc #topics .famtog .t { grid-area: t; font-size: 29px; font-weight: 700; line-height: 1.1; position: relative; }
+  html.acc #topics .famtog .c { display: none; }
+  html.acc #topics .famtog .teaser { display: block; grid-area: teaser; position: relative; font-size: 16px; font-weight: 300; line-height: 1.35; letter-spacing: .015em; color: #dccbaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html.acc #topics .famtog .chev { display: block; grid-area: chev; position: relative; width: 30px; height: 30px; border: 1px solid rgba(233, 207, 148, .5); border-radius: 50%; }
+  html.acc #topics .famtog .chev::before, html.acc #topics .famtog .chev::after { content: ""; position: absolute; top: 50%; left: 50%; width: 11px; height: 1.5px; background: #f3d998; transform: translate(-50%, -50%); transition: transform .4s var(--ease); }
+  html.acc #topics .famtog .chev::after { transform: translate(-50%, -50%) rotate(90deg); }
+  html.acc #topics .famtog[aria-expanded="true"] .chev::after { transform: translate(-50%, -50%) rotate(0deg); }
+
+  /* הגוף: נפתח בגובה אמיתי, בלי קפיצה */
+  html.acc #topics .famblock .tgrid { display: block; }
+  html.acc #topics .famblock .fold { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }
+  html.acc #topics .famblock.open .fold { grid-template-rows: 1fr; }
+  html.acc #topics .famblock .fold > .tgrid { overflow: hidden; min-height: 0; visibility: hidden; transition: visibility 0s .5s; background: #fffdf8; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 4px 4px; padding-inline: 16px; }
+  html.acc #topics .famblock:not(.open) .fold > .tgrid { border-color: transparent; }
+  html.acc #topics .famblock.open .fold > .tgrid { visibility: visible; transition: visibility 0s; }
+  html.acc #topics .topic { padding: 13px 0 12px; opacity: 0; transform: translateY(8px); transition: opacity .4s var(--ease), transform .4s var(--ease); }
+  html.acc #topics .topic:last-child { border-bottom: 0; }
+  html.acc #topics .famblock.open .topic { opacity: 1; transform: none; transition-delay: calc(60ms + var(--n, 0) * 35ms); }
+  html.acc #topics .topic .head { align-items: center; }
+  html.acc #topics .topic .name { font-size: 23px; }
+  html.acc #topics .topic .count { font-size: 16px; letter-spacing: .015em; }
+  html.acc #topics .topic .count::after { content: "←"; display: inline-block; margin-right: 9px; color: #b88a3e; font-weight: 400; }
+  html.acc #topics .topic .promise { font-size: 16.5px; line-height: 1.35; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: none; }
+  html.acc #topics .sub { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.acc #topics .famblock .fold, html.acc #topics .topic, html.acc #topics .famtog::after, html.acc #topics .famtog .chev::after { transition: none !important; }
+}
+body.a-still #topics .famblock .fold, body.a-still #topics .topic { transition: none !important; }
+
+/* ---------- צבע הלוחיות ----------
+   חל על: לוחית המשפחה, כפתורי "ביאור", "חיפוש", "עוד ציטוטים", תג "השבוע".
+   כפתור ההצטרפות הזהוב הזז (סבב 3) לא משתנה. */
+/* 1: זהב אחיד ומאט, כהה אחיד */
+html.c1 .fs1 .fam, html.c1 #topics .famtog { background-color: #24170a; background-image: none; }
+html.c1 .btn:not(.joinin .btn), html.c1 details.biur summary .bbtn, html.c1 .search button, html.c1 .bookrow.now > span:first-child::after { background: #d9b467; }
+html.c1 .btn:not(.joinin .btn):hover, html.c1 details.biur summary:hover .bbtn, html.c1 .search button:hover { background: #e3c27c; }
+/* 2: כהה אחיד עם מלל זהב */
+html.c2 .fs1 .fam, html.c2 #topics .famtog { background-color: #2b1b0b; background-image: none; }
+html.c2 .btn:not(.joinin .btn), html.c2 details.biur summary .bbtn, html.c2 .search button, html.c2 .bookrow.now > span:first-child::after { background: #2b1b0b; color: #f3d998; }
+html.c2 details.biur summary .bbtn .pm::before, html.c2 details.biur summary .bbtn .pm::after { background: #f3d998; }
+html.c2 .btn:not(.joinin .btn):hover, html.c2 details.biur summary:hover .bbtn, html.c2 .search button:hover { background: #432c13; }
+/* 3: גרדיאנט זהב חדש: ברק אלכסוני רך כמו מתכת מוברשת, וכהה עם אור בפינה */
+html.c3 .fs1 .fam, html.c3 #topics .famtog { background: radial-gradient(120% 190% at 100% 0, #57391a 0%, #2e1d0c 48%, #1c1208 100%); }
+html.c3 .btn:not(.joinin .btn), html.c3 details.biur summary .bbtn, html.c3 .search button, html.c3 .bookrow.now > span:first-child::after { background: linear-gradient(125deg, #cfa252 0%, #e2c07a 38%, #f1dca6 52%, #dfbb72 66%, #c99b4b 100%); }
+html.c3 .btn:not(.joinin .btn):hover, html.c3 details.biur summary:hover .bbtn, html.c3 .search button:hover { background: linear-gradient(125deg, #d6ab5d 0%, #e9ca88 38%, #f6e5b6 52%, #e6c680 66%, #d1a557 100%); }
+html.c3 #topics .famtog::before { display: none; }
+
+/* ---------- ריווח המלל הקטן ----------
+   רק מלל קטן בפונט פלטפורמה (מונים, מקורות, שמות, תחתית). הציטוטים והכותרות לא משתנים. */
+html.sp1 { --sp: .012em; --wsp: 0em; }
+html.sp2 { --sp: .024em; --wsp: .02em; }
+html.sp3 { --sp: .036em; --wsp: .05em; }
+html:is(.sp1, .sp2, .sp3) :is(.count, .card .ref, .card .num, .card .note, .cardbar, .wh span, .who, .by, .joinin .alt, .kicker, .qnav .k, .back, .today .ref, .topic .promise, .block .sub, .fam .c, .filters, #count, .side .count, .weekly, .eyebrow, .chumash, .foot) { letter-spacing: var(--sp); word-spacing: var(--wsp); }
+/* גודל מינימלי 15 בטלפון */
+@media (max-width: 560px) {
+  html:is(.sp1, .sp2, .sp3) .foot { font-size: 15px; }
+  html:is(.sp1, .sp2, .sp3) .bookrow.now > span:first-child::after { font-size: 15px; }
+  html:is(.sp1, .sp2, .sp3) details.biur summary .wh span { font-size: 16px; }
+}
+
+/* ---------- מתג הגרסאות (זמני, רק לבחירה של נועם) ---------- */
+.r8-btn { position: fixed; z-index: 50; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); font-family: "Heebo", Arial, sans-serif; font-size: 15px; font-weight: 700; padding: 11px 18px; border: 1px solid #c9a35a; border-radius: 999px; background: #1d1206; color: #f3d998; box-shadow: 0 6px 20px rgba(0, 0, 0, .28); }
+.r8-panel { position: fixed; z-index: 51; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(68px + env(safe-area-inset-bottom, 0px)); width: min(330px, calc(100vw - 28px)); background: #fff; color: #1d1206; border: 1px solid #d9c9a3; border-radius: 12px; padding: 14px 16px 16px; box-shadow: 0 14px 40px rgba(0, 0, 0, .3); font-family: "Heebo", Arial, sans-serif; font-size: 15px; }
+.r8-panel h2 { font-family: inherit; font-size: 17px; font-weight: 700; margin: 0 0 4px; }
+.r8-panel p { font-size: 13.5px; color: #6a5a40; margin: 0 0 10px; }
+.r8-panel h3 { font-family: inherit; font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
+.r8-panel .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.r8-panel .opts.two { grid-template-columns: repeat(2, 1fr); }
+.r8-panel .opts button { font: inherit; font-size: 14px; padding: 9px 4px; border: 1px solid #d9c9a3; border-radius: 8px; background: #faf6ee; color: #1d1206; }
+.r8-panel .opts button[aria-pressed="true"] { background: #2b1b0b; color: #f3d998; border-color: #2b1b0b; font-weight: 700; }
+@media print { .r8-btn, .r8-panel { display: none !important; } }
+
+/* הכפתורים הקבועים בפינות לא מסתירים את סוף התחתית בטלפון */
+@media (max-width: 560px) { .foot { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); } .foot .give { margin-block: 4px; } }
