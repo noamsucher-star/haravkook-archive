@@ -777,8 +777,8 @@ html .today .q a::after { margin-right: .05em; }
 .bar .logo { margin-right: auto; }
 .bar .logo img { height: 46px; }
 
-.menubtn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px 0 14px; border: 1px solid #cbb58a; background: #fffdf8; color: var(--bark); font-size: 19px; font-weight: 700; cursor: pointer; transition: background-color .2s, border-color .2s;
-  clip-path: polygon(7px 0, calc(100% - 7px) 0, 100% 7px, 100% calc(100% - 7px), calc(100% - 7px) 100%, 7px 100%, 0 calc(100% - 7px), 0 7px); }
+/* סבב 13: מלבן חד ונקי, בלי פינות חתוכות */
+.menubtn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 16px 0 14px; border: 1.5px solid #b88a3e; border-radius: 0; background: #fffdf8; color: var(--bark); font-size: 19px; font-weight: 700; cursor: pointer; transition: background-color .2s, border-color .2s; }
 .menubtn:hover { border-color: #b88a3e; background: #fff6e2; }
 .menubtn .hb { display: grid; gap: 5px; width: 22px; }
 .menubtn .hb i { display: block; height: 2px; border-radius: 2px; background: currentColor; transition: transform .3s var(--ease), opacity .2s; }
@@ -901,6 +901,13 @@ body.a-cursor, body.a-cursor * { cursor: url("data:image/svg+xml,%3Csvg xmlns='h
 .givebtn { margin: 0; padding: 8px 4px; min-height: 48px; background: none; color: var(--bronze); font-size: clamp(25px, 3vw, 30px); clip-path: none; text-decoration: underline; text-decoration-color: #c9a35a; text-decoration-thickness: 2px; text-underline-offset: 7px; }
 .givebtn:hover { background: none; color: var(--bark); }
 @media (max-width: 560px) { .givebox { padding: 18px 0; } .givebox h2 { font-size: 27px; } .givebtn { font-size: 25px; } }
+
+/* ---------- המגירה (סבב 13): הצטרפות ותרומה = שני מלבנים חדים באותו גודל ---------- */
+.mjoin, .mgive { clip-path: none; border-radius: 0; min-height: 58px; }
+.mjoin { font-size: 23px; gap: 12px; border: 1.5px solid #b88a3e; background: linear-gradient(105deg, #c9973f 0%, #edcb7f 18%, #fff3cc 30%, #f0d089 40%, #c9973f 60%, #e6c173 80%, #fff0c2 90%, #d6a850 100%); background-size: 240% 100%; background-position: 12% 0; animation: goldflow 7s ease-in-out infinite alternate; }
+.mjoin .arw { width: .55em; height: .55em; }
+.mgive { font-size: 21px; border-width: 1.5px; }
+@media (prefers-reduced-motion: reduce) { .mjoin { animation: none; } }
 
 /* ---------- המלל בכפתורים: גדול ומאוזן ---------- */
 .search button { font-size: 21px; padding: 0 24px; }
