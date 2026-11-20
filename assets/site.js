@@ -508,31 +508,51 @@ function todayHTML(q, base) {
 })();
 
 
-// ================= סבב 15: הנושאים במחשב =================
+// ================= סבבים 15-16: תנועת האייקונים בשערי הנושאים =================
+// "on" = הצורה המשתנה: אש→דמות אדם, שמש זורחת, כדור הארץ→עין, מגן דוד מסתובב.
 (function () {
-  var H = document.documentElement;
-  // האייקונים זזים כשהמשפחה נכנסת למסך (פעם אחת)
-  var fams = [].slice.call(document.querySelectorAll('#topics .famblock'));
-  if (fams.length && 'IntersectionObserver' in window && !window.matchMedia('(max-width: 700px)').matches) {
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('lit'); io.unobserve(e.target); } }); }, { threshold: .35 });
-    fams.forEach(function (f) { io.observe(f); });
+  try { localStorage.removeItem('r15'); } catch (e) {}
+  var NS = 'http://www.w3.org/2000/svg';
+  var still = function () { return document.body.classList.contains('a-still') || window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  function setIcon(svg, on) {
+    if (!svg || svg.classList.contains('on') === on) return;
+    svg.classList.toggle('on', on);
+    [].forEach.call(svg.querySelectorAll('.mo'), function (p) {
+      var to = p.getAttribute(on ? 'data-b' : 'data-a');
+      [].forEach.call(p.querySelectorAll('animate'), function (a) { a.remove(); });
+      if (still() || !p.animate && !window.SVGAnimateElement) { p.setAttribute('d', to); return; }
+      var from = p.getAttribute('d'), an = document.createElementNS(NS, 'animate');
+      an.setAttribute('attributeName', 'd'); an.setAttribute('from', from); an.setAttribute('to', to);
+      an.setAttribute('dur', '0.75s'); an.setAttribute('begin', 'indefinite'); an.setAttribute('fill', 'freeze');
+      an.setAttribute('calcMode', 'spline'); an.setAttribute('keyTimes', '0;1'); an.setAttribute('keySplines', '.45 0 .2 1');
+      p.appendChild(an);
+      p.setAttribute('d', to);
+      try { an.beginElement(); } catch (e) {}
+    });
   }
-  // מתג זמני: פריסת הנושאים במחשב dl1-dl3 (גם בקישור ?dl=2)
-  var K = 'r15', v = 1;
-  try { v = +localStorage.getItem(K) || 1; } catch (e) {}
-  try { var u = +new URLSearchParams(location.search).get('dl'); if (u >= 1 && u <= 3) { v = u; localStorage.setItem(K, String(v)); } } catch (e) {}
-  function apply() { [1, 2, 3].forEach(function (n) { H.classList.toggle('dl' + n, v === n); }); }
-  apply();
-  var rb = document.getElementById('r8-btn'), rp = document.getElementById('r8-panel');
-  if (!rb || !rp) return;
-  function sync() { [].forEach.call(rp.querySelectorAll('[data-r8]'), function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-r8') === v ? 'true' : 'false'); }); }
-  sync();
-  rb.addEventListener('click', function () { rp.hidden = !rp.hidden; rb.setAttribute('aria-expanded', String(!rp.hidden)); });
-  rp.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-r8]'); if (!b) return;
-    v = +b.getAttribute('data-r8'); try { localStorage.setItem(K, String(v)); } catch (err) {}
-    apply(); sync();
-    var t = document.getElementById('topics'); if (t) t.scrollIntoView({ behavior: 'smooth' });
+  var fams = [].slice.call(document.querySelectorAll('#topics .famblock'));
+  if (!fams.length) return;
+  var mq = window.matchMedia('(max-width: 700px)');
+  var svgOf = function (f) { return f.querySelector('.famtog .ico svg'); };
+  // טלפון: האייקון משתנה כשהשער נפתח, וחוזר כשהוא נסגר
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('#topics .famtog')) return;
+    setTimeout(function () { fams.forEach(function (f) { setIcon(svgOf(f), f.classList.contains('open')); }); }, 30);
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rp.hidden) { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); } });
+  // מחשב: במעבר עכבר על המשפחה, ופעם אחת כשהיא נכנסת למסך
+  fams.forEach(function (f) {
+    f.addEventListener('mouseenter', function () { if (!mq.matches) setIcon(svgOf(f), true); });
+    f.addEventListener('mouseleave', function () { if (!mq.matches) setIcon(svgOf(f), false); });
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting || mq.matches) return;
+        io.unobserve(e.target);
+        var s = svgOf(e.target);
+        setTimeout(function () { setIcon(s, true); setTimeout(function () { if (!e.target.matches(':hover')) setIcon(s, false); }, 2200); }, 250);
+      });
+    }, { rootMargin: '0px 0px -30% 0px' });
+    fams.forEach(function (f) { io.observe(f.querySelector('.fam')); });
+  }
 })();
