@@ -55,7 +55,7 @@ function todayHTML(q, base) {
   function syncA11yBtn(b, on) { b.setAttribute('aria-pressed', String(on)); var s = $('.st', b); if (s) s.textContent = on ? 'פעיל' : ''; }
 
   // ---------- תפריט נגישות (סבב 7) ----------
-  var A11Y = ['contrast', 'links', 'font', 'still'], a11y = {};
+  var A11Y = ['contrast', 'links', 'font', 'still', 'spacing', 'align', 'heads', 'cursor'], a11y = {};
   try { a11y = JSON.parse(localStorage.getItem('a11y') || '{}') || {}; } catch (e) { a11y = {}; }
   function setA11y(k, on) { a11y[k] = on; document.body.classList.toggle('a-' + k, on); var b = $('[data-a11y="' + k + '"]'); if (b) syncA11yBtn(b, on); try { localStorage.setItem('a11y', JSON.stringify(a11y)); } catch (e) {} }
   A11Y.forEach(function (k) { setA11y(k, !!a11y[k]); });
@@ -66,6 +66,8 @@ function todayHTML(q, base) {
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (t.closest('#a11y-btn')) { a11yOpen(a11yPanel.hidden); return; }
+    if (t.closest('[data-a11y-close]')) { a11yOpen(false, true); return; }
+    if (t.closest('[data-a11y-open]')) { if (window.__menuClose) window.__menuClose(); setTimeout(function () { a11yOpen(true); }, 30); return; }
     var ab = t.closest('[data-a11y]');
     if (ab) { var k = ab.getAttribute('data-a11y'); if (k === 'big') { setBig(!big); try { localStorage.setItem('big', big ? '1' : '0'); } catch (err) {} } else setA11y(k, !a11y[k]); if (k === 'big' || k === 'font') setTimeout(alignToday, 60); return; }
     if (t.closest('[data-a11y-reset]')) { A11Y.forEach(function (k) { setA11y(k, false); }); setBig(false); try { localStorage.setItem('big', '0'); } catch (err) {} setTimeout(alignToday, 60); return; }
@@ -447,3 +449,77 @@ function todayHTML(q, base) {
   }
 
 })();
+
+
+// ================= סבב 10 (20.11.26): סרגל עליון ותפריט נפתח =================
+(function () {
+  var H = document.documentElement;
+  var menu = document.getElementById('menu'), mbtn = document.getElementById('menu-btn'), bar = document.getElementById('bar');
+  var still = function () { return document.body.classList.contains('a-still') || window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  function menuOpen(v) {
+    if (!menu || !mbtn) return;
+    if (v) {
+      menu.hidden = false; H.classList.add('menu-on');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.add('on'); }); });
+      mbtn.setAttribute('aria-expanded', 'true');
+      var p = menu.querySelector('.mpanel'); if (p) p.focus({ preventScroll: true });
+    } else if (!menu.hidden) {
+      menu.classList.remove('on'); mbtn.setAttribute('aria-expanded', 'false'); H.classList.remove('menu-on');
+      setTimeout(function () { if (!menu.classList.contains('on')) menu.hidden = true; }, still() ? 0 : 380);
+    }
+  }
+  window.__menuClose = function () { menuOpen(false); };
+  if (menu && mbtn) {
+    mbtn.addEventListener('click', function () { menuOpen(menu.hidden); });
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest('[data-mclose]')) { menuOpen(false); mbtn.focus(); return; }
+      var a = e.target.closest('a'); if (a && (a.getAttribute('href') || '').indexOf('#') > -1) menuOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (menu.hidden) return;
+      if (e.key === 'Escape') { menuOpen(false); mbtn.focus(); }
+      if (e.key === 'Tab') { // המיקוד נשאר בתוך התפריט
+        var f = [].slice.call(menu.querySelectorAll('a[href], button, input, summary')).filter(function (x) { return x.offsetParent !== null; });
+        if (!f.length) return; var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+  }
+  // הסרגל נצמד למעלה, מסתתר בגלילה למטה וחוזר בגלילה למעלה
+  if (bar) {
+    var lastY = window.pageYOffset, tick = false;
+    window.addEventListener('scroll', function () {
+      if (tick) return; tick = true;
+      requestAnimationFrame(function () {
+        var y = window.pageYOffset, h = bar.offsetHeight;
+        bar.classList.toggle('stuck', y > 4);
+        if (y > h + 40 && y > lastY + 6 && !H.classList.contains('menu-on')) bar.classList.add('away');
+        else if (y < lastY - 6 || y <= h) bar.classList.remove('away');
+        lastY = y; tick = false;
+      });
+    }, { passive: true });
+    bar.addEventListener('focusin', function () { bar.classList.remove('away'); });
+  }
+
+  // מתג זמני: m תפריט, i אייקונים, d תרומה, t כפתורים (גם בקישור ?m=2&i=3)
+  var MK = 'r10', KEYS = ['m', 'i', 'd', 't'], st = {};
+  try { st = JSON.parse(localStorage.getItem(MK) || '{}') || {}; } catch (e) { st = {}; }
+  try { var u = new URLSearchParams(location.search), ch = 0; KEYS.forEach(function (k) { var v = +u.get(k); if (v >= 1 && v <= 3) { st[k] = v; ch = 1; } }); if (ch) localStorage.setItem(MK, JSON.stringify(st)); } catch (e) {}
+  var val = function (k) { return +st[k] || 1; };
+  function applyV() { KEYS.forEach(function (k) { [1, 2, 3].forEach(function (n) { H.classList.toggle(k + n, val(k) === n); }); }); }
+  applyV();
+  var rb = document.getElementById('r8-btn'), rp = document.getElementById('r8-panel');
+  if (rb && rp) {
+    var sync = function () { [].forEach.call(rp.querySelectorAll('[data-r8]'), function (b) { var p = b.getAttribute('data-r8').split(':'); b.setAttribute('aria-pressed', val(p[0]) === +p[1] ? 'true' : 'false'); }); };
+    sync();
+    rb.addEventListener('click', function () { rp.hidden = !rp.hidden; rb.setAttribute('aria-expanded', String(!rp.hidden)); });
+    rp.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-r8]'); if (!b) return;
+      var p = b.getAttribute('data-r8').split(':'); st[p[0]] = +p[1];
+      try { localStorage.setItem(MK, JSON.stringify(st)); } catch (err) {}
+      applyV(); sync();
+      if (p[0] === 'm') { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); menuOpen(true); }
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rp.hidden) { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); rb.focus(); } });
+  }})();
