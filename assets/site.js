@@ -415,8 +415,8 @@ function todayHTML(q, base) {
   // ---------- נושאים שנפתחים ----------
   var mq = window.matchMedia('(max-width: 700px)');
   var blocks = [].slice.call(document.querySelectorAll('#topics .famblock'));
-  // סבב 14: השערים פועלים גם במחשב (4 שערים בשורה, הפאנל נפתח מתחת)
-  function accOn() { return H.classList.contains('acc'); }
+  // שערים נפתחים רק בטלפון. במחשב כל הנושאים גלויים (סבב 15, נועם ביקש)
+  function accOn() { return mq.matches && H.classList.contains('acc'); }
   function setOpen(b, on) {
     b.classList.toggle('open', on);
     var t = b.querySelector('.famtog'); if (t) t.setAttribute('aria-expanded', on ? 'true' : 'false');
@@ -431,8 +431,6 @@ function todayHTML(q, base) {
     });
   }
   if (blocks.length) {
-    // במחשב השער הראשון פתוח מההתחלה, כדי שהנושאים ייראו מיד
-    if (!mq.matches) setOpen(blocks[0], true);
     syncAcc();
     if (mq.addEventListener) mq.addEventListener('change', syncAcc); else if (mq.addListener) mq.addListener(syncAcc);
     document.addEventListener('click', function (e) {
@@ -507,4 +505,34 @@ function todayHTML(q, base) {
 
   // סבב 12: הבחירות של נועם קבועות בבנייה (m1 i1 d2 t1). אין יותר מתג.
   try { localStorage.removeItem('r10'); } catch (e) {}
+})();
+
+
+// ================= סבב 15: הנושאים במחשב =================
+(function () {
+  var H = document.documentElement;
+  // האייקונים זזים כשהמשפחה נכנסת למסך (פעם אחת)
+  var fams = [].slice.call(document.querySelectorAll('#topics .famblock'));
+  if (fams.length && 'IntersectionObserver' in window && !window.matchMedia('(max-width: 700px)').matches) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('lit'); io.unobserve(e.target); } }); }, { threshold: .35 });
+    fams.forEach(function (f) { io.observe(f); });
+  }
+  // מתג זמני: פריסת הנושאים במחשב dl1-dl3 (גם בקישור ?dl=2)
+  var K = 'r15', v = 1;
+  try { v = +localStorage.getItem(K) || 1; } catch (e) {}
+  try { var u = +new URLSearchParams(location.search).get('dl'); if (u >= 1 && u <= 3) { v = u; localStorage.setItem(K, String(v)); } } catch (e) {}
+  function apply() { [1, 2, 3].forEach(function (n) { H.classList.toggle('dl' + n, v === n); }); }
+  apply();
+  var rb = document.getElementById('r8-btn'), rp = document.getElementById('r8-panel');
+  if (!rb || !rp) return;
+  function sync() { [].forEach.call(rp.querySelectorAll('[data-r8]'), function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-r8') === v ? 'true' : 'false'); }); }
+  sync();
+  rb.addEventListener('click', function () { rp.hidden = !rp.hidden; rb.setAttribute('aria-expanded', String(!rp.hidden)); });
+  rp.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-r8]'); if (!b) return;
+    v = +b.getAttribute('data-r8'); try { localStorage.setItem(K, String(v)); } catch (err) {}
+    apply(); sync();
+    var t = document.getElementById('topics'); if (t) t.scrollIntoView({ behavior: 'smooth' });
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rp.hidden) { rp.hidden = true; rb.setAttribute('aria-expanded', 'false'); } });
 })();
