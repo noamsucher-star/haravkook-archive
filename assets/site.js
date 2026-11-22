@@ -556,3 +556,159 @@ function todayHTML(q, base) {
     fams.forEach(function (f) { io.observe(f.querySelector('.fam')); });
   }
 })();
+
+// ---------- דמו דיוקים 22.11.26: מתג גרסאות, "עכשיו בלוח השנה", קריאת מסלול ----------
+(function () {
+  var html = document.documentElement, base = html.getAttribute('data-base') || '';
+  document.addEventListener('DOMContentLoaded', function () {
+    // ---------- מסלול: ציטוט אחד בכל פעם ----------
+    var steps = document.querySelector('[data-reader]');
+    if (steps) {
+      var items = [].slice.call(steps.children), end = document.querySelector('.dm-end'), i = 0, all = false;
+      var bar = document.createElement('div');
+      bar.className = 'dm-reader';
+      bar.innerHTML = '<button type="button" class="prev"><i class="arw r" aria-hidden="true"></i> הקודם</button>'
+        + '<span class="prog"><span class="dots">' + items.map(function () { return '<i></i>'; }).join('') + '</span><span class="n"></span></span>'
+        + '<button type="button" class="next">הבא <i class="arw" aria-hidden="true"></i></button>';
+      var toggle = document.createElement('button');
+      toggle.type = 'button'; toggle.className = 'dm-showall'; toggle.textContent = 'להציג את כל השבעה ברצף';
+      steps.parentNode.insertBefore(bar, steps.nextSibling);
+      bar.parentNode.insertBefore(toggle, bar.nextSibling);
+      var dots = [].slice.call(bar.querySelectorAll('.dots i')), n = bar.querySelector('.n'), prev = bar.querySelector('.prev'), next = bar.querySelector('.next');
+      function show(k, scroll) {
+        i = Math.max(0, Math.min(items.length, k));
+        var done = i === items.length;
+        items.forEach(function (li, j) { li.hidden = !all && j !== i; });
+        dots.forEach(function (d, j) { d.className = j < i ? 'was' : j === i ? 'now' : ''; });
+        n.textContent = done ? 'סיימתם' : (i + 1) + ' מתוך ' + items.length;
+        prev.disabled = i === 0; next.hidden = done; next.innerHTML = (i === items.length - 1 ? 'לסיום' : 'הבא') + ' <i class="arw" aria-hidden="true"></i>';
+        if (end) end.hidden = !done && !all;
+        if (scroll) {
+          // תמיד לאותה נקודה: ראש הציטוט מתחת לסרגל הדביק, בלי תלות באורך הביאורים
+          var tgt = done && end ? end : steps, hd = document.querySelector('header'), off = (hd && getComputedStyle(hd).position === 'sticky' ? hd.offsetHeight : 0) + 14;
+          window.scrollTo({ top: Math.max(0, Math.round(tgt.getBoundingClientRect().top + window.pageYOffset - off)), behavior: 'instant' });
+        }
+      }
+      prev.addEventListener('click', function () { show(i - 1, true); });
+      next.addEventListener('click', function () { show(i + 1, true); });
+      // החלקת אצבע על הכרטיס: שמאלה = הבא, ימינה = הקודם (כמו החצים)
+      var sx = 0, sy = 0, st = 0;
+      var slide = function (k) { if (k < 0 || k > items.length) return; var dir = k > i ? 'dm-in-next' : 'dm-in-prev'; show(k, true); var li = items[i]; if (li) { li.classList.remove('dm-in-next', 'dm-in-prev'); void li.offsetWidth; li.classList.add(dir); } };
+      steps.addEventListener('touchstart', function (e) { if (all || e.touches.length > 1) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+      steps.addEventListener('touchend', function (e) {
+        if (all || !st) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; st = 0;
+        if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
+        if (window.getSelection && String(window.getSelection())) return;
+        slide(dx < 0 ? i + 1 : i - 1);
+      }, { passive: true });
+      toggle.addEventListener('click', function () {
+        all = !all; steps.classList.toggle('all', all); bar.hidden = all;
+        toggle.textContent = all ? 'לקרוא אחד אחד' : 'להציג את כל השבעה ברצף';
+        show(all ? 0 : i, false);
+      });
+      steps.classList.add('reader');
+      show(0, false);
+    }
+
+    // ---------- עכשיו בלוח השנה: פרשת השבוע והחג הקרוב ----------
+    var calEl = document.getElementById('dmcal'), pmapEl = document.getElementById('pmap');
+    if (!calEl) return;
+    var CAL = {}; try { CAL = JSON.parse(calEl.textContent); } catch (x) { return; }
+    function fill(id, slug, title) {
+      var c = CAL[slug], a = document.getElementById(id); if (!a || !c) return false;
+      a.href = base + slug + '.html';
+      a.querySelector('.t').textContent = title || c.l;
+      a.querySelector('.q').textContent = '"' + c.q + '"';
+      return true;
+    }
+    try {
+      var PM = pmapEl ? JSON.parse(pmapEl.textContent) : {}, wk = (window.__weeklyParasha && window.__weeklyParasha(new Date())) || [], hit = null;
+      wk.forEach(function (s) { if (!hit && PM[s]) hit = PM[s]; });
+      if (hit) fill('dm-parasha', 'parasha/' + hit[0], 'פרשת ' + hit[1]);
+    } catch (x) {}
+    var DATES = { 'Tishri': [[1, 'rosh-hashana'], [3, 'tzom-gedalia'], [15, 'sukkot']], 'Heshvan': [[11, 'rachel']], 'Kislev': [[25, 'hanukkah']], 'Shevat': [[15, 'tu-bishvat']],
+      'Adar': [[14, 'purim']], 'Adar II': [[14, 'purim']], 'Nisan': [[15, 'pesach'], [27, 'yom-hashoah']], 'Iyar': [[4, 'yom-hazikaron'], [18, 'lag-baomer'], [28, 'yom-yerushalayim']],
+      'Sivan': [[6, 'shavuot']], 'Tamuz': [[17, 'bein-hametzarim']], 'Av': [[15, 'tu-beav']], 'Elul': [[3, 'rav']] };
+    try {
+      var f = new Intl.DateTimeFormat('en-u-ca-hebrew', { month: 'long', day: 'numeric' }), d = new Date(), found = null;
+      for (var k = 0; k < 400 && !found; k++) {
+        var mo = '', dy = 0;
+        f.formatToParts(d).forEach(function (p) { if (p.type === 'month') mo = p.value; if (p.type === 'day') dy = +p.value; });
+        (DATES[mo] || []).forEach(function (x) { if (!found && x[0] === dy && CAL['moed/' + x[1]]) found = { slug: 'moed/' + x[1], days: k }; });
+        d = new Date(d.getTime() + 864e5);
+      }
+      if (found) {
+        fill('dm-moed', found.slug);
+        var kEl = document.querySelector('#dm-moed .k');
+        if (kEl) kEl.textContent = found.days === 0 ? 'היום' : found.days < 8 ? 'בעוד ' + found.days + ' ימים' : 'החג הקרוב';
+      }
+    } catch (x) {}
+  });
+})();
+
+// ---------- דמו 22.11: כתב היד של הרב (BA כנפי רוח) - קישוט בלבד, לא לקריאה ----------
+(function () {
+  // פסקה קבועה (נועם 22.11: 'רעיון פגז') - חדריו, עמ' פ: ברקע של 'חצי דקה להיום' ובפס התחתון
+  var BGTEXT = 'אפילו כשנדמה שאין מוסיפים דבר ושום רעיון חדש, אין הדבר כן, כי במה שמעתיקים את העניינים ממקום למקום, מוסיפים תנועה חיותית ואור פנימי, אור חיים חדש מזריח ושופע';
+  var SIG = 'אברהם יצחק הכהן קוק', MOTTO = 'הישן יתחדש והחדש יתקדש', RISE = 'עלה למעלה עלה, כי כח עז לך, יש לך כנפי רוח, כנפי נשרים אבירים. אל תכחש בם, פן יכחשו לך, דרש אותם, וימצאו לך מיד';
+  function el(tag, cls, txt) { var e = document.createElement(tag); e.className = cls; e.setAttribute('aria-hidden', 'true'); if (txt) e.textContent = txt; return e; }
+  // כניסה של "כתיבה": נחשף מימין לשמאל כשמגיעים אליו
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('hw-in'); io.unobserve(e.target); } });
+  }, { threshold: 0.25 }) : null;
+  function watch(e) {
+    // גם בלי IntersectionObserver (או כשהוא לא נורה): אם כבר על המסך - לחשוף
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      var r = e.getBoundingClientRect();
+      if (!io || (r.top < innerHeight && r.bottom > 0)) e.classList.add('hw-in'); else io.observe(e);
+    }); });
+  }
+  function addSig(box) {
+    if (!box || box.querySelector('.hw-sig')) return;
+    var ref = box.querySelector('.ref'); if (!ref) return;
+    var s = el('p', 'hw-sig', SIG); ref.parentNode.insertBefore(s, ref.nextSibling); watch(s);
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1. רקע בפתיחה: הציטוט של היום בכתב ידו, גדול ועדין מאחורי "חצי דקה להיום"
+    var today = document.querySelector('.today'), tin = today && today.querySelector('.in');
+    if (today && tin) {
+      var bg = el('div', 'hw-bg'); today.insertBefore(bg, today.firstChild);
+      var fill = function () {
+        var q = tin.querySelector('.q'); if (!q) return;
+        bg.textContent = (BGTEXT + ' ').repeat(4);
+        bg.classList.remove('hw-in'); void bg.offsetWidth; watch(bg);
+        addSig(tin);
+      };
+      fill();
+      new MutationObserver(function () { if (!tin.querySelector('.hw-sig')) fill(); }).observe(tin, { childList: true });
+    }
+    // 2. עמוד ציטוט: רק חתימה (סימן המים הוסר לבקשת נועם)
+    var qp = document.querySelector('.dm-qpage .card');
+    if (qp) addSig(qp.querySelector('.cardin'));
+    // 3. חתימה גם בכרטיסי מסלול
+    document.querySelectorAll('[data-reader] .card .cardin').forEach(addSig);
+    // 4. פס כתב יד שזז לאט בין האזורים, ובמסך "סיימתם"
+    // פס שזז לבד מימין לשמאל, ואפשר לגרור אותו ביד (אצבע / עכבר) לשני הכיוונים
+    var band = function (txt) {
+      var b = el('div', 'hw-band'), tr = document.createElement('div'); tr.className = 'hw-track';
+      var one = txt + ' <b class="sep">·</b> '; tr.innerHTML = '<span>' + one + one + '</span><span>' + one + one + '</span>'; b.appendChild(tr);
+      var x = 0, last = 0, drag = false, px = 0, hold = 0, span = tr.firstChild;
+      var still = function () { return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || document.body.classList.contains('a-still'); };
+      function step(t) { var w = span.offsetWidth || 1, dt = last ? Math.min(t - last, 60) : 0; last = t;
+        if (!drag && t > hold && !still()) x += dt * 0.022;
+        x = ((x % w) + w) % w; tr.style.transform = 'translate3d(' + x + 'px,0,0)'; requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+      b.addEventListener('pointerdown', function (e) { drag = true; px = e.clientX; b.classList.add('grab'); try { b.setPointerCapture(e.pointerId); } catch (z) {} });
+      b.addEventListener('pointermove', function (e) { if (!drag) return; x += e.clientX - px; px = e.clientX; });
+      var up = function () { if (!drag) return; drag = false; hold = performance.now() + 1200; b.classList.remove('grab'); };
+      b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+      return b;
+    };
+    // הפס העליון: במעבר בין המדבר (הפתיחה) ל"חצי דקה להיום"
+    var tday = document.querySelector('.block.today'); if (tday) tday.parentNode.insertBefore(band(RISE), tday);
+    var join = document.querySelector('.join.block'); if (join) join.parentNode.insertBefore(band(BGTEXT), join);
+    var end = document.querySelector('.dm-end'); if (end) { var eb = el('div', 'hw-endbg', MOTTO); end.insertBefore(eb, end.firstChild); }
+  });
+})();
+
+

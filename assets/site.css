@@ -977,3 +977,303 @@ body.a-still .today .in.swap > *, body.a-still details.biur[open] > .biurbox { a
 
 @media (prefers-reduced-motion: reduce) { #topics .famtog svg * { transition: none !important; } }
 body.a-still #topics .famtog svg * { transition: none !important; }
+
+/* ===== דמו דיוקים 22.11.26 ===== */
+/* --- עולמות צבע (מתג "גרסאות") --- */
+html[data-cw="a"] { --ivory: #f3ebdd; --paper: #fbf7ef; --line: #e2d5bd; --bark: #24170b; --ink: #2b1d0d; }
+html[data-cw] body { background: var(--ivory); }
+/* הצילום של הרב באותו גוון זהב של המדבר */
+html[data-cw="a"] .arch .pic img { filter: sepia(.5) saturate(1.35) hue-rotate(-6deg) contrast(1.04) brightness(1.03); }
+/* b: מקצב, אזור הנושאים והספרים כלילה במדבר */
+/* c: שקט, בלי לוחיות כהות */
+
+/* --- פחות מספרים --- */
+#topics .topic .count { display: none; }
+
+/* --- 8. דלת לקהל חדש --- */
+.dm-new { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: #f1dfb6; font-size: 18px; text-decoration: none; border-bottom: 1px solid rgba(241, 223, 182, .45); padding-bottom: 2px; }
+.dm-new:hover { border-bottom-color: #f1dfb6; }
+.dm-new .arw, .dm-joinrow .arw, .dm-all .arw, .go .arw { width: .7em; height: .7em; }
+
+/* --- 3. וואטסאפ קבוע בסרגל --- */
+.bar .box { position: relative; }
+.dm-wa { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 14px; color: #24170b; text-decoration: none; font-size: 18px; font-weight: 700; white-space: nowrap; background: linear-gradient(120deg, #c99a48, #f0d79c 45%, #c99a48); background-size: 220% 100%; animation: dmshine 6s ease-in-out infinite; }
+.dm-wa svg { width: 22px; height: 22px; }
+@keyframes dmshine { 0%, 100% { background-position: 0 0; } 50% { background-position: 100% 0; } }
+@media (prefers-reduced-motion: reduce) { .dm-wa { animation: none; } }
+@media (max-width: 420px) { .dm-wa span { display: none; } .dm-wa { padding: 0 11px; } }
+
+/* --- 2. הצטרפות צמודה לחצי דקה להיום --- */
+.today .dm-joinrow { margin-top: 26px; display: block; padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.today .dm-joinrow::before { content: none !important; }
+.dm-joinrow p { margin: 0; width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; padding: 16px 0 0; border-top: 1px solid var(--line); font-size: 19px; color: var(--ink); }
+.dm-joinrow a { display: inline-flex; align-items: center; gap: 8px; color: var(--bark); font-weight: 700; text-decoration: none; border-bottom: 2px solid #c99a48; padding-bottom: 1px; }
+.dm-joinrow svg { width: 21px; height: 21px; color: #1f8f4e; }
+
+/* --- כותרת חלק עם "הכול" בקצה --- */
+.dm-head { width: 100%; display: flex; align-items: end; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; text-align: right; }
+.dm-head .sub { margin-inline: 0; }
+.dm-all { display: inline-flex; align-items: center; gap: 8px; color: var(--bark); font-size: 18px; text-decoration: none; border-bottom: 1px solid var(--bark); padding-bottom: 2px; white-space: nowrap; }
+.dm-doors .in, .dm-paths .in, #books .in, #calendar .in, .dm-rabbis .in, .dm-more .in { justify-items: stretch; }
+
+/* --- 4. ארבע דלתות --- */
+.dm-doors h2, .dm-doors .sub { text-align: center; }
+.dm-doorgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 18px; width: 100%; }
+@media (max-width: 860px) { .dm-doorgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
+.dm-door { display: grid; justify-items: center; gap: 6px; padding: 26px 14px 22px; background: var(--paper); border: 1px solid var(--line); color: var(--ink); text-decoration: none; text-align: center; transition: border-color .3s, transform .3s var(--ease); }
+.dm-door:hover { border-color: #c99a48; transform: translateY(-3px); }
+.dm-door .ic { width: 46px; height: 46px; color: #a87b33; }
+.dm-door .ic svg { width: 100%; height: 100%; }
+.dm-door .t { font-size: 24px; font-weight: 700; color: var(--bark); line-height: 1.1; }
+.dm-door .s { font-size: 15.5px; color: #6d5a3d; line-height: 1.35; }
+
+/* --- 7. מסלולים --- */
+.dm-pathgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 100%; margin-top: 10px; }
+@media (max-width: 860px) { .dm-pathgrid { grid-template-columns: 1fr; } }
+/* מסלולים: 3 גרסאות (מתג pv). a נייר וזהב, b מדבר, c תוכן העניינים */
+.dm-path { display: grid; gap: 8px; align-content: start; padding: 26px 24px 22px; text-decoration: none; text-align: right; position: relative; overflow: hidden; transition: transform .35s var(--ease), border-color .3s; }
+.dm-path:hover { transform: translateY(-3px); }
+.dm-path > * { position: relative; }
+.dm-path .bg, .dm-path .toc, .dm-path .dots { display: none; }
+.dm-path .k { font-size: 14px; letter-spacing: .04em; font-weight: 700; }
+.dm-path .t { font-size: 30px; font-weight: 700; line-height: 1.1; }
+.dm-path .s { font-size: 16.5px; line-height: 1.4; }
+.dm-path .first { font-family: var(--book); font-size: 18px; line-height: 1.55; padding-top: 12px; margin-top: 2px; }
+.dm-path .go { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; margin-top: 4px; }
+/* a: נייר וזהב */
+html[data-pv="a"] .dm-path { background: var(--paper); border: 1px solid #d8c08a; outline: 1px solid rgba(201, 154, 72, .35); outline-offset: -7px; color: var(--ink); }
+html[data-pv="a"] .dm-path:hover { border-color: #c99a48; }
+html[data-pv="a"] .dm-path .k { color: #a87b33; }
+html[data-pv="a"] .dm-path .t { color: var(--bark); }
+html[data-pv="a"] .dm-path .s { color: #6d5a3d; }
+html[data-pv="a"] .dm-path .first { color: #3d2e18; border-top: 1px solid var(--line); }
+html[data-pv="a"] .dm-path .dots { display: flex; gap: 6px; }
+html[data-pv="a"] .dm-path .dots i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #c99a48; }
+html[data-pv="a"] .dm-path .dots i:first-child { background: #c99a48; }
+html[data-pv="a"] .dm-path .go { color: var(--bark); }
+/* b: מדבר, התמונה של הפתיחה */
+/* c: תוכן העניינים, רואים מה יש בפנים */
+
+/* אייקון "האדם ובוראו": רק הגרסה שנבחרה */
+.ic-bore .icv { display: none; }
+html[data-ic="a"] .ic-bore .icv-a { display: inline; }
+
+/* קריאת מסלול: ציטוט אחד בכל פעם */
+.dm-steps.reader:not(.all) li { grid-template-columns: 1fr; }
+.dm-steps.reader:not(.all) .st { display: none; }
+.dm-reader { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: -10px 0 14px; }
+.dm-reader button { height: 50px; padding: 0 18px; font: inherit; font-size: 19px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.dm-reader .prev { background: transparent; border: 1px solid var(--line); color: var(--bark); }
+.dm-reader .prev:disabled { opacity: .35; cursor: default; }
+.dm-reader .next { background: #1f150b; border: 1px solid #1f150b; color: #f1d595; }
+.dm-reader .next[hidden] { display: none; }
+.dm-reader .prog { display: grid; justify-items: center; gap: 6px; }
+.dm-reader .dots { display: flex; gap: 7px; }
+.dm-reader .dots i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #c99a48; transition: background .3s, transform .3s; }
+.dm-reader .dots i.was { background: rgba(201, 154, 72, .45); }
+.dm-reader .dots i.now { background: #c99a48; transform: scale(1.25); }
+.dm-reader .n { font-size: 15px; color: #6d5a3d; }
+.dm-showall { display: block; margin: 0 auto 30px; background: none; border: 0; border-bottom: 1px solid currentColor; color: #8a5a2b; font: inherit; font-size: 16px; cursor: pointer; padding: 0 0 2px; }
+.dm-end { text-align: center; padding: 34px 20px; margin-bottom: 30px; background: var(--paper); border: 1px solid #d8c08a; display: grid; justify-items: center; gap: 8px; }
+.dm-end[hidden] { display: none; }
+.dm-end .k { margin: 0; color: #a87b33; font-weight: 700; font-size: 15px; }
+.dm-end h2 { margin: 0; }
+.dm-end p { margin: 0; font-size: 19px; }
+.dm-endjoin { display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 22px; margin-top: 6px; color: #24170b; text-decoration: none; font-size: 20px; font-weight: 700; background: linear-gradient(120deg, #c99a48, #f0d79c 45%, #c99a48); }
+.dm-endjoin svg { width: 22px; height: 22px; }
+.dm-endmore { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin-top: 12px; }
+.dm-endmore a { color: var(--bark); font-size: 17px; text-decoration: none; border-bottom: 1px solid currentColor; display: inline-flex; align-items: center; gap: 6px; }
+.dm-endmore .arw { width: .65em; height: .65em; }
+
+/* תמונות המבארים */
+.dm-rabbi .mono { overflow: hidden; }
+.dm-rabbi .mono img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; filter: saturate(.9) sepia(.12); }
+
+/* --- 5. כריכות ספרים ושורת גלילה --- */
+.dm-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(170px, 1fr); gap: 14px; overflow-x: auto; width: 100%; padding-bottom: 10px; scroll-snap-type: x mandatory; scrollbar-width: thin; margin-top: 10px; }
+.dm-rail > * { scroll-snap-align: start; }
+@media (max-width: 700px) { .dm-rail { grid-auto-columns: 62%; } }
+.dm-cover { aspect-ratio: 3 / 4; display: grid; grid-template-rows: auto 1fr auto auto; justify-items: center; align-items: center; gap: 6px; padding: 20px 14px 18px; background: linear-gradient(160deg, #2c1d0d, #1a1107 70%); color: #f3e2b9; text-decoration: none; text-align: center; border: 1px solid #3b2913; outline: 1px solid rgba(233, 207, 148, .35); outline-offset: -8px; transition: transform .35s var(--ease); }
+.dm-cover:hover { transform: translateY(-4px); }
+.dm-cover .orn { width: 34px; height: 1px; background: #c99a48; box-shadow: 0 5px 0 #c99a48; opacity: .8; }
+.dm-cover .nm { font-family: var(--book); font-size: 25px; font-weight: 700; line-height: 1.15; color: #fff1cf; }
+.dm-cover .by { font-size: 13px; color: #c8ad78; letter-spacing: .05em; }
+.dm-cover .n { font-size: 14px; color: #a89065; }
+.dm-cover.more { background: var(--paper); color: var(--bark); border-color: var(--line); outline-color: var(--line); grid-template-rows: 1fr auto; }
+.dm-cover.more .nm { color: var(--bark); font-size: 22px; }
+.dm-cover.more .go { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; border-bottom: 1px solid currentColor; }
+.dm-shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; width: 100%; padding-block: 30px 50px; }
+@media (max-width: 480px) { .dm-shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .dm-cover .nm { font-size: 21px; } }
+
+/* --- 6. עכשיו בלוח השנה --- */
+.dm-now { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; margin-top: 10px; }
+@media (max-width: 760px) { .dm-now { grid-template-columns: 1fr; } }
+.dm-nowcard { display: grid; gap: 8px; align-content: start; padding: 24px; background: var(--paper); border: 1px solid var(--line); color: var(--ink); text-decoration: none; text-align: right; }
+.dm-nowcard:hover { border-color: #c99a48; }
+.dm-nowcard .k { font-size: 14px; color: #a87b33; letter-spacing: .06em; font-weight: 700; }
+.dm-nowcard .t { font-size: 30px; font-weight: 700; color: var(--bark); line-height: 1.1; }
+.dm-nowcard .q { font-family: var(--book); font-size: 19px; line-height: 1.55; color: #4a3920; }
+.dm-nowcard .q:empty { display: none; }
+.dm-nowcard .go { display: inline-flex; align-items: center; gap: 8px; color: var(--bark); font-size: 17px; font-weight: 700; margin-top: 4px; }
+
+/* --- המבארים --- */
+.dm-rabbis .dm-rail { grid-auto-columns: minmax(180px, 1fr); }
+@media (max-width: 700px) { .dm-rabbis .dm-rail { grid-auto-columns: 46%; } }
+.dm-rabbi { display: grid; justify-items: center; align-content: start; gap: 4px; padding: 22px 12px 18px; background: var(--paper); border: 1px solid var(--line); text-decoration: none; text-align: center; color: var(--ink); }
+.dm-rabbi .mono { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #4a3217, #1f150b); color: #f1d595; font-size: 27px; font-weight: 700; margin-bottom: 8px; box-shadow: 0 0 0 1px #c99a48, 0 0 0 5px var(--paper), 0 0 0 6px rgba(201, 154, 72, .4); }
+.dm-rabbi .nm { font-size: 19px; font-weight: 700; color: var(--bark); line-height: 1.2; }
+.dm-rabbi .ro { font-size: 14.5px; color: #75634a; line-height: 1.3; }
+.dm-rabbi .n { font-size: 14px; color: #a87b33; margin-top: 4px; }
+.dm-rgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; width: 100%; padding-block: 30px 50px; }
+@media (max-width: 480px) { .dm-rgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
+
+/* --- 9. עמוד ציטוט: במרכז, בלי עמודה בצד --- */
+.dm-qcol { max-width: 860px !important; display: block !important; text-align: right !important; padding-block: 34px 10px; }
+.dm-qpage .card .quote { font-size: clamp(25px, 3.2vw, 34px); line-height: 1.45; }
+.dm-more { padding-block: 40px 20px; border-top: 1px solid var(--line); margin-top: 30px; }
+.dm-mini { display: grid; gap: 8px; align-content: start; padding: 18px; background: var(--paper); border: 1px solid var(--line); text-decoration: none; color: var(--ink); text-align: right; min-height: 170px; }
+.dm-mini .t { font-weight: 700; font-size: 19px; color: var(--bark); }
+.dm-mini .q { font-family: var(--book); font-size: 16.5px; line-height: 1.5; color: #4a3920; }
+.dm-more .dm-rail { grid-auto-columns: minmax(230px, 1fr); }
+@media (max-width: 700px) { .dm-more .dm-rail { grid-auto-columns: 78%; } }
+.dm-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
+.dm-tags a { padding: 6px 14px; border: 1px solid var(--line); background: var(--paper); color: var(--bark); text-decoration: none; font-size: 16px; }
+
+/* --- מסלול: צעדים ממוספרים --- */
+.dm-steps { list-style: none; margin: 0 0 40px; padding: 0; display: grid; gap: 22px; counter-reset: none; }
+.dm-steps li { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; align-items: start; }
+.dm-steps .st { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: #1f150b; color: #f1d595; font-weight: 700; font-size: 20px; margin-top: 14px; }
+@media (max-width: 520px) { .dm-steps li { grid-template-columns: 1fr; } .dm-steps .st { margin-top: 0; } }
+
+/* --- מתג גרסאות --- */
+
+.dm-rabbi .mono.ph { background-repeat: no-repeat; background-color: #2a1c0e; filter: saturate(.92) sepia(.1); }
+
+/* מבארים כרשימה: שם ותיאור, 3 טורים, בלי תמונות (נועם 22.11) */
+.dm-rlist { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 34px; width: 100%; margin-top: 14px; text-align: right; }
+@media (max-width: 860px) { .dm-rlist { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 18px; } }
+@media (max-width: 480px) { .dm-rlist { grid-template-columns: 1fr; } }
+.dm-rlist.all { padding-block: 30px 50px; }
+.dm-rlist .dm-rabbi { display: grid; gap: 2px; justify-items: start; text-align: right; padding: 15px 0 14px; background: none; border: 0; border-bottom: 1px solid var(--line); }
+.dm-rlist .dm-rabbi .nm { font-size: 21px; }
+.dm-rlist .dm-rabbi .ro { font-size: 15.5px; }
+.dm-rlist .dm-rabbi:hover .nm { color: #a87b33; }
+
+.ic-bore .icv .mo:nth-child(n+3) { opacity: 0; transition: opacity .35s ease .25s; }
+.ic-bore.on .icv .mo:nth-child(n+3) { opacity: 1; }
+
+/* מסלולים: שורה שמדפדפים בה (6 מסלולים) */
+.dm-pathgrid { grid-template-columns: none !important; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 3); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: thin; }
+.dm-pathgrid > * { scroll-snap-align: start; }
+@media (max-width: 860px) { .dm-pathgrid { grid-auto-columns: 84%; } }
+
+/* מבארים בדף הבית: כולם, קטן, 3 שורות */
+.dm-rlist.compact { grid-template-columns: none; grid-template-rows: repeat(3, auto); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 22px; }
+.dm-rlist.compact .dm-rabbi { padding: 9px 0 8px; }
+.dm-rlist.compact .dm-rabbi .nm { font-size: 16.5px; }
+.dm-rlist.compact .dm-rabbi .ro { font-size: 13px; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+@media (max-width: 860px) { .dm-rlist.compact { grid-auto-columns: 46%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; } .dm-rlist.compact > * { scroll-snap-align: start; } }
+
+.dm-pathgrid, .dm-rail, .dm-rlist { min-width: 0; max-width: 100%; }
+
+/* ---------- דמו 22.11: כתב היד של הרב (BA כנפי רוח) - קישוט, לא לקריאה ---------- */
+@font-face { font-family: "Kanfei Ruach"; src: url(fonts/kanfei-ruach.otf) format("opentype"); font-display: swap; }
+:root { --hw: "Kanfei Ruach", cursive; --hw-gold: #c99a48; }
+/* הפעולה: נחשף מימין לשמאל כמו עט */
+.hw-bg, .hw-sig { clip-path: inset(0 0 0 100%); transition: clip-path 2.6s cubic-bezier(.45, .05, .2, 1); }
+.hw-in { clip-path: inset(0 0 0 0) !important; }
+.hw-sig { transition-duration: 1.4s; transition-delay: .3s; }
+
+/* 1. רקע בפתיחה */
+.today { position: relative; overflow: hidden; isolation: isolate; }
+.hw-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; user-select: none; overflow: hidden; font-family: var(--hw); color: var(--hw-gold); opacity: .1; font-size: clamp(78px, 15vw, 190px); line-height: .92; text-align: justify; word-break: break-word; padding-top: .1em; -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.45) 45%, #000 100%); mask-image: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.45) 45%, #000 100%); }
+
+/* 2. סימן מים בעמוד ציטוט */
+.dm-qpage .card .cardin { position: relative; isolation: isolate; overflow: hidden; }
+
+/* 3. חתימה */
+.hw-sig { font-family: var(--hw); color: var(--hw-gold); font-size: 30px; line-height: 1.1; margin: 6px 0 0; text-align: center; opacity: .9; user-select: none; }
+.today .hw-sig { display: block; width: 100%; grid-column: 1 / -1; justify-self: center; text-align: center !important; }
+
+/* 4. פס שזז */
+.hw-band { overflow: hidden; white-space: nowrap; font-family: var(--hw); color: var(--hw-gold); font-size: clamp(38px, 5.4vw, 60px); line-height: 1.6; padding-block: 8px; border-block: 1px solid rgba(201, 154, 72, .3); user-select: none; -webkit-user-select: none; touch-action: pan-y; cursor: grab; }
+.hw-band.grab { cursor: grabbing; }
+.hw-track { display: flex; width: max-content; opacity: .72; will-change: transform; }
+.hw-track > span { flex: none; padding-left: .6em; }
+.hw-band .sep { font-weight: normal; font-size: .5em; vertical-align: middle; padding-inline: .3em; }
+.dm-end { position: relative; overflow: hidden; isolation: isolate; }
+.hw-endbg { position: absolute; inset: 50% -5% auto; transform: translateY(-50%) rotate(-5deg); z-index: -1; font-family: var(--hw); color: var(--hw-gold); opacity: .14; font-size: clamp(60px, 12vw, 150px); text-align: center; white-space: nowrap; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .hw-bg, .hw-sig { clip-path: none; transition: none; } }
+
+
+
+/* 22.11 נועם (טלפון): עמוד ציטוט ממורכז - ציטוט, מקור, ושורת "ביאור" + שם המבאר */
+@media (max-width: 900px) {
+  .dm-qpage .card .quote, .dm-qpage .card .ref, .dm-qpage .card .note { text-align: center !important; }
+  .dm-qpage details.biur > summary { justify-content: center !important; }
+  .dm-qpage details.biur > summary .who { justify-content: center; }
+  .dm-qpage details.biur > summary .wh { text-align: center; align-items: center; }
+}
+/* החתימה לא נחתכת: מקום לזנבות האותיות (ק, ן) גם בתוך החשיפה */
+.hw-sig { line-height: 1.5 !important; padding-bottom: .15em; clip-path: inset(-40% -6% -60% 100%); }
+.hw-sig.hw-in { clip-path: inset(-40% -6% -60% -6%) !important; }
+
+/* 22.11 נועם (טלפון): בשער - תמונת הרב קטנה יותר, החיפוש מתחתיה, ו"מי היה הרב קוק" צמוד לחיפוש */
+@media (max-width: 900px) {
+  .hero .text, .hero .under { display: contents; }
+  .hero > .in, .hero .in:has(> .stage) { display: flex !important; flex-direction: column; align-items: center; }
+  .hero h1 { order: 1; } .hero .lede { order: 2; }
+  .hero .stage { order: 3; width: 150px !important; max-width: 42vw; height: auto !important; margin: 8px auto 18px !important; }
+  .hero .stage .arch { width: 100% !important; height: auto !important; }
+  .hero form { order: 4; width: 100%; margin-bottom: 0 !important; }
+  .hero .dm-new { order: 5; margin-top: 10px !important; padding-top: 0 !important; }
+}
+/* 22.11 נועם - טלפון בלבד: כותרת גדולה יותר ומשפט קטן קצת, באותו רוחב; "מי היה" צמוד לחיפוש; השער נגמר מהר יותר (הרקע נחתך מהשמיים, הדיונות נשארות) */
+@media (max-width: 900px) {
+  .hero .in { padding-top: 22px !important; padding-bottom: 14px !important; row-gap: 14px !important; }
+  .hero h1 { font-size: 31vw !important; line-height: .98 !important; margin: 0 !important; }
+  .hero .lede { font-size: 6.75vw !important; line-height: 1.3 !important; max-width: none !important; margin: 0 !important; }
+  .hero .stage { margin: 2px auto 6px !important; }
+  .hero form { margin: 0 !important; }
+  .hero .dm-new { margin-top: -6px !important; padding-block: 0 !important; }
+}
+
+/* 22.11 נועם (טלפון): כל כרטיסי הציטוט ממורכזים - כותרת, ציטוט, מקור, ביאור + מבאר, נושאים ושיתוף. טקסט הביאור עצמו נשאר מיושר לקריאה */
+@media (max-width: 900px) {
+  .card .cardtop { display: flex; flex-direction: column; align-items: center !important; justify-content: center; text-align: center; gap: 2px; }
+  .card .cardtop .title, .card .num { text-align: center !important; margin-inline: auto; }
+  .card .quote, .card .ref, .card .note { text-align: center !important; }
+  .card details.biur > summary { justify-content: center !important; }
+  .card details.biur > summary .who { justify-content: center; }
+  .card details.biur > summary .wh { text-align: center; align-items: center; }
+  .card .cardbar { justify-content: center !important; text-align: center; }
+  .card .cardbar .tags { display: flex; flex-wrap: wrap; justify-content: center; }
+  .card .cardbar .spacer { display: none; }
+}
+/* החלקה בין כרטיסי מסלול */
+.dm-steps.reader li.dm-in-next { animation: dmInNext .32s cubic-bezier(.2, .7, .2, 1) both; }
+.dm-steps.reader li.dm-in-prev { animation: dmInPrev .32s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes dmInNext { from { opacity: 0; transform: translateX(40px); } }
+@keyframes dmInPrev { from { opacity: 0; transform: translateX(-40px); } }
+@media (prefers-reduced-motion: reduce) { .dm-steps.reader li.dm-in-next, .dm-steps.reader li.dm-in-prev { animation: none; } }
+.dm-steps.reader { touch-action: pan-y; }
+
+/* 22.11 נועם - טלפון בלבד: גודל השער שנבחר ("כמו מקודם") - כותרת, משפט, מלבן חיפוש */
+@media (max-width: 900px) {
+  .hero h1 { font-size: 21vw !important; }
+  .hero .lede { font-size: 6.1vw !important; }
+  .hero form { width: 100% !important; }
+  .hero form :is(input, button) { height: 56px !important; min-height: 0 !important; font-size: 18px !important; }
+}
+
+/* 22.11 נועם - טלפון: פחות מרווח בשורות שמתחת לציטוט (נושא / שיתוף / העתקה). נבחר: צפוף */
+@media (max-width: 900px) {
+  .card .cardbar { margin-top: 10px !important; padding-top: 6px !important; }
+  .card .cardbar :is(.tags a, > a, > button) { padding-block: 2px !important; min-height: 0 !important; line-height: 1.2 !important; }
+  .card .cardbar .tags { margin-bottom: 0 !important; }
+}
+/* תיקון: שורת "ביאור" + המבאר הייתה inline-flex ונצמדה לימין. עכשיו ברוחב מלא וממורכזת */
+@media (max-width: 900px) {
+  .card details.biur > summary { display: flex !important; width: 100%; justify-content: center !important; text-align: center; }
+  .card details.biur .biurbox .bh { justify-content: center; text-align: center; }
+}
