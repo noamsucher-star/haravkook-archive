@@ -423,6 +423,7 @@ if (typeof module !== 'undefined') module.exports = SE;
 
   // ---------- פרשת השבוע (לפי לוח ארץ ישראל) ----------
   // מחזיר את הפרשה (או שתיים מחוברות) של השבת הקרובה, או null בשבת של חג
+  window.__weeklyParasha = function (d) { return weeklyParasha(d); }; // לעוזר
   function weeklyParasha(now) {
     var NAMES = 'bereshit noach lech-lecha vayera chayei-sara toldot vayetze vayishlach vayeshev miketz vayigash vayechi shemot vaera bo beshalach yitro mishpatim teruma tetzave ki-tisa vayakhel pekudei vayikra tzav shemini tazria metzora acharei-mot kedoshim emor behar bechukotai bamidbar naso behaalotcha shlach korach chukat balak pinchas matot masei devarim vaetchanan ekev reeh shoftim ki-tetze ki-tavo nitzavim'.split(' ');
     var fmt = new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -594,6 +595,154 @@ if (typeof module !== 'undefined') module.exports = SE;
     var cl = t.closest('[data-copylink]');
     if (cl) { (navigator.clipboard ? navigator.clipboard.writeText(cl.getAttribute('data-copylink')) : Promise.reject()).then(function () { toast('הקישור הועתק'); }, function () {}); }
   });
+})();
+
+// "העוזר של חצי דקה" (24.11.26): צ'אט קבוע בצד המסך שעוזר למצוא ציטוטים.
+// עובד רק מהמאגר, דרך מנוע החיפוש (search-engine.js). אף פעם לא כותב ציטוט משלו.
+(function () {
+  var root = document.documentElement, BASE = root.getAttribute('data-base') || '', CH = root.getAttribute('data-channel') || '';
+  var btn = document.getElementById('bot-btn'), panel = document.getElementById('bot-panel');
+  if (!btn || !panel || typeof SE === 'undefined') return;
+  var log = panel.querySelector('.bot-log'), form = panel.querySelector('.bot-form'), input = panel.querySelector('.bot-input');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ALL = null, DATA = null, loading = null, started = false, last = null;
+  var e = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var store = function (k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (err) { return null; } };
+
+  // ---------- גרסאות עיצוב (זמני, עד שנועם בוחר) ----------
+  var ver = (location.search.match(/[?&]bot=([123])/) || [])[1];
+  try { if (ver) localStorage.setItem('botv', ver); else ver = localStorage.getItem('botv'); } catch (err) {}
+  root.setAttribute('data-bot', ver || '1');
+  var vs = document.getElementById('bot-vers');
+  if (vs) {
+    var syncV = function () { [].forEach.call(vs.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === root.getAttribute('data-bot'))); }); };
+    syncV();
+    vs.addEventListener('click', function (ev) { var b = ev.target.closest('[data-v]'); if (!b) return; root.setAttribute('data-bot', b.getAttribute('data-v')); try { localStorage.setItem('botv', b.getAttribute('data-v')); } catch (err) {} syncV(); });
+  }
+
+  function load() {
+    if (loading) return loading;
+    loading = Promise.all([
+      fetch(BASE + 'assets/search.json').then(function (r) { return r.json(); }),
+      fetch(BASE + 'assets/bot.json').then(function (r) { return r.json(); })
+    ]).then(function (res) { ALL = res[0]; DATA = res[1]; return res; });
+    return loading;
+  }
+
+  // ---------- הודעות ----------
+  function scroll() { log.scrollTop = log.scrollHeight; }
+  function save() { store('bot-log', log.innerHTML); }
+  function add(html, who) {
+    var m = document.createElement('div'); m.className = 'bot-msg ' + (who || 'bot'); m.innerHTML = html;
+    log.appendChild(m); scroll(); save(); return m;
+  }
+  function typing(ms) {
+    return new Promise(function (res) {
+      if (reduce) return res();
+      var t = add('<span class="bot-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="vh">מקליד</span>', 'bot typing');
+      setTimeout(function () { t.remove(); res(); }, ms || 450);
+    });
+  }
+  function say(html, ms) { return typing(ms).then(function () { return add(html, 'bot'); }); }
+  function chips(list) { // [[תווית, פעולה]]
+    return '<div class="bot-chips">' + list.map(function (c) { return '<button type="button" class="bot-chip" data-act="' + e(c[1]) + '">' + e(c[0]) + '</button>'; }).join('') + '</div>';
+  }
+  function card(q) {
+    var by = q.bi && q.bi[0] && q.bi[0].a ? '<p class="bot-by">ביאור: ' + e(q.bi[0].a) + '</p>' : '';
+    var share = 'https://wa.me/?text=' + encodeURIComponent('*' + (q.t || '') + '*\n"' + q.q + '"\n' + (q.r || '') + (CH ? '\n\nלציטוט יומי בוואטסאפ: ' + CH : ''));
+    return '<article class="bot-card"><h3 class="bot-ct">' + e(q.t || 'ציטוט') + '</h3><p class="bot-cq">' + e(q.q) + '</p>'
+      + (q.r ? '<p class="bot-cr">' + e(q.r) + '</p>' : '') + by
+      + '<p class="bot-ca"><a href="' + BASE + 'q/' + q.i + '.html">לציטוט המלא' + (q.bi && q.bi.length ? ' ולביאור' : '') + ' <i class="arw" aria-hidden="true"></i></a>'
+      + '<a href="' + share + '" target="_blank" rel="noopener">שיתוף בוואטסאפ</a></p></article>';
+  }
+  function show(list, intro, more) {
+    last = { list: list, at: 3, more: more };
+    return say(e(intro)).then(function () {
+      add('<div class="bot-cards">' + list.slice(0, 3).map(card).join('') + '</div>', 'bot cards');
+      var next = [];
+      if (list.length > 3) next.push(['עוד ציטוטים', 'more']);
+      (more || []).forEach(function (m) { next.push(m); });
+      next.push(['חיפוש חדש', 'start']);
+      add(chips(next), 'bot');
+    });
+  }
+
+  // ---------- השיחה ----------
+  function start(again) {
+    var hi = again ? 'במה עוד אפשר לעזור?' : 'שלום! אני העוזר של חצי דקה הרב קוק.';
+    return say(e(hi), 300).then(function () {
+      return again ? null : say('ספרו לי מה עובר עליכם או מה אתם מחפשים, ואמצא לכם ציטוט מתאים מכתבי הראי"ה.');
+    }).then(function () {
+      add(chips([['מה עובר עליי', 'feel'], ['לפי נושא', 'fams'], ['לפרשת השבוע', 'parasha'], ['ציטוט אקראי', 'random']]), 'bot');
+    });
+  }
+  function answer(text) {
+    var R = SE.search(ALL, text, DATA.names, DATA.topicInfo);
+    var more = R.topics.slice(0, 2).map(function (id) { return ['לנושא: ' + DATA.names[id], 'topic:' + id]; });
+    if (!R.results.length) {
+      return say('לא מצאתי ציטוט בדיוק על "' + e(text) + '". אולי אחד מאלה יעזור?').then(function () {
+        add(chips(more.concat(DATA.feel.slice(0, 6).map(function (f) { return [f[1], 'q:' + f[0]]; }))), 'bot');
+      });
+    }
+    var n = R.results.length;
+    var intro = n === 1 ? 'מצאתי ציטוט אחד שמתאים:' : n <= 3 ? 'מצאתי ' + n + ' ציטוטים שמתאימים:' : 'מצאתי ' + n + ' ציטוטים. הנה המתאימים ביותר:';
+    if (!R.exact) intro = 'לא מצאתי ציטוט עם כל המילים, אבל אלה הכי קרובים:';
+    return show(R.results, intro, more);
+  }
+  function act(a) {
+    if (a === 'start') return start(true);
+    if (a === 'more' && last) {
+      var chunk = last.list.slice(last.at, last.at + 3); last.at += 3;
+      add('<div class="bot-cards">' + chunk.map(card).join('') + '</div>', 'bot cards');
+      var next = []; if (last.list.length > last.at) next.push(['עוד ציטוטים', 'more']); (last.more || []).forEach(function (m) { next.push(m); }); next.push(['חיפוש חדש', 'start']);
+      add(chips(next), 'bot'); return;
+    }
+    if (a === 'feel') return say('מה מרגישים עכשיו?').then(function () { add(chips(DATA.feel.map(function (f) { return [f[1], 'q:' + f[0]]; })), 'bot'); });
+    if (a === 'fams') return say('איזה תחום מעניין אתכם?').then(function () { add(chips(DATA.fams.map(function (f, i) { return [f.name, 'fam:' + i]; })), 'bot'); });
+    if (a.indexOf('fam:') === 0) { var f = DATA.fams[+a.slice(4)]; return say('בחרו נושא:').then(function () { add(chips(f.topics.map(function (t) { return [t[1], 'topic:' + t[0]]; })), 'bot'); }); }
+    if (a.indexOf('topic:') === 0) {
+      var id = a.slice(6), list = ALL.filter(function (q) { return (q.tp || []).indexOf(id) > -1; }).sort(function (x, y) { return (y.w || 0) - (x.w || 0); });
+      return show(list, 'בנושא "' + DATA.names[id] + '" יש ' + list.length + ' ציטוטים. הנה כמה מהיפים שבהם:', [['לעמוד הנושא המלא', 'go:topic/' + id + '.html']]);
+    }
+    if (a.indexOf('go:') === 0) { location.href = BASE + a.slice(3); return; }
+    if (a.indexOf('q:') === 0) return answer(a.slice(2));
+    if (a === 'random') {
+      var good = ALL.filter(function (q) { return q.bi && q.bi.length && (q.w || 0) >= 6; }); if (!good.length) good = ALL;
+      var pick = good[Math.floor(Math.random() * good.length)];
+      return show([pick], 'הנה חצי דקה של אור:', [['עוד ציטוט אקראי', 'random']]);
+    }
+    if (a === 'parasha') {
+      var wk = (window.__weeklyParasha && window.__weeklyParasha(new Date())) || [], hit = null;
+      wk.forEach(function (s) { if (!hit && DATA.pmap[s]) hit = DATA.pmap[s]; });
+      if (!hit) return say('השבת הקרובה היא שבת של חג, או שעוד אין לנו ציטוטים לפרשה שלה. אפשר לראות את כל הפרשות:').then(function () { add(chips([['לכל פרשות השבוע', 'go:calendar.html#parashot'], ['חיפוש חדש', 'start']]), 'bot'); });
+      var pl = hit.ids.map(function (i) { return ALL.find(function (q) { return q.i === i; }); }).filter(Boolean);
+      return show(pl, 'לשבת הקרובה, ' + hit.label + ':', [['לעמוד הפרשה', 'go:' + hit.url]]);
+    }
+  }
+
+  // ---------- פתיחה וסגירה ----------
+  function open(v, focusBack) {
+    panel.hidden = !v; btn.setAttribute('aria-expanded', String(v)); root.classList.toggle('bot-open', v); store('bot-open', v ? '1' : '0');
+    if (v) {
+      load().then(function () { if (!started) { started = true; if (!log.children.length) start(); } setTimeout(function () { input.focus({ preventScroll: true }); }, 50); }, function () { add('העוזר לא נטען. כדאי לרענן את העמוד.', 'bot'); });
+    } else if (focusBack) btn.focus();
+  }
+  // השיחה נשמרת כשעוברים עמוד (באותה לשונית)
+  var saved = store('bot-log'); if (saved) { log.innerHTML = saved; started = true; }
+  btn.addEventListener('click', function () { open(panel.hidden); });
+  panel.querySelector('.bot-x').addEventListener('click', function () { open(false, true); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && !panel.hidden) open(false, true); });
+  panel.addEventListener('click', function (ev) {
+    var c = ev.target.closest('.bot-chip'); if (!c) return;
+    var a = c.getAttribute('data-act'), label = c.textContent;
+    var row = c.closest('.bot-msg'); if (row) row.classList.add('used');
+    load().then(function () { if (a !== 'more') add(e(label), 'me'); act(a); });
+  });
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault(); var t = input.value.trim(); if (!t) return; input.value = '';
+    add(e(t), 'me'); load().then(function () { answer(t); });
+  });
+  panel.querySelector('.bot-reset').addEventListener('click', function () { log.innerHTML = ''; save(); last = null; load().then(function () { start(); }); input.focus(); });
 })();
 
 
