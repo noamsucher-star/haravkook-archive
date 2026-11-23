@@ -1287,3 +1287,15 @@ html[data-ic="a"] .ic-bore .icv-a { display: inline; }
 .givebox .tax46 { margin-top: -8px; font-size: 14px; opacity: .72; text-align: center; }
 @media (max-width: 560px) { .givebox .tax46 { margin-top: -6px; font-size: 13.5px; } }
 .mtax { margin-top: 4px; font-size: 14px; opacity: .7; text-align: center; }
+
+/* ===== חיפוש חכם (24.11): נושאים מתאימים + "מה עובר עליך?" ===== */
+.smart { display: grid; gap: 18px; margin: 4px 0 22px; }
+.smart .smh { margin: 0 0 8px; font-size: 18px; font-weight: 700; color: var(--bronze); }
+.smart .smrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.smart .smrow a { display: inline-flex; align-items: center; min-height: 44px; padding: 6px 16px; font-size: 18px; line-height: 1.2; color: var(--bark); text-decoration: none; background: #fffdf8; border: 1px solid #d9c18a; transition: background-color .2s, border-color .2s; }
+.smart .smrow a:hover { background: #f6ecd6; border-color: #b88a3e; }
+.smart .smtopics .smrow a { font-weight: 700; border-width: 1.5px; border-color: #c9a35a; }
+/* כשיש תוצאות, ההרגשות מתחבאות כדי שהתוצאות יופיעו מיד. הן מופיעות כשאין חיפוש או כשלא נמצא כלום */
+.smart .smfeel.after { display: none; }
+.smnote { margin: 0 0 14px; font-size: 18px; font-weight: 300; color: #58462d; }
+@media (max-width: 560px) { .smart .smrow a { font-size: 17px; padding: 6px 13px; } .smart .smh { font-size: 17px; } }

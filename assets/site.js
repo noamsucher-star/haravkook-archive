@@ -37,6 +37,192 @@ function todayHTML(q, base) {
     + '<p class="todaybar"><a href="' + (base || '') + 'q/' + q.i + '.html" data-wa="' + q.i + '" target="_blank" rel="noopener">שיתוף בוואטסאפ</a><button type="button" data-another>ציטוט נוסף</button></p>';
 }
 
+// מנוע החיפוש החכם (24.11.26). אותו קוד רץ בדפדפן ובבדיקות (Node).
+// עובד רק מהמאגר: כל תוצאה היא ציטוט אמיתי. "ההבנה" באה ממילים נרדפות ומתגיות שהוכנו מראש לכל ציטוט (data/tags).
+var SE = (function () {
+  // ---------- ניקוי ----------
+  var FIN = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
+  function norm(s) {
+    return String(s || '').replace(/[֑-ׇ]/g, '').replace(/[ךםןףץ]/g, function (c) { return FIN[c]; })
+      .replace(/[^א-ת0-9a-zA-Z]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  // כתיב חסר: בלי ו' וי' באמצע מילה (ירושלים = ירושלם, ענווה = ענוה)
+  function bare(w) { return w.length >= 4 ? w.charAt(0) + w.slice(1).replace(/[וי]/g, '') : w; }
+
+  // ---------- מילים שלא מחפשים ----------
+  var STOP = ' של על את עם אני לי שלי מה איך למה כמה הרב קוק הראיה ראיה ציטוט ציטוטים יש אין לא כן רוצה רוצים צריך צריכה משהו קצת מאוד מאד כמו זה זו זאת הוא היא הם אנחנו אתה את מרגיש מרגישה מרגישים הרגשה אצלי עכשיו היום כל או גם אם כי רק עוד מתי איפה מי מישהו על אודות בנושא נושא דבר דברים לגבי ממש חייב מחפש מחפשת תן תני תביא בבקשה לפני אחרי בזמן במהלך כשאני כשיש שאני שיש אצל בשביל עבור יותר פחות הכי הרבה '.split(' ').map(norm).filter(Boolean);
+  var PHRASES = [
+    ['אין לי כוח', 'עייפות'], ['שאין לי כוח', 'עייפות'], ['שאין כוח', 'עייפות'], ['אין כוח', 'עייפות'], ['נגמר לי הכוח', 'עייפות'], ['שחוק', 'שחיקה'], ['עייף', 'עייפות'], ['עייפה', 'עייפות'],
+    ['לא מצליח', 'כישלון'], ['לא מצליחה', 'כישלון'], ['אין טעם', 'ייאוש'], ['לא שווה', 'ערך עצמי'], ['שונא את עצמי', 'ערך עצמי'],
+    ['קשה לי', ''], ['קשה', ''], ['מתמודד', ''], ['מתמודדת', ''], ['להתמודד', ''], ['התמודדות', ''],
+    ['לב שבור', 'עצב'], ['שבור לי הלב', 'עצב'], ['בוכה', 'עצב'], ['נפטר', 'אבל'], ['נפטרה', 'אבל'], ['מוות של', 'אבל'], ['הלך לעולמו', 'אבל']
+  ].map(function (p) { return [norm(p[0]), norm(p[1])]; });
+  var STOPSET = {}; STOP.forEach(function (w) { STOPSET[w] = 1; });
+
+  // ---------- מילים נרדפות: מילה שאנשים כותבים -> מילים שמופיעות בכתבים, בביאורים ובתגיות ----------
+  var GROUPS = [
+    ['עצב', 'עצוב', 'עצובה', 'עצבות', 'עצבת', 'דיכאון', 'דכאון', 'מדוכא', 'מדוכאת', 'דכדוך', 'צער', 'כאב', 'לב שבור', 'שבור', 'שבורה', 'מצוברח', 'בוכה', 'דמעות'],
+    ['פחד', 'פוחד', 'פוחדת', 'מפחד', 'מפחדת', 'חרדה', 'חרד', 'חרדות', 'דאגה', 'דואג', 'דואגת', 'מודאג', 'מודאגת', 'חשש', 'לחץ', 'לחוץ', 'לחוצה', 'אימה'],
+    ['עייפות', 'עייף', 'חולשה', 'שחיקה', 'תשישות', 'עומס', 'מנוחה'],
+    ['ייאוש', 'יאוש', 'מיואש', 'מיואשת', 'להתייאש', 'התייאשות', 'אין טעם', 'אין תקווה', 'נשבר', 'נשברה', 'אבוד'],
+    ['נפילה', 'נפל', 'נפלתי', 'כישלון', 'כשלון', 'נכשל', 'נכשלתי', 'ירידה', 'משבר', 'מעידה', 'טעות', 'טעיתי'],
+    ['כעס', 'כועס', 'כועסת', 'עצבני', 'עצבנית', 'עצבים', 'זעם', 'רוגז'],
+    ['בדידות', 'בודד', 'בודדה', 'לבד', 'לבדי', 'גלמוד', 'ניכור'],
+    ['בלבול', 'מבולבל', 'מבולבלת', 'ספק', 'ספקות', 'מסופק', 'תהיה', 'תהיות', 'שאלות', 'לא יודע', 'חוסר ודאות'],
+    ['שמחה', 'שמח', 'שמחים', 'אושר', 'מאושר', 'מאושרת', 'עליזות', 'חדווה', 'שמחת חיים', 'שמח בחלקו'],
+    ['תקווה', 'תקוה', 'אופטימיות', 'אופטימי', 'לא להתייאש'],
+    ['אהבה', 'אוהב', 'אוהבת', 'לאהוב', 'אהבת', 'חיבה'],
+    ['הכרת תודה', 'תודה', 'הודיה', 'הכרת הטוב', 'להודות', 'הודאה'],
+    ['שלווה', 'שלוה', 'רוגע', 'רגוע', 'מנוחה', 'שקט', 'שקט נפשי', 'מנוחת הנפש', 'שלום פנימי'],
+    ['קנאה', 'מקנא', 'מקנאה', 'צרות עין'],
+    ['גאווה', 'גאוה', 'גאוותן', 'יהירות', 'אגו', 'התנשאות'],
+    ['ענווה', 'ענוה', 'ענו', 'צניעות', 'שפלות', 'פשטות'],
+    ['אשמה', 'אשם', 'רגשות אשם', 'חרטה', 'מתחרט', 'חטא', 'חטאתי', 'עבירה', 'בושה'],
+    ['תשובה', 'חזרה בתשובה', 'לחזור בתשובה', 'חוזר בתשובה', 'בעל תשובה', 'שינוי', 'להשתנות', 'תיקון'],
+    ['תפילה', 'להתפלל', 'מתפלל', 'מתפללת', 'תפלה', 'תפילות', 'בקשה'],
+    ['לימוד תורה', 'ללמוד', 'לומד', 'לומדת', 'לימוד', 'תורה', 'גמרא', 'ישיבה', 'בית מדרש'],
+    ['זוגיות', 'חתונה', 'נישואין', 'נישואים', 'בן זוג', 'בת זוג', 'אשה', 'אישה', 'שידוך', 'זיווג', 'חתן'],
+    ['הורות', 'הורים', 'ילדים', 'ילד', 'חינוך', 'לחנך', 'בנים', 'אמא', 'אבא', 'גידול ילדים'],
+    ['אבל', 'מוות', 'פטירה', 'שכול', 'אובדן', 'נפטר', 'הלוויה', 'נפטרה', 'יתום'],
+    ['מחלה', 'חולה', 'חולי', 'רפואה', 'החלמה', 'ריפוי', 'בריאות', 'כאב גוף'],
+    ['ארץ ישראל', 'הארץ', 'ארץ', 'ציונות', 'ציוני', 'עלייה', 'עליה לארץ', 'יישוב הארץ', 'מדינה', 'מדינת ישראל'],
+    ['גאולה', 'משיח', 'קץ', 'גאולת ישראל', 'קיבוץ גלויות'],
+    ['צבא', 'חייל', 'חיילים', 'מלחמה', 'גבורה', 'קרב', 'מילואים', 'צה"ל'],
+    ['עבודה', 'פרנסה', 'כסף', 'קריירה', 'מקצוע', 'עסק', 'עמל'],
+    ['טבע', 'בריאה', 'פרחים', 'עצים', 'בעלי חיים', 'נוף'],
+    ['עצמי', 'עצמיות', 'להיות עצמי', 'מי אני', 'זהות', 'ביטחון עצמי', 'בטחון עצמי', 'ערך עצמי', 'הכרה עצמית'],
+    ['אמונה', 'ביטחון', 'בטחון', 'מאמין', 'להאמין', 'אמון'],
+    ['השם', 'אלוקים', 'אלהים', 'בורא', 'הקדוש ברוך הוא', 'קבה', 'ריבונו של עולם', 'שכינה'],
+    ['אחדות', 'ביחד', 'אחווה', 'פילוג', 'מחלוקת', 'שנאת חינם', 'אהבת חינם', 'אהבת ישראל'],
+    ['נשמה', 'נפש', 'פנימיות', 'רוח', 'רוחניות'],
+    ['שבת', 'שבת קודש', 'מנוחה'],
+    ['רצון', 'שאיפה', 'חלום', 'חלומות', 'מטרה', 'מטרות', 'הצלחה', 'להצליח', 'גדלות'],
+    ['מחשבה', 'מחשבות', 'שכל', 'דמיון', 'יצירה', 'יצירתיות', 'רעיון', 'רעיונות'],
+    ['גוף', 'חומר', 'בריאות', 'ספורט', 'התעמלות', 'אוכל', 'שינה'],
+    ['צדקה', 'חסד', 'נתינה', 'לתת', 'עזרה לזולת', 'נדיבות'],
+    ['אמת', 'כנות', 'יושר', 'שקר'],
+    ['חירות', 'חופש', 'עבדות', 'שחרור'],
+    ['קדושה', 'קודש', 'קדוש', 'טהרה'],
+    ['זמן', 'רגע', 'עכשיו', 'הווה', 'עבר', 'עתיד']
+  ].map(function (g) { return g.map(norm); });
+  var SYN = {};
+  GROUPS.forEach(function (g, gi) { g.forEach(function (w) { (SYN[w] = SYN[w] || []).push(gi); }); });
+
+  // ---------- תחיליות וסיומות ----------
+  var PRE = ['ו', 'ה', 'ב', 'ל', 'מ', 'ש', 'כ', 'וה', 'וב', 'ול', 'ומ', 'וש', 'שה', 'שב', 'של', 'כש', 'מה', 'לה', 'בה', 'וכש'];
+  function forms(w) {
+    var out = [w];
+    if (w.length >= 4) PRE.forEach(function (p) { if (w.indexOf(p) === 0 && w.length - p.length >= 3) out.push(w.slice(p.length)); });
+    out.slice().forEach(function (x) {
+      if (x.length >= 5) ['ים', 'ות', 'יות', 'תי', 'נו', 'כם', 'הם'].forEach(function (s) { if (x.slice(-s.length) === s && x.length - s.length >= 3) out.push(x.slice(0, -s.length)); });
+      if (x.length >= 4 && /[התי]$/.test(x)) out.push(x.slice(0, -1));
+    });
+    return out.filter(function (x, i) { return out.indexOf(x) === i; });
+  }
+  // קבוצות מילים נרדפות שהמילה שייכת אליהן (גם בלי תחילית)
+  function groupsOf(w) { var gs = []; forms(w).forEach(function (f) { (SYN[f] || []).forEach(function (g) { if (gs.indexOf(g) < 0) gs.push(g); }); }); return gs; }
+
+  // ---------- התאמה בטקסט ----------
+  // מילה קצרה (עד 3 אותיות) = מילה שלמה בלבד (עם תחילית), כדי ש"אב" לא יימצא בתוך "אהבה"
+  // כתיב חסר נבדק רק כמילה שלמה (אחרת "חינוך" נמצא בתוך "חנוכה")
+  var RX = {};
+  function rx(key, src) { return RX[key] || (RX[key] = new RegExp(src)); }
+  function has(text, textBare, w) {
+    if (!w) return false;
+    if (w.indexOf(' ') > -1) return text.indexOf(w) > -1;
+    if (w.length <= 3) return rx('s' + w, '(^| )(?:[והלמש]{0,2})' + w + '( |$)').test(text);
+    if (text.indexOf(w) > -1) return true;
+    var b = bare(w);
+    return w.length >= 5 && b.length >= 4 && b !== w && rx('b' + b, '(^| )' + b + '( |$)').test(textBare);
+  }
+
+  // ---------- אינדקס ----------
+  var FIELDS = [['t', 10], ['k', 8], ['f', 8], ['tpn', 6], ['h', 6], ['q', 5], ['r', 4], ['bi', 2]];
+  function prep(q, topics) {
+    if (q._x) return q._x;
+    var x = {
+      t: norm(q.t), q: norm(q.q), r: norm((q.r || '') + ' ' + (q.b || '')), h: norm(q.h),
+      k: norm((q.k || []).join(' ')), f: norm((q.f || []).join(' ')),
+      tpn: norm((q.tp || []).map(function (id) { return topics && topics[id] ? topics[id] : ''; }).join(' ')),
+      bi: norm((q.bi || []).map(function (b) { return b.x + ' ' + (b.a || ''); }).join(' '))
+    };
+    x.all = FIELDS.map(function (f) { return x[f[0]]; }).join(' ');
+    x.B = {}; FIELDS.forEach(function (f) { x.B[f[0]] = x[f[0]].split(' ').map(function (t) { var o = bare(t); for (var p = 1; p <= 2 && t.length - p >= 4 && /[והבלמשכ]/.test(t.charAt(p - 1)); p++) o += ' ' + bare(t.slice(p)); return o; }).join(' '); });
+    q._x = x; return x;
+  }
+
+  // ציון של מילה אחת בציטוט: התאמה ישירה שווה יותר ממילה נרדפת
+  var AMBIG = { 'אבל': 1, 'עבודה': 1 };
+  function wordScore(x, w) {
+    var direct = forms(w), best = 0, hit = '';
+    FIELDS.forEach(function (f) {
+      if (AMBIG[w] && ['q', 'bi', 'r', 't'].indexOf(f[0]) > -1) return;
+      direct.forEach(function (d) { if (f[1] > best && has(x[f[0]], x.B[f[0]], d)) { best = f[1]; hit = d; } });
+    });
+    if (best) return { s: best, hit: hit };
+    groupsOf(w).forEach(function (g) {
+      GROUPS[g].forEach(function (syn) {
+        FIELDS.forEach(function (f) { if (AMBIG[syn] && ['q', 'bi', 'r', 't'].indexOf(f[0]) > -1) return; var v = f[1] * .7; if (v > best && has(x[f[0]], x.B[f[0]], syn)) { best = v; hit = syn; } });
+      });
+    });
+    return { s: best, hit: hit };
+  }
+
+  // ---------- החיפוש ----------
+  // all: כל הציטוטים, query: מה שכתבו, topics: {id: שם}, topicInfo: [{id,name,scope,promise}]
+  function search(all, query, topics, topicInfo) {
+    var nq = ' ' + norm(query) + ' ';
+    PHRASES.forEach(function (p) { nq = nq.split(' ' + p[0] + ' ').join(' ' + p[1] + ' '); });
+    nq = nq.replace(/s+/g, ' ').trim();
+    var words = nq.split(' ').filter(function (w) { return w && !STOPSET[w] && !(w.length === 1); });
+    if (!words.length) words = nq.split(' ').filter(Boolean);
+    var res = { words: words, results: [], terms: [], topics: [], exact: true };
+    if (!words.length) return res;
+    var terms = {};
+    var scored = all.map(function (q) {
+      var x = prep(q, topics), sum = 0, matched = 0;
+      words.forEach(function (w) { var r = wordScore(x, w); if (r.s) { matched++; sum += r.s; terms[r.hit] = 1; } });
+      // כל המשפט כמו שהוא, בציטוט או בכותרת = התאמה הכי חזקה
+      if (words.length > 1 && (x.q.indexOf(nq) > -1 || x.t.indexOf(nq) > -1)) sum += 40;
+      return { q: q, m: matched, s: sum + (q.w || 0) * .3 };
+    });
+    var need = words.length;
+    var full = scored.filter(function (r) { return r.m === need; });
+    if (!full.length && need > 1) {
+      // אין ציטוט שיש בו הכול: מראים את מה שהכי קרוב (רוב המילים)
+      res.exact = false;
+      var top = Math.max.apply(null, scored.map(function (r) { return r.m; }));
+      full = top >= Math.ceil(need / 2) ? scored.filter(function (r) { return r.m === top; }) : [];
+    }
+    full.sort(function (a, b) { return b.s - a.s || a.q.i - b.q.i; });
+    // מעט תוצאות מלאות: מוסיפים אחריהן ציטוטים שיש בהם כמעט הכול (חסרה מילה אחת)
+    if (res.exact && need > 1 && full.length < 5) {
+      var near = scored.filter(function (r) { return r.m === need - 1 && r.m >= 1; }).sort(function (a, b) { return b.s - a.s || a.q.i - b.q.i; }).slice(0, 12);
+      full = full.concat(near);
+    }
+    res.results = full.map(function (r) { return r.q; });
+    res.terms = Object.keys(terms).filter(Boolean);
+    // נושאים מתאימים: לפי שם הנושא, ההבטחה והתחום שלו, ולפי הנושאים של התוצאות הראשונות
+    if (topicInfo) {
+      var ts = topicInfo.map(function (t) {
+        var tx = { n: norm(t.name), p: norm((t.promise || '') + ' ' + (t.scope || '')) }; tx.nb = bare(tx.n); tx.pb = bare(tx.p);
+        var s = 0;
+        words.forEach(function (w) {
+          var hitN = forms(w).some(function (d) { return has(tx.n, tx.nb, d); }), hitP = forms(w).some(function (d) { return has(tx.p, tx.pb, d); });
+          if (!hitN && !hitP) groupsOf(w).forEach(function (g) { GROUPS[g].forEach(function (syn) { if (has(tx.n, tx.nb, syn)) hitN = true; else if (has(tx.p, tx.pb, syn)) hitP = true; }); });
+          s += hitN ? 3 : hitP ? 2 : 0;
+        });
+        res.results.slice(0, 12).forEach(function (q) { if ((q.tp || []).indexOf(t.id) > -1) s += .25; });
+        return { id: t.id, s: s };
+      }).filter(function (t) { return t.s >= 1; }).sort(function (a, b) { return b.s - a.s; });
+      res.topics = ts.slice(0, 3).map(function (t) { return t.id; });
+    }
+    return res;
+  }
+  return { norm: norm, search: search, forms: forms, groupsOf: groupsOf };
+})();
+if (typeof module !== 'undefined') module.exports = SE;
+
 // הקוד של האתר בדפדפן. card.js מודבק לפני הקובץ הזה בבנייה.
 (function () {
   var root = document.documentElement;
@@ -213,16 +399,22 @@ function todayHTML(q, base) {
     if (query) document.title = query + ' | חיפוש | אוצר חצי דקה הרב קוק';
     var words = norm(query).split(' ').filter(Boolean);
     var status = $('#count');
-    if (!words.length) { if (status) status.textContent = ''; $('#empty').hidden = false; $('#empty').textContent = 'מה מחפשים? כתבו מילה אחת או שתיים, למשל: שמחה, תשובה, ירושלים.'; }
+    if (!words.length) { if (status) status.textContent = ''; $('#empty').hidden = false; $('#empty').textContent = 'מה מחפשים? אפשר לכתוב מילה, הרגשה או מצב, למשל: שמחה, פחד, לפני חתונה. או לבחור הרגשה מהרשימה למעלה.'; }
     else {
       if (status) status.textContent = 'מחפשים...';
       fetch(BASE + 'assets/search.json').then(function (r) { return r.json(); }).then(function (all) {
-        var found = all.filter(function (q) { var s = q._s || (q._s = norm([q.t, q.q, q.r, q.b, q.bi.map(function (b) { return b.x + ' ' + b.a; }).join(' ')].join(' '))); var s2 = q._s2 || (q._s2 = s.replace(/[וי]/g, '')); return words.every(function (w) { return s.indexOf(w) > -1 || (w.length >= 4 && s2.indexOf(w.replace(/[וי]/g, '')) > -1); }); });
-        // כותרת שמתאימה = קודם
-        found.sort(function (a, b) { return (words.every(function (w) { return norm(b.t).indexOf(w) > -1; }) ? 1 : 0) - (words.every(function (w) { return norm(a.t).indexOf(w) > -1; }) ? 1 : 0); });
+        // חיפוש חכם (24.11): מילים נרדפות, תגיות שהוכנו מראש, תחיליות, ודירוג (כותרת, תגיות, נושא, ציטוט, ביאור)
+        var TI = []; try { TI = JSON.parse($('#topicinfo').textContent); } catch (err) {}
+        var R = SE.search(all, query, TOPICS, TI), found = R.results;
         list.innerHTML = found.map(function (q, i) { return cardHTML(q, { n: i + 1, total: found.length, base: BASE, topics: TOPICS }); }).join('');
-        highlight(list, words, query);
-        var e = $('#empty'); e.textContent = 'לא נמצאו ציטוטים עם "' + query + '". כדאי לנסות מילה אחת קצרה, או לבחור נושא מהרשימה.';
+        // המנוע עובד עם אותיות רגילות במקום סופיות; לסימון מחזירים את האות הסופית
+        var fin = function (w) { return w.split(' ').map(function (x) { return x.replace(/[כמנפצ]$/, function (c) { return { 'כ': 'ך', 'מ': 'ם', 'נ': 'ן', 'פ': 'ף', 'צ': 'ץ' }[c]; }); }).join(' '); };
+        highlight(list, R.words.concat(R.terms).map(fin).filter(function (w, i, a) { return w.length > 1 && w.indexOf(' ') < 0 && a.indexOf(w) === i; }), query);
+        var smt = $('#smtopics'), smr = $('#smtopicrow');
+        if (smt && smr && R.topics.length) { smr.innerHTML = R.topics.map(function (id) { return '<a href="' + BASE + 'topic/' + id + '.html">' + esc(TOPICS[id] || id) + '</a>'; }).join(''); smt.hidden = false; }
+        var sf = $('.smfeel'); if (sf && found.length) sf.classList.add('after');
+        if (found.length && !R.exact && status) { var note = document.createElement('p'); note.className = 'smnote'; note.textContent = 'לא מצאנו ציטוט עם כל המילים, אז הנה הכי קרובים.'; list.parentNode.insertBefore(note, list); }
+        var e = $('#empty'); e.textContent = 'לא מצאנו ציטוט עם "' + query + '". אפשר לבחור נושא או הרגשה מהרשימה למעלה, או לנסות מילה אחת אחרת.';
         applyList();
         var live = $('#live'); if (live) live.textContent = found.length ? (found.length === 1 ? 'נמצא ציטוט אחד' : 'נמצאו ' + found.length + ' ציטוטים') : 'לא נמצאו ציטוטים';
       }).catch(function () { if (status) status.textContent = ''; $('#empty').hidden = false; $('#empty').textContent = 'החיפוש לא נטען. כדאי לרענן את העמוד.'; });
