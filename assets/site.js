@@ -171,9 +171,42 @@ var SE = (function () {
     return { s: best, hit: hit };
   }
 
+  // ---------- שגיאות הקלדה: "שמחח" -> "שמחה" ----------
+  // אוצר מילים מהמאגר עצמו (כותרות, תגיות, נושאים, מילון) עם מספר ההופעות
+  var VOCAB = null;
+  function vocab(all, topics) {
+    if (VOCAB) return VOCAB;
+    VOCAB = {};
+    var addW = function (s, n) { norm(s).split(' ').forEach(function (w) { if (w.length >= 3) VOCAB[w] = (VOCAB[w] || 0) + (n || 1); }); };
+    all.forEach(function (q) { var x = prep(q, topics); addW(x.t, 2); addW(x.k, 3); addW(x.f, 3); addW(x.tpn, 1); });
+    GROUPS.forEach(function (g) { g.forEach(function (w) { addW(w, 2); }); });
+    return VOCAB;
+  }
+  // מרחק של אות אחת: החלפה, הוספה, השמטה, או שתי אותיות שהתחלפו
+  function near1(a, b) {
+    if (a === b) return false;
+    var la = a.length, lb = b.length;
+    if (Math.abs(la - lb) > 1) return false;
+    if (la === lb) {
+      var d = [];
+      for (var i = 0; i < la; i++) if (a.charAt(i) !== b.charAt(i)) d.push(i);
+      return d.length === 1 || (d.length === 2 && d[1] === d[0] + 1 && a.charAt(d[0]) === b.charAt(d[1]) && a.charAt(d[1]) === b.charAt(d[0]));
+    }
+    var s = la < lb ? a : b, l = la < lb ? b : a, k = 0, skip = false;
+    for (var j = 0; j < l.length; j++) { if (s.charAt(k) === l.charAt(j)) k++; else if (skip) return false; else skip = true; }
+    return true;
+  }
+  function fix(w, all, topics) {
+    var V = vocab(all, topics);
+    if (w.length < 4 || V[w] || SYN[w]) return null;
+    var best = null, bn = 0;
+    Object.keys(V).forEach(function (v) { if (V[v] > bn && near1(w, v)) { best = v; bn = V[v]; } });
+    return best;
+  }
+
   // ---------- החיפוש ----------
   // all: כל הציטוטים, query: מה שכתבו, topics: {id: שם}, topicInfo: [{id,name,scope,promise}]
-  function search(all, query, topics, topicInfo) {
+  function search(all, query, topics, topicInfo, noFix) {
     var nq = ' ' + norm(query) + ' ';
     PHRASES.forEach(function (p) { nq = nq.split(' ' + p[0] + ' ').join(' ' + p[1] + ' '); });
     nq = nq.replace(/s+/g, ' ').trim();
@@ -205,6 +238,14 @@ var SE = (function () {
     }
     res.results = full.map(function (r) { return r.q; });
     res.terms = Object.keys(terms).filter(Boolean);
+    // לא נמצא כלום? אולי שגיאת הקלדה: מתקנים מילה אחת ומחפשים שוב
+    if (!res.results.length && !noFix) {
+      var fixed = words.map(function (w) { return fix(w, all, topics) || w; });
+      if (fixed.join(' ') !== words.join(' ')) {
+        var again = search(all, fixed.join(' '), topics, topicInfo, true);
+        if (again.results.length) { again.didYouMean = fixed.join(' '); return again; }
+      }
+    }
     // נושאים מתאימים: לפי שם הנושא, ההבטחה והתחום שלו, ולפי הנושאים של התוצאות הראשונות
     if (topicInfo) {
       var ts = topicInfo.map(function (t) {
@@ -849,34 +890,142 @@ if (typeof module !== 'undefined') module.exports = SE;
       if (!again) add('<p class="bot-tip"><b>טיפ:</b> הכי טוב לכתוב מילה או שתיים: הרגשה, מצב או נושא. למשל: <i>פחד</i>, <i>לפני חתונה</i>, <i>אמונה</i>.</p>', 'bot tip');
     });
   }
+  // ---------- הבנה: הרגשות, מצוקה, צמצום ----------
+  var N = function (t) { return SE.norm(t); };
+  var has = function (t, list) { t = ' ' + N(t) + ' '; return list.some(function (w) { return t.indexOf(' ' + N(w)) > -1; }); };
+  // מילים של מצוקה קשה: מציעים בעדינות עזרה אנושית
+  var DISTRESS = ['להתאבד', 'התאבדות', 'אובדני', 'לא רוצה לחיות', 'רוצה למות', 'לסיים את החיים', 'לשים קץ', 'לפגוע בעצמי', 'אין טעם לחיות', 'אין לי בשביל מה לחיות'];
+  // פתיח חם לפי מה שכתבו, ו"מי שחיפש... מצא גם"
+  var MOODS = [
+    { w: ['עצב', 'עצוב', 'עצובה', 'עצבות', 'דיכאון', 'מדוכא', 'כאב', 'צער', 'בוכה', 'שבור', 'שבורה', 'קשה לי'], say: 'זה לא פשוט. הנה כמה מילים שיכולות לחזק:', also: [['שמחה', 'שמחה'], ['תקווה', 'תקווה']] },
+    { w: ['פחד', 'פוחד', 'פוחדת', 'מפחד', 'מפחדת', 'חרדה', 'דאגה', 'דואג', 'דואגת', 'לחץ', 'לחוץ', 'לחוצה'], say: 'פחד ודאגה מוכרים לכולנו. הנה כמה ציטוטים שיכולים להרגיע:', also: [['ביטחון', 'אמונה וביטחון'], ['שלווה', 'שלווה']] },
+    { w: ['ייאוש', 'יאוש', 'מיואש', 'מיואשת', 'נפלתי', 'נפילה', 'כישלון', 'נכשלתי', 'משבר'], say: 'גם אחרי נפילה אפשר לקום. הנה כמה ציטוטים שמחזקים:', also: [['תקווה', 'תקווה'], ['תשובה', 'להתחיל מחדש']] },
+    { w: ['בדידות', 'בודד', 'בודדה', 'לבד', 'לבדי'], say: 'הנה כמה ציטוטים לרגעים של בדידות:', also: [['אהבת ישראל', 'אהבת ישראל'], ['אמונה', 'אמונה']] },
+    { w: ['אבל', 'נפטר', 'נפטרה', 'מוות', 'אובדן', 'שכול', 'הלוויה', 'שבעה'], say: 'משתתפים בצערכם. הנה כמה ציטוטים שיכולים לנחם:', also: [['נשמה', 'נשמה'], ['תקווה', 'תקווה']] },
+    { w: ['כעס', 'כועס', 'כועסת', 'עצבני', 'עצבנית'], say: 'הנה כמה ציטוטים על כעס ועל השקט שאחריו:', also: [['שלווה', 'שלווה'], ['ענווה', 'ענווה']] },
+    { w: ['בלבול', 'מבולבל', 'מבולבלת', 'ספק', 'ספקות', 'שאלות'], say: 'שאלות וספקות הם חלק מהדרך. הנה כמה ציטוטים:', also: [['אמונה', 'אמונה'], ['מחשבה', 'מחשבה ושכל']] },
+    { w: ['שמחה', 'שמח', 'שמחה', 'אושר', 'מאושר', 'מאושרת'], say: 'איזה יופי. הנה עוד קצת אור:', also: [['הכרת תודה', 'הכרת תודה'], ['אהבה', 'אהבה']] },
+    { w: ['תודה', 'הכרת תודה', 'הודיה'], say: 'הנה כמה ציטוטים על הכרת תודה:', also: [['שמחה', 'שמחה'], ['טוב', 'לראות את הטוב']] },
+    { w: ['זוגיות', 'חתונה', 'נישואין', 'שידוך', 'בן זוג', 'בת זוג'], say: 'הנה כמה ציטוטים על זוגיות ובית:', also: [['אהבה', 'אהבה'], ['חינוך', 'ילדים וחינוך']] }
+  ];
+  function moodOf(t) { for (var i = 0; i < MOODS.length; i++) if (has(t, MOODS[i].w)) return MOODS[i]; return null; }
+  var SHORT = 140;
+  function applyF(list, f) {
+    return list.filter(function (q) {
+      if (f.biur && !(q.bi && q.bi.length)) return false;
+      if (f.short && q.q.length > SHORT) return false;
+      if (f.rabbi && !(q.bi || []).some(function (b) { return b.a === f.rabbi; })) return false;
+      if (f.book && q.b !== f.book) return false;
+      return true;
+    });
+  }
+  // מוציא מהמשפט בקשות צמצום: "קצר", "עם ביאור", "של הרב...", שם של ספר
+  function parse(text) {
+    var t = ' ' + N(text) + ' ', f = {};
+    var cut = function (w) { t = t.split(' ' + N(w) + ' ').join(' '); };
+    ['קצר', 'קצרה', 'קצרים', 'קצרות', 'לשתף', 'לשיתוף', 'לסטטוס'].forEach(function (w) { if (t.indexOf(' ' + w + ' ') > -1) { f.short = 1; cut(w); } });
+    ['עם ביאור', 'עם הסבר', 'עם ביאורים'].forEach(function (w) { if (t.indexOf(' ' + N(w) + ' ') > -1) { f.biur = 1; cut(w); } });
+    (DATA.rabbis || []).forEach(function (r) {
+      var full = N(r), last = full.split(' ').pop();
+      if (t.indexOf(' ' + full + ' ') > -1) { f.rabbi = r; cut(r); }
+      else if (last.length >= 4 && t.indexOf(' ' + last + ' ') > -1 && t.indexOf(' הרב ') > -1) { f.rabbi = r; cut(last); }
+    });
+    if (f.rabbi) ['של הרב', 'הרב', 'מהרב', 'של'].forEach(cut);
+    (DATA.books || []).forEach(function (b) { var nb = N(b); if (nb.length >= 4 && t.indexOf(' ' + nb + ' ') > -1) { f.book = b; cut(b); } });
+    if (f.book) ['מתוך', 'מהספר', 'בספר', 'מ'].forEach(cut);
+    return { q: t.replace(/\s+/g, ' ').trim(), f: f };
+  }
+  function fLabel(f) { var p = []; if (f.short) p.push('קצרים'); if (f.biur) p.push('עם ביאור'); if (f.rabbi) p.push('של ' + f.rabbi); if (f.book) p.push('מתוך ' + f.book); return p.join(', '); }
+  // כפתורי המשך: צמצום, "מי שחיפש... מצא גם", נושאים
+  function nextChips(list, f, mood, topics) {
+    var c = [];
+    if (!f.biur && list.some(function (q) { return !(q.bi && q.bi.length); }) && list.some(function (q) { return q.bi && q.bi.length; })) c.push(['רק עם ביאור', 'f:biur']);
+    if (!f.short && list.length > 3 && list.some(function (q) { return q.q.length <= SHORT; }) && list.some(function (q) { return q.q.length > SHORT; })) c.push(['קצרים לשיתוף', 'f:short']);
+    (topics || []).slice(0, 2).forEach(function (id) { c.push(['לנושא: ' + DATA.names[id], 'topic:' + id]); });
+    return { refine: c, also: mood ? mood.also : [] };
+  }
+  function present(list, intro, f, mood, topics) {
+    last = { list: list, at: 3, f: f, mood: mood, topics: topics };
+    return say(e(intro)).then(function () {
+      add('<div class="bot-cards">' + list.slice(0, 3).map(card).join('') + '</div>', 'bot cards');
+      tail();
+    });
+  }
+  function tail() {
+    var nx = nextChips(last.list, last.f || {}, last.mood, last.topics), c = [];
+    if (last.list.length > last.at) c.push(['עוד ציטוטים', 'more']);
+    c = c.concat(nx.refine);
+    add(chips(c.concat([['חיפוש חדש', 'start']])), 'bot');
+    if (nx.also.length) add('<p class="bot-also">מי שחיפש את זה מצא גם:</p>' + chips(nx.also.map(function (m) { return [m[1], 'q:' + m[0]]; })), 'bot also');
+  }
   function answer(text) {
-    var R = SE.search(ALL, text, DATA.names, DATA.topicInfo);
-    var more = R.topics.slice(0, 2).map(function (id) { return ['לנושא: ' + DATA.names[id], 'topic:' + id]; });
-    if (!R.results.length) {
-      return say('לא מצאתי ציטוט בדיוק על "' + e(text) + '". אולי אחד מאלה יעזור?').then(function () {
-        add('<p class="bot-tip"><b>טיפ:</b> נסו מילה אחת פשוטה (למשל <i>שמחה</i> במקום משפט שלם), או מילה קרובה.</p>', 'bot tip');
-        add(chips(more.concat(DATA.feel.slice(0, 6).map(function (f) { return [f[1], 'q:' + f[0]]; }))), 'bot');
+    // מצוקה קשה: קודם אנשים, אחר כך ציטוטים
+    if (has(text, DISTRESS)) {
+      return say('תודה ששיתפת. אם קשה לך מאוד עכשיו, לא צריך להתמודד עם זה לבד: אפשר לדבר עם מישהו בער"ן, בטלפון <a href="tel:1201"><b>1201</b></a>, בכל שעה. אפשר גם לכתוב בצ\'אט של <a href="https://sahar.org.il" target="_blank" rel="noopener">סה"ר</a>.', 700).then(function () {
+        add(chips([['ציטוטים של תקווה', 'q:תקווה'], ['ציטוטים של חיזוק', 'q:נפילה']]), 'bot');
       });
     }
-    var n = R.results.length;
-    var intro = n === 1 ? 'מצאתי ציטוט אחד שמתאים:' : n <= 3 ? 'מצאתי ' + n + ' ציטוטים שמתאימים:' : 'מצאתי ' + n + ' ציטוטים. הנה המתאימים ביותר:';
-    if (!R.exact) intro = 'לא מצאתי ציטוט עם כל המילים, אבל אלה הכי קרובים. אפשר לנסות עם פחות מילים:';
-    return show(R.results, intro, more);
+    var nt = N(text);
+    if (/^(עוד|עוד ציטוטים|עוד אחד|תביא עוד)$/.test(nt) && last && last.list.length > last.at) return act('more');
+    if (/^(תודה|תודה רבה|תודה לך)$/.test(nt)) return say('בשמחה. מקווים שמצאתם חצי דקה של אור.').then(function () { add(chips([['חיפוש חדש', 'start'], ['ציטוט אקראי', 'random']]), 'bot'); });
+    var P = parse(text), f = P.f, mood = moodOf(text);
+    var R = P.q ? SE.search(ALL, P.q, DATA.names, DATA.topicInfo) : { results: ALL.slice().sort(function (x, y) { return (y.w || 0) - (x.w || 0); }), topics: [], exact: true, words: [] };
+    var list = applyF(R.results, f);
+    var pre = Promise.resolve();
+    if (R.didYouMean) pre = say('התכוונתם ל"' + e(R.didYouMean) + '"? הנה מה שמצאתי:', 350);
+    return pre.then(function () {
+      if (!list.length) {
+        var why = R.results.length && fLabel(f) ? 'יש ציטוטים על זה, אבל לא ' + fLabel(f) + '.' : 'לא מצאתי ציטוט בדיוק על "' + e(text) + '".';
+        return say(why + ' אולי אחד מאלה יעזור?').then(function () {
+          if (R.results.length && fLabel(f)) { last = { list: R.results, at: 0, f: {}, mood: mood, topics: R.topics }; add(chips([['להראות בלי הסינון', 'nofilter']]), 'bot'); }
+          add('<p class="bot-tip"><b>טיפ:</b> נסו מילה אחת פשוטה (למשל <i>שמחה</i> במקום משפט שלם), או מילה קרובה.</p>', 'bot tip');
+          add(chips(R.topics.slice(0, 2).map(function (id) { return ['לנושא: ' + DATA.names[id], 'topic:' + id]; }).concat(DATA.feel.slice(0, 6).map(function (x) { return [x[1], 'q:' + x[0]]; }))), 'bot');
+        });
+      }
+      // חיפוש רחב (הרבה תוצאות בכמה נושאים): שואלים על מה בדיוק
+      var count = {}; list.slice(0, 40).forEach(function (q) { (q.tp || []).forEach(function (id) { count[id] = (count[id] || 0) + 1; }); });
+      var tops = R.topics.concat(Object.keys(count).filter(function (id) { return count[id] >= 4; }).sort(function (x, y) { return count[y] - count[x]; })).filter(function (id, i, arr) { return arr.indexOf(id) === i && list.some(function (q) { return (q.tp || []).indexOf(id) > -1; }); }).slice(0, 3);
+      if (list.length >= 25 && tops.length >= 2 && !fLabel(f) && !mood && R.words.length <= 2) {
+        last = { list: list, at: 0, f: f, mood: mood, topics: R.topics, pending: true };
+        return say('יש לא מעט ציטוטים על "' + e(P.q) + '". על מה בדיוק?').then(function () {
+          add(chips(tops.map(function (id) { return [DATA.names[id], 'narrow:' + id]; }).concat([['להראות את המתאימים ביותר', 'showall']])), 'bot');
+        });
+      }
+      var n = list.length, fl = fLabel(f);
+      var intro = mood ? mood.say
+        : !R.exact ? 'לא מצאתי ציטוט עם כל המילים, אבל אלה הכי קרובים:'
+        : n === 1 ? 'מצאתי ציטוט אחד שמתאים' + (fl ? ' (' + fl + ')' : '') + ':'
+        : n <= 3 ? 'מצאתי ' + n + ' ציטוטים שמתאימים' + (fl ? ' (' + fl + ')' : '') + ':'
+        : 'מצאתי ' + n + ' ציטוטים' + (fl ? ' (' + fl + ')' : '') + '. הנה המתאימים ביותר:';
+      return present(list, intro, f, mood, R.topics);
+    });
   }
   function act(a) {
     if (a === 'start') return start(true);
+    if (a.indexOf('f:') === 0 && last) {
+      var nf = {}; Object.keys(last.f || {}).forEach(function (k) { nf[k] = last.f[k]; }); nf[a.slice(2)] = 1;
+      var fl = applyF(last.list, nf);
+      if (!fl.length) return say('אין כאן ציטוטים כאלה. הנה עדיין כל השאר.');
+      return present(fl, a === 'f:biur' ? 'הנה רק אלה שיש להם ביאור:' : 'הנה הקצרים, נוחים לשיתוף:', nf, null, last.topics);
+    }
+    if (a.indexOf('narrow:') === 0 && last) {
+      var id = a.slice(7), nl = last.list.filter(function (q) { return (q.tp || []).indexOf(id) > -1; });
+      return present(nl, 'בנושא "' + DATA.names[id] + '":', last.f || {}, null, []);
+    }
+    if (a === 'showall' && last) return present(last.list, 'הנה המתאימים ביותר:', last.f || {}, null, last.topics);
+    if (a === 'nofilter' && last) return present(last.list, 'הנה כולם, בלי הסינון:', {}, last.mood, last.topics);
+
     if (a === 'more' && last) {
       var chunk = last.list.slice(last.at, last.at + 3); last.at += 3;
       add('<div class="bot-cards">' + chunk.map(card).join('') + '</div>', 'bot cards');
-      var next = []; if (last.list.length > last.at) next.push(['עוד ציטוטים', 'more']); (last.more || []).forEach(function (m) { next.push(m); }); next.push(['חיפוש חדש', 'start']);
-      add(chips(next), 'bot'); return;
+      tail(); return;
     }
     if (a === 'feel') return say('מה מרגישים עכשיו?').then(function () { add(chips(DATA.feel.map(function (f) { return [f[1], 'q:' + f[0]]; })), 'bot'); });
     if (a === 'fams') return say('איזה תחום מעניין אתכם?').then(function () { add(chips(DATA.fams.map(function (f, i) { return [f.name, 'fam:' + i]; })), 'bot'); });
     if (a.indexOf('fam:') === 0) { var f = DATA.fams[+a.slice(4)]; return say('בחרו נושא:').then(function () { add(chips(f.topics.map(function (t) { return [t[1], 'topic:' + t[0]]; })), 'bot'); }); }
     if (a.indexOf('topic:') === 0) {
       var id = a.slice(6), list = ALL.filter(function (q) { return (q.tp || []).indexOf(id) > -1; }).sort(function (x, y) { return (y.w || 0) - (x.w || 0); });
-      return show(list, 'בנושא "' + DATA.names[id] + '" יש ' + list.length + ' ציטוטים. הנה כמה מהיפים שבהם:', [['לעמוד הנושא המלא', 'go:topic/' + id + '.html']]);
+      return present(list, 'בנושא "' + DATA.names[id] + '" יש ' + list.length + ' ציטוטים. הנה כמה מהיפים שבהם:', {}, null, []);
     }
     if (a.indexOf('go:') === 0) { location.href = BASE + a.slice(3); return; }
     if (a.indexOf('q:') === 0) return answer(a.slice(2));

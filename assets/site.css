@@ -1379,3 +1379,8 @@ body.a-still .bot-msg, body.a-still .bot-dots i, body.a-still .bot-btn, body.a-s
 /* טיפ לניסוח */
 .bot-msg.tip { background: #fbf3df; border: 1px dashed #c9a35a; font-size: 15.5px; color: #4a3820; }
 .bot-tip { margin: 0; } .bot-tip b { color: var(--bronze, #8a5a2b); } .bot-tip i { font-style: normal; font-weight: 700; color: var(--bark, #38240f); }
+/* "מי שחיפש את זה מצא גם" */
+.bot-msg.also { background: none; border: 0; padding: 0; max-width: 100%; }
+.bot-also { margin: 2px 0 6px; font-size: 14.5px; font-weight: 500; color: #6b5638; letter-spacing: var(--sp, .024em); }
+.bot-msg.also .bot-chip { border-style: dashed; }
+.bot-msg a[href^="tel:"], .bot-msg a[href*="sahar"] { color: var(--bark, #38240f); text-decoration: underline; text-underline-offset: 3px; }
