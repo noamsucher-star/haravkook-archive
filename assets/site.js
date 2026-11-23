@@ -107,6 +107,8 @@ var SE = (function () {
   ].map(function (g) { return g.map(norm); });
   var SYN = {};
   GROUPS.forEach(function (g, gi) { g.forEach(function (w) { (SYN[w] = SYN[w] || []).push(gi); }); });
+  // מילון מושגים מורחב (data/concepts.json): מחבר מילים יומיומיות למושגים שבמאגר
+  function addGroups(list) { (list || []).forEach(function (g) { var n = g.map(norm).filter(function (w) { return w.length >= 3; }); if (n.length < 2) return; var gi = GROUPS.push(n) - 1; n.forEach(function (w) { (SYN[w] = SYN[w] || []).push(gi); }); }); }
 
   // ---------- תחיליות וסיומות ----------
   var PRE = ['ו', 'ה', 'ב', 'ל', 'מ', 'ש', 'כ', 'וה', 'וב', 'ול', 'ומ', 'וש', 'שה', 'שב', 'של', 'כש', 'מה', 'לה', 'בה', 'וכש'];
@@ -219,10 +221,10 @@ var SE = (function () {
     }
     return res;
   }
-  return { norm: norm, search: search, forms: forms, groupsOf: groupsOf };
+  return { norm: norm, search: search, forms: forms, groupsOf: groupsOf, addGroups: addGroups };
 })();
 if (typeof module !== 'undefined') module.exports = SE;
-
+;SE.addGroups([]);
 // הקוד של האתר בדפדפן. card.js מודבק לפני הקובץ הזה בבנייה.
 (function () {
   var root = document.documentElement;
@@ -609,16 +611,7 @@ if (typeof module !== 'undefined') module.exports = SE;
   var e = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var store = function (k, v) { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (err) { return null; } };
 
-  // ---------- גרסאות עיצוב (זמני, עד שנועם בוחר) ----------
-  var ver = (location.search.match(/[?&]bot=([123])/) || [])[1];
-  try { if (ver) localStorage.setItem('botv', ver); else ver = localStorage.getItem('botv'); } catch (err) {}
-  root.setAttribute('data-bot', ver || '1');
-  var vs = document.getElementById('bot-vers');
-  if (vs) {
-    var syncV = function () { [].forEach.call(vs.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === root.getAttribute('data-bot'))); }); };
-    syncV();
-    vs.addEventListener('click', function (ev) { var b = ev.target.closest('[data-v]'); if (!b) return; root.setAttribute('data-bot', b.getAttribute('data-v')); try { localStorage.setItem('botv', b.getAttribute('data-v')); } catch (err) {} syncV(); });
-  }
+  root.setAttribute('data-bot', '2'); // נבחרה גרסה 2 (24.11)
 
   function load() {
     if (loading) return loading;
@@ -669,11 +662,12 @@ if (typeof module !== 'undefined') module.exports = SE;
 
   // ---------- השיחה ----------
   function start(again) {
-    var hi = again ? 'במה עוד אפשר לעזור?' : 'שלום! אני העוזר של חצי דקה הרב קוק.';
+    var hi = again ? 'במה עוד אפשר לעזור?' : 'שלום! אני העוזר החכם של חצי דקה הרב קוק.';
     return say(e(hi), 300).then(function () {
       return again ? null : say('ספרו לי מה עובר עליכם או מה אתם מחפשים, ואמצא לכם ציטוט מתאים מכתבי הראי"ה.');
     }).then(function () {
       add(chips([['מה עובר עליי', 'feel'], ['לפי נושא', 'fams'], ['לפרשת השבוע', 'parasha'], ['ציטוט אקראי', 'random']]), 'bot');
+      if (!again) add('<p class="bot-tip"><b>טיפ:</b> הכי טוב לכתוב מילה או שתיים: הרגשה, מצב או נושא. למשל: <i>פחד</i>, <i>לפני חתונה</i>, <i>אמונה</i>.</p>', 'bot tip');
     });
   }
   function answer(text) {
@@ -681,12 +675,13 @@ if (typeof module !== 'undefined') module.exports = SE;
     var more = R.topics.slice(0, 2).map(function (id) { return ['לנושא: ' + DATA.names[id], 'topic:' + id]; });
     if (!R.results.length) {
       return say('לא מצאתי ציטוט בדיוק על "' + e(text) + '". אולי אחד מאלה יעזור?').then(function () {
+        add('<p class="bot-tip"><b>טיפ:</b> נסו מילה אחת פשוטה (למשל <i>שמחה</i> במקום משפט שלם), או מילה קרובה.</p>', 'bot tip');
         add(chips(more.concat(DATA.feel.slice(0, 6).map(function (f) { return [f[1], 'q:' + f[0]]; }))), 'bot');
       });
     }
     var n = R.results.length;
     var intro = n === 1 ? 'מצאתי ציטוט אחד שמתאים:' : n <= 3 ? 'מצאתי ' + n + ' ציטוטים שמתאימים:' : 'מצאתי ' + n + ' ציטוטים. הנה המתאימים ביותר:';
-    if (!R.exact) intro = 'לא מצאתי ציטוט עם כל המילים, אבל אלה הכי קרובים:';
+    if (!R.exact) intro = 'לא מצאתי ציטוט עם כל המילים, אבל אלה הכי קרובים. אפשר לנסות עם פחות מילים:';
     return show(R.results, intro, more);
   }
   function act(a) {
