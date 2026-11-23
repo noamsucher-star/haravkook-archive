@@ -1408,3 +1408,5 @@ html.bot-open[data-bot="3"] .bot-btn { display: none; }
 body.a-still .bot-msg, body.a-still .bot-dots i, body.a-still .bot-btn, body.a-still .bot-btn::after { animation: none !important; }
 @media print { .bot-btn, .bot-panel, .bot-vers { display: none !important; } }
 .bot-ca .arw { width: .55em; height: .55em; margin-inline-start: 4px; }
+/* ריווח אותיות למלל הקטן בעוזר: אותו ריווח של שאר המלל הקטן באתר (sp2) */
+.bot-panel :is(.bot-cq, .bot-ct, .bot-cr, .bot-by, .bot-ca, .bot-msg, .bot-chip, .bot-head p, .bot-note) { letter-spacing: var(--sp, .024em); word-spacing: var(--wsp, .02em); }
