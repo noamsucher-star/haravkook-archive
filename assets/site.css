@@ -1282,3 +1282,8 @@ html[data-ic="a"] .ic-bore .icv-a { display: inline; }
 .tax46 { flex: 1 0 100%; margin: 2px 0 0; text-align: center; font-size: 16.5px; font-weight: 300; line-height: 1.4; color: #58462d; letter-spacing: .01em; }
 .mtax { margin-top: 8px; font-size: 15.5px; color: inherit; opacity: .8; }
 @media (max-width: 560px) { .tax46 { font-size: 15.5px; } }
+/* סעיף 46, תיקון: צמוד למשפט שמעליו, קטן ופחות בולט, ממורכז */
+.givebox { row-gap: 0; }
+.givebox .tax46 { margin-top: -8px; font-size: 14px; opacity: .72; text-align: center; }
+@media (max-width: 560px) { .givebox .tax46 { margin-top: -6px; font-size: 13.5px; } }
+.mtax { margin-top: 4px; font-size: 14px; opacity: .7; text-align: center; }
