@@ -1369,7 +1369,7 @@ if (typeof module !== 'undefined') module.exports = SE;
       return b;
     };
     // הפס העליון: במעבר בין המדבר (הפתיחה) ל"חצי דקה להיום"
-    var tday = document.querySelector('.block.today'); if (tday) tday.parentNode.insertBefore(band(RISE), tday);
+    var tday = document.querySelector('.block.today') || document.querySelector('.home.h2 ~ main .dm-doors'); if (tday) tday.parentNode.insertBefore(band(RISE), tday);
     var join = document.querySelector('.join.block'); if (join) join.parentNode.insertBefore(band(BGTEXT), join);
     var end = document.querySelector('.dm-end'); if (end) { var eb = el('div', 'hw-endbg', MOTTO); end.insertBefore(eb, end.firstChild); }
   });
@@ -1393,4 +1393,258 @@ if (typeof module !== 'undefined') module.exports = SE;
   window.addEventListener('load', fit); window.addEventListener('resize', fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   fit();
+})();
+
+
+/* פתיח חדש (24.11.26): הציטוט שבפתיח הוא "חצי דקה להיום". 25.11: הרצועה שמתחת נמחקה; חצים מדפדפים במאגר, וקישור "לביאור" מוביל לעמוד הציטוט */
+(function () {
+  var q = document.getElementById('h2-q'), ref = document.getElementById('h2-ref'), more = document.getElementById('h2-more');
+  if (!q) return;
+  var a = q.querySelector('a'), hero = q.closest('.hero'), P = [], cur = -1;
+  try { P = JSON.parse(document.getElementById('pool').textContent); } catch (e) {}
+  function size() { var n = q.textContent.trim().length; q.setAttribute('data-len', n > 150 ? 'xl' : n > 95 ? 'l' : n > 48 ? 'm' : 's'); }
+  function idOf(h) { var m = /q\/([^\/]+)\.html/.exec(h || ''); return m ? m[1] : ''; }
+  function words(el, txt, from, step) { // כמו כניסת הכותרת: כל מילה עולה ומתחדדת
+    el.textContent = ''; var n = from;
+    txt.split(/\s+/).forEach(function (w, i) { if (!w) return; if (i) el.appendChild(document.createTextNode(' ')); var s = document.createElement('span'); s.className = 'w'; s.textContent = w; s.style.cssText = '--d:' + Math.round(n * step) + 'ms;--du:440ms'; el.appendChild(s); n++; });
+    return n;
+  }
+  function show(i, anim) {
+    var d = P[i]; if (!d || !a) return; cur = i;
+    var href = a.getAttribute('href').replace(/q\/[^\/]+\.html.*$/, 'q/' + d.i + '.html');
+    a.setAttribute('href', href); if (more) more.setAttribute('href', href);
+    if (anim && hero && hero.classList.contains('h2t-go')) { var st = Math.min(30, 600 / Math.max(1, d.q.split(/\s+/).length)); var n = words(a, d.q, 0, st); words(ref, d.r || '', n, st); }
+    else { a.textContent = d.q; ref.textContent = d.r || ''; }
+    size();
+    try { document.dispatchEvent(new CustomEvent('h2:quote')); } catch (e) {}
+  }
+  // הציטוט של היום (מתחלף כל יום, לפי השעון של הגולש)
+  if (P.length && a) {
+    var t = Math.floor((Date.now() - new Date().getTimezoneOffset() * 6e4) / 864e5) % P.length;
+    if (String(P[t].i) !== idOf(a.getAttribute('href'))) show(t, false); else cur = t;
+  }
+  size();
+  // החצים: מעבר לציטוט הבא / הקודם במאגר
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-h2nav]'); if (!b || !P.length) return;
+    show(((cur < 0 ? 0 : cur) + (+b.getAttribute('data-h2nav')) + P.length) % P.length, true);
+  });
+})();
+
+/* מתג דמו: 3 כיווני פריסה + 2 פסקאות לכתב היד */
+(function () {
+  if (!document.querySelector('.h2-hw')) return;
+  if (!/[?&]ctl=1/.test(location.search) || /[?&]embed=1/.test(location.search)) return; // 25.11: המתגים מוסתרים; רק בכתובת עם ?ctl=1
+  var root = document.documentElement, sw = document.createElement('div');
+  sw.className = 'hw-sw'; sw.setAttribute('role', 'group'); sw.setAttribute('aria-label', 'גרסאות לפתיח');
+  sw.innerHTML = '<b>פריסה</b><button type="button" data-k="hv" data-v="a">1 הרב בימין</button><button type="button" data-k="hv" data-v="b">2 הרב במרכז</button><button type="button" data-k="hv" data-v="c">3 הרב בשמאל</button><i></i><b>כתב יד</b><button type="button" data-k="hw" data-v="a">מרחבים</button><button type="button" data-k="hw" data-v="b">שמעו אלי עמי</button>';
+  function mark() { [].forEach.call(sw.querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', root.getAttribute('data-' + b.getAttribute('data-k')) === b.getAttribute('data-v') ? 'true' : 'false'); }); }
+  sw.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; root.setAttribute('data-' + b.getAttribute('data-k'), b.getAttribute('data-v')); try { localStorage.setItem(b.getAttribute('data-k'), b.getAttribute('data-v')); } catch (x) {} mark(); });
+  document.body.appendChild(sw); mark();
+})();
+
+
+/* מחשב: 25.11. טלפון (390x844): 25.11, נשלח מדף כיוון הטלפון. ההגדרות שנועם כיוון ביד ושלח (25.11.26, מחשב, פריסה 1, מסך 1440x825). נטענות תמיד, בכל דפדפן ובכל כתובת; מה ששמור בדפדפן גובר עליהן. */
+window.H2_PRESET = {
+  "d-a": {"size":96,"x":82.5,"y":1,"op":45,"blend":"multiply","fade":60,"sep":0,"br":109,"flip":"לא","hwp":"מרחבים","hwo":35,"hws":36,"hwh":59,"hwl":1,"demo":"הציטוט של היום","al":"מרכז","box":"לא","qw":56,"tb":"normal","ty":18.5,"tx":0,"qs":100,"gap":62,"qm":"לא","qms":160,"qmx":73.5,"qmy":36.5,"qmo":28,"qmcol":"#8a5a2b","qmb":"multiply","qmr":0,"qmf":"מאחורי","qc":"#2e1c0a","tc":"#3a2710","glow":69,"gc":"#fff0d0","sh":0,"shd":4,"shc":"#1a0f04","ls":27,"lx":0,"lb":9,"lc":"#3a2710","lg":69,"lgc":"#fff0d0","lgo":4,"so":60,"sw":590},
+  "m-a": {"lbx":"לא","lbw":277,"lbh":48,"ls":21,"lsp":1.2,"llh":1.12,"gap":73,"lb":-7,"lx":0,"lc":"#f1e8d1","lg":26,"lgc":"#fff0d0","lgo":1,"lds":84,"ldx":0,"ldy":3,"ldb":6,"ldc":"#1a0f04","zg":"לא","zgo":70,"zgc":"#fff4dc","zgw":110,"zgh":70,"zgx":0,"zgy":0,"zgb":24,"zgr":50,"size":55,"x":43,"y":0,"op":44,"blend":"multiply","fade":53,"sep":0,"br":110,"flip":"לא","hwp":"מרחבים","hwo":26,"hws":35,"hwh":54,"hwl":1.05,"demo":"הציטוט של היום","al":"מרכז","box":"לא","qw":100,"tb":"normal","ty":7,"tx":0,"qs":81,"qm":"לא","qms":275,"qmx":50,"qmy":52,"qmo":16,"qmcol":"#8a5a2b","qmb":"multiply","qmr":0,"qmf":"מאחורי","qc":"#2e1c0a","tc":"#2c1d0d","glow":22,"gc":"#fff0d0","sh":0,"shd":4,"shc":"#1a0f04","so":82,"sw":300,"ks":21,"kb":-12,"qlh":1.06,"rt":-9,"rs":21,"mt":-9,"ms":21}
+};
+
+
+/* לוח שליטה ידני (דמו בלבד, מחשב וטלפון): נועם מכוון בעצמו את הרב, הבלנד, כתב היד והמלל, ושולח את המספרים.
+   ההגדרות נשמרות בנפרד לכל פריסה (hv) ולכל סוג מסך (מחשב / טלפון). */
+(function () {
+  var hero = document.querySelector('.home.h2 .hero'); if (!hero) return;
+  var rav = hero.querySelector('.h2-rav'), img = rav.querySelector('img'), hws = hero.querySelectorAll('.h2-hw'), inn = hero.querySelector('.h2-in'), q = hero.querySelector('.h2-q'), form = hero.querySelector('form.search'), lede = hero.querySelector('.lede'), root = document.documentElement;
+  var mob = function () { return window.innerWidth < 901; };
+  var CTL = /[?&]ctl=1/.test(location.search); // 25.11: הלוח מוסתר לגולשים; ההגדרות של נועם (ctl-preset.js) נטענות תמיד. לכיוון: להוסיף ?ctl=1 לכתובת
+  var F = [
+    ['h', 'המשפט שמעל החיפוש'], ['lbx', 'להציג את התיבה (קו מקווקו)', ['לא', 'כן']], ['lbw', 'רוחב התיבה (המלל נשבר לפיו)', 100, 1000, 1, 'px'], ['lbh', 'גובה התיבה', 10, 240, 1, 'px'], ['ls', 'גודל', 12, 52, 0.5, 'px'], ['lsp', 'ריווח אותיות', -3, 6, 0.1, 'px'], ['llh', 'מרווח בין השורות', 0.8, 2, 0.02, ''], ['gap', 'מרווח מעליו (מהציטוט)', -40, 200, 1, 'px'], ['lb', 'מרווח עד החיפוש', -20, 90, 1, 'px'], ['lx', 'ימינה / שמאלה', -40, 40, .5, 'vw'], ['lc', 'צבע', 'color'], ['lg', 'זוהר', 0, 80, 1, 'px'], ['lgc', 'צבע הזוהר', 'color'], ['lgo', 'עוצמת הזוהר', 1, 4, 1, ''], ['lds', 'צל (דרופ שדו): עוצמה', 0, 100, 1, '%'], ['ldx', 'צל: ימינה / שמאלה', -20, 20, 1, 'px'], ['ldy', 'צל: למעלה / למטה', -20, 20, 1, 'px'], ['ldb', 'צל: רכות', 0, 40, 1, 'px'], ['ldc', 'צל: צבע', 'color'],
+    ['h', 'שכבת זוהר נוספת מאחורי המשפט'], ['zg', 'להציג', ['לא', 'כן']], ['zgo', 'שקיפות', 0, 100, 1, '%'], ['zgc', 'צבע', 'color'], ['zgw', 'רוחב', 20, 200, 1, '%'], ['zgh', 'גובה', 10, 300, 1, 'px'], ['zgx', 'ימינה / שמאלה', -200, 200, 1, 'px'], ['zgy', 'למעלה / למטה', -150, 150, 1, 'px'], ['zgb', 'רכות (טשטוש)', 0, 80, 1, 'px'], ['zgr', 'עיגול הפינות', 0, 50, 1, '%'],
+    ['h', 'הרב'], ['size', 'גודל', 20, 170, 1, '%'], ['x', 'ימינה / שמאלה', -20, 120, .5, '%'], ['y', 'למעלה / למטה', -40, 70, .5, '%'], ['op', 'שקיפות', 0, 100, 1, '%'],
+    ['blend', 'סוג בלנד', ['multiply', 'normal', 'soft-light', 'overlay', 'hard-light', 'luminosity', 'darken', 'color-burn', 'screen']],
+    ['fade', 'פייד בקצוות', 0, 100, 1, ''], ['sep', 'גוון חום', 0, 100, 1, '%'], ['br', 'בהירות', 60, 140, 1, '%'], ['flip', 'היפוך כיוון', ['לא', 'כן']],
+    ['h', 'כתב היד ברקע'], ['hwp', 'איזו פסקה', ['מרחבים', 'שמעו אלי עמי']], ['hwo', 'שקיפות', 0, 100, 1, '%'], ['hws', 'גודל אותיות', 12, 48, 1, 'px'], ['hwh', 'עד איזה גובה', 10, 100, 1, '%'], ['hwl', 'מרווח בין השורות', 0.8, 3.2, 0.05, ''],
+    ['h', 'המלל'], ['demo', 'ציטוט לדוגמה (לבדיקת אורך)', ['הציטוט של היום', 'קצר', 'בינוני', 'ארוך', 'ארוך מאוד']], ['al', 'יישור המלל', ['מרכז', 'ימין', 'שמאל']], ['box', 'להציג את תיבת המלל', ['לא', 'כן']], ['qw', 'רוחב תיבת הציטוט', 30, 100, 1, '%'], ['tb', 'בלנד למלל', ['normal', 'multiply', 'overlay', 'soft-light', 'hard-light', 'color-burn', 'darken', 'luminosity', 'difference']], ['ty', 'מרווח מלמטה', 0, 50, .5, 'vh'], ['tx', 'ימינה / שמאלה', -40, 40, .5, 'vw'], ['qs', 'גודל הציטוט', 50, 150, 1, '%'],
+    ['h', 'גרשיים ברקע (פלטפורמה בולד)'], ['qm', 'להציג', ['כן', 'לא']], ['qms', 'גודל', 40, 1200, 5, 'px'], ['qmx', 'ימינה / שמאלה', -10, 110, .5, '%'], ['qmy', 'למעלה / למטה', -10, 110, .5, '%'], ['qmo', 'שקיפות', 0, 100, 1, '%'], ['qmcol', 'צבע', 'color'], ['qmb', 'סוג בלנד', ['multiply', 'normal', 'overlay', 'soft-light', 'screen', 'color-burn', 'luminosity']], ['qmr', 'סיבוב', -45, 45, 1, '°'], ['qmf', 'מאחורי או מלפני המלל', ['מאחורי', 'מלפני']],
+    ['h', 'צבע ואפקטים למלל'], ['qc', 'צבע הציטוט', 'color'], ['tc', 'צבע המלל הקטן', 'color'], ['glow', 'זוהר מאחורי המלל', 0, 70, 1, 'px'], ['gc', 'צבע הזוהר', 'color'], ['sh', 'צל (דרופ שדו)', 0, 100, 1, '%'], ['shd', 'מרחק הצל', 0, 24, 1, 'px'], ['shc', 'צבע הצל', 'color'],
+    ['h', 'החיפוש'], ['so', 'אטימות', 30, 100, 1, '%'], ['sw', 'רוחב', 240, 900, 10, 'px'],
+    ['h', 'שורה אחרי שורה (גדלים ומרווחים)'],
+    ['ks', '"חצי דקה להיום": גודל', 12, 40, 1, 'px'], ['kb', 'מרווח מתחת ל"חצי דקה להיום"', -20, 80, 1, 'px'],
+    ['qlh', 'הציטוט: מרווח בין השורות', 0.8, 1.8, 0.02, ''],
+    ['rt', 'מרווח בין הציטוט למקור', -20, 80, 1, 'px'], ['rs', 'המקור: גודל', 12, 40, 1, 'px'],
+    ['mt', 'מרווח בין המקור ל"לביאור"', -20, 80, 1, 'px'], ['ms', '"לביאור": גודל', 12, 36, 1, 'px']
+  ];
+  var v = {}, base = {}, baseFs = 0;
+  var qm = document.createElement('div'); qm.className = 'h2-qm'; qm.setAttribute('aria-hidden', 'true'); qm.textContent = '"'; hero.insertBefore(qm, inn);
+  function key() { return 'h2ctl-' + (mob() ? 'm' : 'd') + '-' + root.getAttribute('data-hv'); }
+  function clear() { rav.style.cssText = ''; img.style.cssText = ''; inn.style.cssText = ''; q.style.cssText = ''; qm.style.cssText = 'display:none'; form.style.cssText = ''; lede.style.cssText = ''; var qa0 = q.querySelector('a'); if (qa0) qa0.style.cssText = ''; [].forEach.call(hero.querySelectorAll('.h2-k, .h2-ref, .h2-more, .h2-more a'), function (e) { e.style.cssText = ''; }); [].forEach.call(hws, function (h) { h.style.cssText = ''; }); }
+  function measure() { // נקודת הפתיחה = מה שרואים עכשיו, כדי ששום דבר לא יקפוץ
+    var H = hero.getBoundingClientRect(), R = rav.getBoundingClientRect(), hw = hws[0], hwv = getComputedStyle(hw).display === 'none' ? hws[1] : hw;
+    baseFs = parseFloat(getComputedStyle(q).fontSize);
+    base = { size: Math.round(R.height / H.height * 100), x: Math.round((R.left + R.width / 2 - H.left) / H.width * 200) / 2, y: Math.round((R.top - H.top) / H.height * 200) / 2, op: Math.round(parseFloat(getComputedStyle(img).opacity) * 100), hwp: root.getAttribute('data-hw') === 'b' ? 'שמעו אלי עמי' : 'מרחבים', blend: 'multiply', fade: 86, sep: 55, br: 104, flip: 'לא',
+      hwo: Math.round(parseFloat(getComputedStyle(hwv).opacity) * 100), hws: Math.round(parseFloat(getComputedStyle(hwv).fontSize)), hwh: Math.round(hwv.getBoundingClientRect().height / H.height * 100),
+      hwl: Math.round(parseFloat(getComputedStyle(hwv).lineHeight) / parseFloat(getComputedStyle(hwv).fontSize) * 20) / 20 || 1.5, demo: 'הציטוט של היום', box: 'לא', qw: Math.round(q.getBoundingClientRect().width / Math.max(1, inn.clientWidth - parseFloat(getComputedStyle(inn).paddingLeft) - parseFloat(getComputedStyle(inn).paddingRight)) * 100) > 92 ? (mob() ? 100 : 94) : 94, tb: 'normal',
+      ty: Math.round(parseFloat(getComputedStyle(inn).paddingBottom) / window.innerHeight * 200) / 2, tx: 0, qs: 100, gap: Math.round(parseFloat(getComputedStyle(lede).marginTop)), qc: '#2e1c0a', tc: '#3a2710', glow: 22, gc: '#fff0d0', sh: 0, shd: 4, shc: '#1a0f04', ls: Math.round(parseFloat(getComputedStyle(lede).fontSize)), lx: 0, lb: Math.round(parseFloat(getComputedStyle(lede).marginBottom)), lc: '#3a2710', lg: 26, lgc: '#fff0d0', lgo: 3, al: getComputedStyle(inn).textAlign === 'right' || getComputedStyle(inn).textAlign === 'start' ? 'ימין' : 'מרכז', qm: 'כן', qms: mob() ? 240 : 460, qmx: 50, qmy: mob() ? 52 : 44, qmo: 16, qmcol: '#8a5a2b', qmb: 'multiply', qmr: 0, qmf: 'מאחורי', so: 92, sw: Math.round(form.getBoundingClientRect().width) };
+    // 25.11: שורה אחרי שורה. נמדד ממה שרואים; מוחל רק כשמזיזים (כך המחשב לא זז אף פיקסל)
+    var K = hero.querySelector('.h2-k'), M = hero.querySelector('.h2-more'), MA = M && M.querySelector('a'), cs = function (e) { return getComputedStyle(e); };
+    var ilw = Math.max(1, inn.clientWidth - parseFloat(cs(inn).paddingLeft) - parseFloat(cs(inn).paddingRight));
+    base.ks = Math.round(parseFloat(cs(K).fontSize)); base.kb = Math.round(parseFloat(cs(K).marginBottom));
+    base.qlh = Math.round(parseFloat(cs(q).lineHeight) / parseFloat(cs(q).fontSize) * 50) / 50 || 1.12;
+    base.rt = Math.round(parseFloat(cs(refEl).marginTop)); base.rs = Math.round(parseFloat(cs(refEl).fontSize));
+    base.mt = M ? Math.round(parseFloat(cs(M).marginTop)) : 8; base.ms = MA ? Math.round(parseFloat(cs(MA).fontSize)) : 21;
+    base.lds = 0; base.ldx = 0; base.ldy = 3; base.ldb = 6; base.ldc = '#1a0f04';
+    base.zg = 'לא'; base.zgo = 70; base.zgc = '#fff4dc'; base.zgw = 110; base.zgh = 70; base.zgx = 0; base.zgy = 0; base.zgb = 24; base.zgr = 50;
+    var LR = lede.getBoundingClientRect(); base.lbx = 'לא'; base.lbw = Math.round(LR.width); base.lbh = Math.round(LR.height);
+    base.llh = Math.round(parseFloat(cs(lede).lineHeight) / parseFloat(cs(lede).fontSize) * 50) / 50 || 1.3; base.lsp = Math.round((parseFloat(cs(lede).letterSpacing) || 0) * 10) / 10;
+  }
+  var zgEl = document.createElement('span'); zgEl.className = 'h2-zg'; zgEl.setAttribute('aria-hidden', 'true');
+  function lines() {
+    if (v.zg === 'כן') { if (zgEl.parentNode !== lede) lede.appendChild(zgEl); lede.style.setProperty('position', 'relative'); zgEl.style.cssText = 'position:absolute;z-index:-1;pointer-events:none;left:50%;top:50%;width:' + v.zgw + '%;height:' + v.zgh + 'px;transform:translate(calc(-50% - ' + v.zgx + 'px),calc(-50% + ' + v.zgy + 'px));background:' + v.zgc + ';opacity:' + v.zgo / 100 + ';filter:blur(' + v.zgb + 'px);border-radius:' + v.zgr + '%;'; }
+    else if (zgEl.parentNode) zgEl.parentNode.removeChild(zgEl);
+    var K = hero.querySelector('.h2-k'), M = hero.querySelector('.h2-more'), MA = M && M.querySelector('a');
+    var put = function (k, el, prop, val) { if (!el) return; if (v[k] !== undefined && v[k] !== base[k]) el.style.setProperty(prop, val, 'important'); else el.style.removeProperty(prop); };
+    put('ks', K, 'font-size', v.ks + 'px'); put('kb', K, 'margin-bottom', v.kb + 'px');
+    put('qlh', q, 'line-height', String(v.qlh));
+    put('rt', refEl, 'margin-top', v.rt + 'px'); put('rs', refEl, 'font-size', v.rs + 'px');
+    put('mt', M, 'margin-top', v.mt + 'px'); put('ms', MA, 'font-size', v.ms + 'px');
+    // תיבת המשפט: רוחב קבוע בפיקסלים (המלל נשבר לפיו, בלי לדחוף את שאר הפתיח) וגובה (המלל באמצע התיבה)
+    var bw = v.lbw !== base.lbw; put('lbw', lede, 'width', v.lbw + 'px'); if (bw) { lede.style.setProperty('max-width', 'none', 'important'); lede.style.setProperty('justify-self', 'center', 'important'); lede.style.setProperty('margin-inline', '-600px', 'important'); } else ['max-width', 'justify-self', 'margin-inline'].forEach(function (p) { lede.style.removeProperty(p); }); // שוליים שליליים: התיבה לא מרחיבה את שאר הפתיח
+    // כשמשנים רוחב, הגובה נשאר כמו שהיה, כדי ששום דבר מעל לא יזוז (אלא אם משנים גובה בעצמך)
+    if (bw || v.lbh !== base.lbh) { lede.style.setProperty('height', v.lbh + 'px', 'important'); lede.style.setProperty('display', 'grid', 'important'); lede.style.setProperty('align-content', 'center', 'important'); } else ['height', 'display', 'align-content'].forEach(function (p) { lede.style.removeProperty(p); });
+    lede.style.outline = v.lbx === 'כן' ? '2px dashed rgba(200, 40, 40, .85)' : ''; lede.style.outlineOffset = v.lbx === 'כן' ? '0px' : '';
+    put('llh', lede, 'line-height', String(v.llh)); put('lsp', lede, 'letter-spacing', v.lsp + 'px');
+  }
+  var cyc = null, orig = null, lastDemo = null, refEl = hero.querySelector('.h2-ref');
+  function sample(kind) {
+    var a = q.querySelector('a'); if (!a) return;
+    if (!orig || (lastDemo === 'הציטוט של היום' || lastDemo === null)) orig = orig && lastDemo !== null && kind !== 'הציטוט של היום' ? orig : { t: a.textContent, h: a.getAttribute('href'), r: refEl.textContent };
+    if (kind === lastDemo) return;
+    var pick = orig;
+    if (kind.charAt(0) === '#') {
+      var PP = []; try { PP = JSON.parse(document.getElementById('pool').textContent); } catch (e) {}
+      var it = PP[+kind.slice(1)]; if (it) pick = { t: it.q, h: a.getAttribute('href'), r: it.r || '' };
+    } else if (kind !== 'הציטוט של היום') {
+      var P = []; try { P = JSON.parse(document.getElementById('pool').textContent); } catch (e) {}
+      var want = { 'קצר': 30, 'בינוני': 75, 'ארוך': 130, 'ארוך מאוד': 230 }[kind], best = null;
+      P.forEach(function (x) { var d = Math.abs((x.q || '').length - want); if (!best || d < best.d) best = { d: d, x: x }; });
+      if (best) pick = { t: best.x.q, h: a.getAttribute('href'), r: best.x.r || '' };
+    }
+    a.textContent = pick.t; refEl.textContent = pick.r; if (kind === 'הציטוט של היום') a.setAttribute('href', pick.h);
+    var n = pick.t.trim().length; q.setAttribute('data-len', n > 150 ? 'xl' : n > 95 ? 'l' : n > 48 ? 'm' : 's');
+    q.style.fontSize = ''; baseFs = parseFloat(getComputedStyle(q).fontSize); lastDemo = kind;
+  }
+  function apply() {
+    root.setAttribute('data-hw', v.hwp === 'שמעו אלי עמי' ? 'b' : 'a');
+    rav.style.cssText = 'right:auto;left:' + v.x + '%;top:' + v.y + '%;height:' + v.size + '%;transform:translateX(-50%)' + (v.flip === 'כן' ? ' scaleX(-1)' : '') + ';mix-blend-mode:' + v.blend + ';';
+    var c = 55 + v.fade * .45, m = v.fade >= 100 ? 'none' : 'radial-gradient(ellipse 58% 52% at 50% 36%, #000 ' + Math.max(0, c - 52) + '%, rgba(0,0,0,.6) ' + (c - 24) + '%, transparent ' + c + '%)';
+    rav.style.setProperty('-webkit-mask-image', m); rav.style.setProperty('mask-image', m);
+    img.style.setProperty('opacity', v.op / 100, 'important');
+    img.style.setProperty('filter', 'sepia(' + v.sep / 100 + ') saturate(1.1) hue-rotate(-6deg) brightness(' + v.br / 100 + ') contrast(1.04)', 'important');
+    [].forEach.call(hws, function (h) { h.style.opacity = v.hwo / 100; h.style.fontSize = v.hws + 'px'; h.style.height = v.hwh + '%'; h.style.lineHeight = v.hwl; });
+    inn.style.setProperty('padding-bottom', v.ty + 'vh', 'important'); inn.style.transform = v.tx ? 'translateX(' + (-v.tx) + 'vw)' : '';
+    sample(cyc !== null ? '#' + cyc : v.demo);
+    q.style.setProperty('max-width', v.qw + '%', 'important'); q.style.width = v.box === 'כן' ? v.qw + '%' : '';
+    q.style.outline = v.box === 'כן' ? '2px dashed rgba(200, 40, 40, .85)' : ''; q.style.outlineOffset = '0px';
+    inn.style.outline = v.box === 'כן' ? '1px dashed rgba(40, 90, 200, .7)' : '';
+    inn.style.zIndex = v.tb === 'normal' ? '' : 'auto'; q.style.mixBlendMode = v.tb;
+    [].forEach.call(hero.querySelectorAll('.h2-k, .h2-ref, .lede'), function (e) { e.style.mixBlendMode = v.tb; });
+    q.style.fontSize = (baseFs * v.qs / 100) + 'px';
+    lede.style.setProperty('margin-top', v.gap + 'px', 'important');
+    var qa = q.querySelector('a'), hex = function (h, a) { var n = parseInt(h.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; };
+    var fl = (v.glow ? 'drop-shadow(0 0 ' + v.glow + 'px ' + v.gc + ') drop-shadow(0 0 ' + Math.round(v.glow / 2) + 'px ' + v.gc + ')' : '') + (v.sh ? ' drop-shadow(0 ' + v.shd + 'px ' + Math.round(v.shd * 1.5) + 'px ' + hex(v.shc, v.sh / 100) + ')' : '');
+    if (qa) { qa.style.background = 'none'; qa.style.webkitTextFillColor = v.qc; qa.style.color = v.qc; qa.style.filter = fl.trim() || 'none'; }
+    var ts = [v.glow ? '0 0 ' + Math.round(v.glow * .6) + 'px ' + v.gc + ', 0 0 ' + Math.round(v.glow * 1.4) + 'px ' + v.gc : '', v.sh ? '0 ' + Math.max(1, Math.round(v.shd / 2)) + 'px ' + v.shd + 'px ' + hex(v.shc, v.sh / 100) : ''].filter(Boolean).join(', ') || 'none';
+    [].forEach.call(hero.querySelectorAll('.h2-k, .h2-ref, .lede'), function (e) { e.style.setProperty('color', v.tc, 'important'); e.style.setProperty('text-shadow', ts, 'important'); });
+    var lts = []; for (var gi = 0; gi < (v.lg ? v.lgo : 0); gi++) lts.push('0 0 ' + Math.round(v.lg * (gi + 1) / v.lgo) + 'px ' + v.lgc);
+    if (v.lds) lts.push((-v.ldx) + 'px ' + v.ldy + 'px ' + v.ldb + 'px ' + hex(v.ldc, v.lds / 100));
+    if (v.sh) lts.push('0 ' + Math.max(1, Math.round(v.shd / 2)) + 'px ' + v.shd + 'px ' + hex(v.shc, v.sh / 100));
+    lede.style.setProperty('color', v.lc, 'important'); lede.style.setProperty('text-shadow', lts.join(', ') || 'none', 'important');
+    lede.style.setProperty('font-size', v.ls + 'px', 'important'); lede.style.setProperty('margin-bottom', v.lb + 'px', 'important');
+    lede.style.transform = v.lx ? 'translateX(' + (-v.lx) + 'vw)' : '';
+    var J = { 'מרכז': ['center', 'center'], 'ימין': ['start', 'right'], 'שמאל': ['end', 'left'] }[v.al] || ['center', 'center'];
+    inn.style.setProperty('justify-items', J[0], 'important'); inn.style.setProperty('text-align', J[1], 'important');
+    [].forEach.call(hero.querySelectorAll('.h2-q, .h2-k, .h2-ref, .lede'), function (e) { e.style.setProperty('text-align', J[1], 'important'); });
+    qm.style.cssText = 'display:' + (v.qm === 'כן' ? 'block' : 'none') + ';left:' + v.qmx + '%;top:' + v.qmy + '%;font-size:' + v.qms + 'px;opacity:' + v.qmo / 100 + ';color:' + v.qmcol + ';mix-blend-mode:' + v.qmb + ';transform:translate(-50%,-50%) rotate(' + v.qmr + 'deg);z-index:' + (v.qmf === 'מלפני' ? 2 : 0) + ';';
+    form.style.setProperty('background', 'rgba(255, 253, 246, ' + v.so / 100 + ')'); form.style.setProperty('width', v.sw + 'px', 'important'); form.style.setProperty('max-width', '100%', 'important');
+    lines();
+  }
+  function text() { return (mob() ? 'טלפון' : 'מחשב') + ' | פריסה ' + root.getAttribute('data-hv') + ' | כתב יד ' + root.getAttribute('data-hw') + ' | ' + F.filter(function (f) { return f[0] !== 'h'; }).map(function (f) { return f[0] + '=' + v[f[0]]; }).join(', ') + ' | מסך ' + window.innerWidth + 'x' + window.innerHeight; }
+  var box = document.createElement('details'); box.className = 'h2c'; box.open = !mob();
+  var html = '<summary>כיוון ידני ⚙</summary><div class="bd"><h4>לראות איך ציטוטים אחרים יושבים</h4><div class="cyc"><button type="button" data-a="qn">הבא ›</button><button type="button" data-a="qp">‹ הקודם</button><button type="button" data-a="qt">של היום</button></div><p class="tip cyci" data-cyc></p>';
+  F.forEach(function (f) {
+    if (f[0] === 'h') { html += '<h4>' + f[1] + '</h4>'; return; }
+    if (f[2] === 'color') { html += '<label class="col">' + f[1] + '<input type="color" data-k="' + f[0] + '"></label>'; return; }
+    if (Array.isArray(f[2])) html += '<label>' + f[1] + '<select data-k="' + f[0] + '">' + f[2].map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select></label>';
+    else html += '<label>' + f[1] + '<output data-o="' + f[0] + '"></output><input type="range" data-k="' + f[0] + '" min="' + f[2] + '" max="' + f[3] + '" step="' + f[4] + '" data-u="' + f[5] + '"></label>';
+  });
+  html += '<div class="acts"><button type="button" class="go" data-a="copy">העתקת ההגדרות</button><button type="button" data-a="reset">איפוס</button></div><p class="tip">כשזה יושב טוב: לוחצים "העתקת ההגדרות" ומדביקים בצ׳אט. מקבעים בדיוק את זה. מחשב וטלפון נשמרים בנפרד.</p></div>';
+  box.innerHTML = html;
+  // 25.11: דף "phone.html" = הטלפון במרכז המסך (iframe), והלוח יושב בדף החיצוני, מחוץ לטלפון
+  var EMB = /[?&]embed=1/.test(location.search) && window.parent !== window, host = null;
+  try { host = EMB ? window.parent.document.getElementById('h2c-host') : null; } catch (x) { host = null; }
+  if (host) { box.open = true; host.innerHTML = ''; host.appendChild(box); } else if (CTL) document.body.appendChild(box);
+  function fill() { [].forEach.call(box.querySelectorAll('[data-k]'), function (e) { var k = e.getAttribute('data-k'); e.value = v[k]; var o = box.querySelector('[data-o="' + k + '"]'); if (o) o.textContent = v[k] + (e.getAttribute('data-u') || ''); }); }
+  function saved() { if (!CTL) return null; try { return JSON.parse(localStorage.getItem(key()) || 'null'); } catch (e) { return null; } }
+  function start() { clear(); if (orig) sample('הציטוט של היום'); measure(); v = {}; for (var k in base) v[k] = base[k]; var pre = (window.H2_PRESET || {})[(mob() ? 'm' : 'd') + '-' + root.getAttribute('data-hv')]; if (pre) for (var kp in pre) if (kp in v) v[kp] = pre[kp]; var s = saved(); if (s) { for (var k2 in s) if (k2 in v) v[k2] = s[k2]; } v.demo = 'הציטוט של היום'; apply(); fill(); }
+  box.addEventListener('input', function (e) { var k = e.target.getAttribute('data-k'); if (!k) return; v[k] = e.target.type === 'range' ? parseFloat(e.target.value) : e.target.value; apply(); fill(); try { localStorage.setItem(key(), JSON.stringify(v)); } catch (x) {} });
+  box.addEventListener('click', function (e) {
+    var a = e.target.getAttribute && e.target.getAttribute('data-a'); if (!a) return;
+    if (a === 'qn' || a === 'qp' || a === 'qt') {
+      var N = 0; try { N = JSON.parse(document.getElementById('pool').textContent).length; } catch (x) {}
+      if (a === 'qt' || !N) cyc = null; else cyc = cyc === null ? (a === 'qn' ? 0 : N - 1) : (cyc + (a === 'qn' ? 1 : N - 1)) % N;
+      apply();
+      var inf = box.querySelector('[data-cyc]'), n = q.textContent.trim().length, hr = hero.getBoundingClientRect(), fr = form.getBoundingClientRect();
+      inf.textContent = (cyc === null ? 'הציטוט של היום' : 'ציטוט ' + (cyc + 1) + ' מתוך ' + N) + ' · ' + n + ' תווים' + (fr.bottom > Math.min(hr.bottom, window.innerHeight) + 1 ? ' · שים לב: החיפוש יוצא מהמסך הראשון' : '');
+      return;
+    }
+    if (a === 'reset') { try { localStorage.removeItem(key()); } catch (x) {} start(); return; }
+    var t = text(), done = function () { e.target.textContent = 'הועתק ✓'; setTimeout(function () { e.target.textContent = 'העתקת ההגדרות'; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { prompt('להעתיק:', t); }); else prompt('להעתיק:', t);
+  });
+  // החצים בפתיח החליפו ציטוט: מחשבים מחדש את גודל האותיות לפי האורך החדש
+  document.addEventListener('h2:quote', function () { q.style.fontSize = ''; baseFs = parseFloat(getComputedStyle(q).fontSize); q.style.fontSize = (baseFs * v.qs / 100) + 'px'; });
+  // החלפת פריסה במתג, או מעבר בין מחשב לטלפון: מתחילים מנקודת הפתיחה של המצב החדש
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.hw-sw button[data-k="hv"]')) setTimeout(start, 30); });
+  var wasMob = mob(); window.addEventListener('resize', function () { if (mob() !== wasMob) { wasMob = mob(); start(); } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(start, 60); }); else setTimeout(start, 300);
+})();
+
+
+/* כניסה מהירה של הכותרת בפתיח (25.11.26): "חצי דקה להיום", הציטוט והמקור. כתב היד ברקע נשאר סטטי (נועם).
+   3 אפשרויות, מתג data-hwa:  a = מילה אחרי מילה, נכתב מימין לשמאל   b = משיכה אחת חלקה מימין לשמאל   c = מילים שעולות ומתחדדות ברכות
+   לא משנה שום דבר בפריסה: רק עוטף מילים ומוסיף השהיה. */
+(function () {
+  var hero = document.querySelector('.home.h2 .hero'); if (!hero) return;
+  var root = document.documentElement, parts = function () { return [hero.querySelector('.h2-k'), hero.querySelector('.h2-q a') || hero.querySelector('.h2-q'), hero.querySelector('.h2-ref')].filter(Boolean); };
+  var still = function () { return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || document.body.classList.contains('a-still'); };
+  function wrap(el) { // עוטף כל מילה ב-span (אם המלל הוחלף, עוטף מחדש)
+    if (el.querySelector('.w')) return;
+    var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [], n; while ((n = tw.nextNode())) nodes.push(n);
+    nodes.forEach(function (t) {
+      var bits = t.nodeValue.split(/(\s+)/), f = document.createDocumentFragment();
+      bits.forEach(function (b) { if (!b) return; if (/^\s+$/.test(b)) { f.appendChild(document.createTextNode(' ')); return; } var s = document.createElement('span'); s.className = 'w'; s.textContent = b; f.appendChild(s); });
+      t.parentNode.replaceChild(f, t);
+    });
+  }
+  function play() {
+    var mode = 'c', P = parts(); // נועם בחר 25.11: אפשרות 3, מילים שעולות ומתחדדות ברכות
+    hero.classList.remove('h2t-go'); root.classList.remove('h2t-wait');
+    P.forEach(function (el) { el.style.removeProperty('--d'); el.style.removeProperty('--du'); });
+    if (still()) return;
+    hero.setAttribute('data-hta', mode);
+    if (mode === 'b') { // משיכה אחת לכל חלק, אחד אחרי השני
+      var t = 0; P.forEach(function (el, i) { var du = i === 1 ? 620 : 340; el.style.setProperty('--d', t + 'ms'); el.style.setProperty('--du', du + 'ms'); t += i === 1 ? 420 : 150; });
+    } else {
+      P.forEach(wrap);
+      var ws = []; P.forEach(function (el) { [].forEach.call(el.querySelectorAll('.w'), function (w) { ws.push(w); }); });
+      var step = mode === 'a' ? Math.min(60, 1250 / Math.max(1, ws.length)) : Math.min(46, 1000 / Math.max(1, ws.length)), du = mode === 'a' ? 280 : 620;
+      ws.forEach(function (w, i) { w.style.cssText = '--d:' + Math.round(i * step) + 'ms;--du:' + du + 'ms'; });
+    }
+    void hero.offsetWidth; hero.classList.add('h2t-go');
+  }
+  window.h2PlayTitle = play;
+  var ready = function () { setTimeout(play, 320); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ready); else setTimeout(ready, 500);
+  setTimeout(function () { root.classList.remove('h2t-wait'); }, 2600); // ביטחון: הכותרת תמיד מופיעה
 })();

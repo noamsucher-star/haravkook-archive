@@ -1469,3 +1469,225 @@ html:root .side nav a span{font-size: 22.5px !important;}
 html:root .side nav a .count{font-size: 20.5px !important;}
 html:root .side nav h2{font-size: 21.5px !important;}
 html:root .side nav a{padding-block: 8px;}
+
+/* ================= פתיח חדש (24.11.26), לפי הפריסה שנועם שלח =================
+   לוגו מימין, הציטוט היומי במרכז הפתיח, הרב וכתב היד ברקע בפייד, חיפוש מעוגל.
+   הפתיח ממלא את כל המסך הראשון; הפס הרץ נראה רק כשגוללים. */
+
+/* ---------- סרגל: לוגו בימין, ואחריו תפריט, ציטוט יומי, קישורים ---------- */
+html:root .bar .logo-t{font-family: var(--display); font-weight: 700; font-size: 35px; line-height: 1; letter-spacing: .005em; color: #24170b; text-decoration: none; white-space: nowrap; margin: 0; padding-block: 4px;}
+html:root .bar .box{flex-direction: row; justify-content: flex-start; gap: 10px;}
+html:root .bar .logo-t{order: 0; margin-left: auto;}
+html:root .bar .dm-wa{order: 1;}
+html:root .bar .menubtn{order: 2;}
+@media (min-width: 1001px) {
+  html:root .bar .logo-t{margin-left: 56px;}
+  html:root .bar .menubtn{order: 1;}
+  html:root .bar .dm-wa{order: 2;}
+  html:root .bar .dm-wa span{display: inline;}
+  html:root .bar .navlinks{order: 3; margin: 0 14px 0 0; gap: 4px;}
+  html:root .bar .navlinks a{padding: 8px 12px;}
+}
+@media (max-width: 560px) { html:root .bar .logo-t{font-size: 25px;} }
+
+/* ---------- הפתיח ---------- */
+html:root .home.h2{background-position: center bottom;}
+html:root .home.h2 .hero{position: relative; min-height: calc(100vh - 67px); min-height: calc(100svh - 67px); display: grid; align-items: end;}
+/* כתב היד של הרב, דהוי, בחלק העליון */
+.h2-hw{position: absolute; z-index: 0; inset: 0 0 auto 0; height: 62%; overflow: hidden; pointer-events: none; user-select: none; font-family: var(--hw); font-size: clamp(20px, 1.9vw, 31px); line-height: 1.5; text-align: justify; color: #e7c98a; opacity: .2; padding: 6px 0 0; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 100%);}
+/* הרב, גדול בצד ימין, נמס אל הרקע */
+.h2-rav{position: absolute; z-index: 0; top: 3%; right: clamp(-40px, 1vw, 40px); height: 80%; aspect-ratio: 713 / 782; pointer-events: none; -webkit-mask-image: radial-gradient(ellipse 62% 64% at 50% 40%, #000 30%, rgba(0, 0, 0, .55) 58%, transparent 80%); mask-image: radial-gradient(ellipse 62% 64% at 50% 40%, #000 30%, rgba(0, 0, 0, .55) 58%, transparent 80%);}
+.h2-rav img{width: 100%; height: 100%; object-fit: contain; display: block; filter: sepia(.82) saturate(1.25) hue-rotate(-8deg) brightness(.82) contrast(1.06); opacity: .74;}
+html:root .h2-in{position: relative; z-index: 1; width: 100%; display: grid; justify-items: center; text-align: center; gap: 0; padding-block: 40px clamp(90px, 21vh, 250px);}
+.h2-k{font-family: var(--display); font-weight: 300; font-size: clamp(22px, 2vw, 33px); letter-spacing: .04em; color: #f1e2bd; margin: 0 0 6px;}
+.h2-q{margin: 0; font-family: var(--display); font-weight: 700; line-height: 1.12; text-wrap: balance; max-width: 22ch; font-size: clamp(44px, 5.5vw, 96px);}
+.h2-q a{text-decoration: none; display: inline-block; padding: .16em .12em .12em; margin: -.16em -.12em -.12em; color: #f3dfaa; background: linear-gradient(180deg, #fff7de 8%, #f1dba2 52%, #c99a48 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 12px rgba(10, 6, 2, .55));}
+.h2-q[data-len="m"]{font-size: clamp(38px, 4.3vw, 76px); max-width: 28ch;}
+.h2-q[data-len="l"]{font-size: clamp(32px, 3.3vw, 58px); max-width: 36ch;}
+.h2-q[data-len="xl"]{font-size: clamp(27px, 2.6vw, 46px); max-width: 44ch;}
+.h2-ref{font-family: var(--display); font-weight: 300; font-size: clamp(21px, 1.95vw, 32px); letter-spacing: .03em; color: #f1e2bd; margin: 10px 0 0;}
+html:root .home.h2 .lede{font-size: clamp(21px, 1.95vw, 31px); font-weight: 300; color: #f1e2bd; margin: clamp(46px, 9.5vh, 110px) 0 16px; max-width: none; width: auto; white-space: normal;}
+/* חיפוש מעוגל ומודרני */
+html:root .home.h2 form.search{-webkit-mask: none; mask: none; border-radius: 999px; overflow: hidden; width: min(540px, 100%); max-width: none; background: rgba(238, 230, 214, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 0 0 1px rgba(255, 244, 214, .22), 0 18px 40px -22px rgba(0, 0, 0, .8); transition: background-color .25s, box-shadow .25s;}
+html:root .home.h2 form.search:focus-within{background: rgba(255, 250, 238, .94); box-shadow: 0 0 0 2px #e6c27a, 0 18px 40px -22px rgba(0, 0, 0, .8);}
+html:root .home.h2 form.search input{font-size: 19px; padding: 15px 26px; color: #24170b;}
+html:root .home.h2 form.search input::placeholder{color: #4b3d26;}
+html:root .home.h2 form.search button{border-radius: 0; padding: 0 26px; font-size: 19px;}
+@media (max-width: 900px) {
+  html:root .home.h2 .hero{min-height: calc(100svh - 62px);}
+  .h2-rav{top: 2%; right: 50%; transform: translateX(50%); height: 52%;}
+  .h2-hw{font-size: 19px; height: 50%;}
+  html:root .h2-in{padding-block: 30px clamp(40px, 9vh, 90px) !important; display: grid !important;}
+  .h2-k{font-size: 21px;}
+  .h2-q{font-size: clamp(38px, 11vw, 60px); max-width: none;}
+  .h2-q[data-len="m"]{font-size: clamp(32px, 8.8vw, 48px);}
+  .h2-q[data-len="l"]{font-size: clamp(27px, 7.2vw, 40px);}
+  .h2-q[data-len="xl"]{font-size: clamp(23px, 6vw, 33px);}
+  .h2-ref{font-size: 20px;}
+  html:root .home.h2 .lede{font-size: 20px !important; margin: clamp(26px, 5vh, 50px) 0 14px !important; line-height: 1.35 !important; text-wrap: balance;}
+  html:root .home.h2 form.search{width: 100% !important;}
+}
+
+/* ---------- הפס הרץ: בלי צבע רקע, רק קו שתוחם אותו מלמטה ---------- */
+html:root .hw-band{background: none; border-top: 0; border-bottom: 1px solid rgba(201, 154, 72, .45);}
+
+/* ---------- לא חוזרים פעמיים: מתחת לפתיח נשאר רק הביאור והפעולות של הציטוט ---------- */
+html:root .home.h2 ~ main .today .kicker, html:root .home.h2 ~ main .today .in > div:not(.biurbox), html:root .home.h2 ~ main .today .hw-bg{display: none;}
+html:root .home.h2 ~ main .today{padding-block: 34px 30px;}
+html:root .home.h2 ~ main .today details.biur:not([open]){margin-right: 0;}
+html:root .home.h2 ~ main .today .todaybar{margin-left: 0;}
+
+/* ---------- כיוונון אחרי צילום ראשון: הציטוט בשורה רחבה, הרב בימין ודהוי יותר ---------- */
+.h2-q{max-width: min(94%, 30ch);}
+.h2-q[data-len="m"]{max-width: min(94%, 40ch);}
+.h2-q[data-len="l"]{max-width: min(94%, 52ch);}
+.h2-q[data-len="xl"]{max-width: min(94%, 64ch);}
+.h2-hw{opacity: .26;}
+@media (min-width: 901px) {
+  .h2-rav{top: -3%; right: -3%; height: 84%;}
+  .h2-rav img{opacity: .6; filter: sepia(.85) saturate(1.2) hue-rotate(-8deg) brightness(.72) contrast(1.08);}
+}
+html:root .home.h2 .lede{animation: none; opacity: 1;}
+@media (min-width: 901px) {
+  html:root .h2-in{max-width: min(1500px, 95vw);}
+  .h2-rav{top: -9%; right: -8%; height: 84%;}
+}
+@media (min-width: 901px) { .h2-q, .h2-q[data-len]{max-width: 94%;} }
+html:root .home.h2 ~ main .today .in::before{content: none;}
+@media (max-width: 900px) {
+  html:root.sp2 .home.h2 .hero .lede, html:root .home.h2 .hero .lede{text-align: center !important; text-align-last: center !important; letter-spacing: .02em !important; word-spacing: 0 !important; width: auto !important; max-width: 22ch !important; text-wrap: balance !important;}
+  html:root .home.h2 .lede .lb{display: none;}
+}
+
+/* ---------- נועם 24.11: הלוגו שלו (תמונה) בימין, תפריט וציטוט יומי בקצה השמאלי, חיפוש בהיר יותר ---------- */
+html:root .bar .logo{order: 0; margin: 0;}
+html:root .bar .dm-wa{order: 5; margin-right: auto;}
+html:root .bar .menubtn{order: 6;}
+@media (min-width: 1001px) {
+  html:root .bar .logo{margin-left: 26px;}
+  html:root .bar .navlinks{order: 1; margin: 0;}
+  html:root .bar .dm-wa{order: 5; margin-right: auto;}
+  html:root .bar .menubtn{order: 6;}
+}
+html:root .home.h2 form.search{background: rgba(255, 251, 240, .9); box-shadow: 0 0 0 1px rgba(255, 248, 226, .6), 0 18px 40px -22px rgba(0, 0, 0, .8);}
+html:root .home.h2 form.search input::placeholder{color: #5a4a30;}
+
+/* ---------- נועם 24.11: כתב היד = פסקה ארוכה (שתי אפשרויות, מתג data-hw), דהוי יותר בצד ימין, איפה שהרב ---------- */
+html[data-hw="a"] .h2-hw-b, html[data-hw="b"] .h2-hw-a{display: none;}
+.h2-hw{-webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to left, transparent 0%, rgba(0, 0, 0, .12) 22%, rgba(0, 0, 0, .55) 46%, #000 72%); mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to left, transparent 0%, rgba(0, 0, 0, .12) 22%, rgba(0, 0, 0, .55) 46%, #000 72%); -webkit-mask-composite: source-in; mask-composite: intersect; opacity: .3;}
+@media (max-width: 900px) { .h2-hw{-webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .5) 45%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .5) 45%, transparent 100%); opacity: .2;} }
+.hw-sw{position: fixed; z-index: 95; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; padding: 5px; background: #1a1107; color: #f3d998; border: 1px solid #b88a3e; font-size: 16px; line-height: 1; white-space: nowrap; box-shadow: 0 16px 34px -14px rgba(0, 0, 0, .6);}
+.hw-sw button{min-height: 40px; padding: 0 16px; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;}
+.hw-sw button[aria-pressed="true"]{background: linear-gradient(120deg, #c99a48, #f0d79c 45%, #c99a48); color: #24170b; font-weight: 700;}
+
+/* ================= רקע זריחה בהיר (נועם 24.11, תמונה ממגניפיק) + מלל כהה ================= */
+html:root .home.h2{background: #f6dcae url(hero-sun.webp) 62% bottom / cover no-repeat; color: #2b1d0d;}
+html:root .home.h2::before{display: none;}
+.h2-hw{color: #7a5122; opacity: .34;}
+.h2-rav{mix-blend-mode: multiply;}
+.h2-rav img{filter: sepia(.7) saturate(1.15) hue-rotate(-6deg) brightness(1.02) contrast(1.02) !important; opacity: .62 !important;}
+.h2-k, .h2-ref, html:root .home.h2 .lede{color: #3a2710; text-shadow: 0 0 18px rgba(255, 244, 220, .75), 0 1px 0 rgba(255, 248, 232, .5);}
+.h2-k, .h2-ref{font-weight: 400;}
+html:root .home.h2 .lede{font-weight: 400;}
+.h2-q a{color: #2b1a09; background: linear-gradient(180deg, #5a3a16 0%, #2e1c0a 55%, #1d1206 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(255, 246, 226, .55)) drop-shadow(0 0 22px rgba(255, 240, 208, .6));}
+html:root .home.h2 form.search{background: rgba(255, 253, 246, .9); box-shadow: 0 0 0 1px rgba(255, 255, 255, .7), 0 18px 40px -20px rgba(70, 40, 8, .55);}
+html:root .home.h2 form.search:focus-within{background: rgba(255, 253, 246, .97); box-shadow: 0 0 0 2px #b88a3e, 0 18px 40px -20px rgba(70, 40, 8, .55);}
+@media (max-width: 900px) {
+  html:root .home.h2{background-image: url(hero-sun-phone.webp); background-position: center bottom;}
+  .h2-rav img{opacity: .5 !important;}
+}
+
+/* ================= תמונת הרב הקודמת (עם הידיים) בבלנד + 3 כיווני פריסה (מתג data-hv) ================= */
+.h2-rav{aspect-ratio: 649 / 945; mix-blend-mode: multiply; -webkit-mask-image: radial-gradient(ellipse 58% 52% at 50% 36%, #000 34%, rgba(0, 0, 0, .6) 62%, transparent 86%); mask-image: radial-gradient(ellipse 58% 52% at 50% 36%, #000 34%, rgba(0, 0, 0, .6) 62%, transparent 86%);}
+.h2-rav img{object-fit: cover; filter: sepia(.55) saturate(1.1) hue-rotate(-6deg) brightness(1.04) contrast(1.04) !important; opacity: .72 !important;}
+.hw-sw{align-items: center; font-size: 15px;}
+.hw-sw b{font-weight: 400; color: #cdb37c; padding: 0 8px 0 4px;}
+.hw-sw i{width: 1px; align-self: stretch; background: rgba(184, 138, 62, .6); margin: 4px 6px;}
+.hw-sw button{padding: 0 12px;}
+@media (max-width: 900px) { .hw-sw{flex-wrap: wrap; justify-content: center; width: calc(100% - 150px); font-size: 13px;} .hw-sw b, .hw-sw i{display: none;} .hw-sw button{padding: 0 8px; min-height: 34px;} }
+@media (min-width: 901px) {
+  /* 1. הרב בימין, המלל במרכז */
+  html[data-hv="a"] .h2-rav{top: -1%; right: 1%; height: 96%;}
+  /* 2. הרב במרכז, גדול ודהוי מאחורי המלל, הכול סימטרי */
+  html[data-hv="b"] .h2-rav{top: -5%; right: 50%; transform: translateX(50%); height: 100%; -webkit-mask-image: radial-gradient(ellipse 60% 46% at 50% 30%, #000 30%, rgba(0, 0, 0, .5) 62%, transparent 88%); mask-image: radial-gradient(ellipse 60% 46% at 50% 30%, #000 30%, rgba(0, 0, 0, .5) 62%, transparent 88%);}
+  html[data-hv="b"] .h2-rav img{opacity: .6 !important;}
+  html[data-hv="b"] .h2-hw{-webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to left, #000 0%, #000 22%, transparent 40%, transparent 60%, #000 78%, #000 100%); mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to left, #000 0%, #000 22%, transparent 40%, transparent 60%, #000 78%, #000 100%);}
+  html[data-hv="b"] .h2-in{padding-bottom: clamp(60px, 12vh, 150px);}
+  /* 3. הרב בשמאל, המלל מיושר לימין */
+  html[data-hv="c"] .h2-rav{top: -1%; right: auto; left: 2%; height: 96%;}
+  html[data-hv="c"] .h2-hw{-webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .12) 24%, rgba(0, 0, 0, .55) 46%, #000 70%); mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .12) 24%, rgba(0, 0, 0, .55) 46%, #000 70%);}
+  html[data-hv="c"] .h2-in{justify-items: start; text-align: right; padding-right: clamp(40px, 7vw, 130px); padding-bottom: clamp(70px, 15vh, 190px);}
+  html[data-hv="c"] .h2-q, html[data-hv="c"] .h2-q[data-len]{max-width: 58%; font-size: clamp(42px, 5vw, 86px);}
+  html[data-hv="c"] .h2-q[data-len="m"]{font-size: clamp(36px, 3.9vw, 68px);}
+  html[data-hv="c"] .h2-q[data-len="l"]{font-size: clamp(30px, 3vw, 52px);}
+  html[data-hv="c"] .h2-q[data-len="xl"]{font-size: clamp(26px, 2.4vw, 42px);}
+  html[data-hv="c"] .h2-q a{margin-right: 0;}
+}
+@media (max-width: 900px) { .h2-rav{height: 60%; top: 0;} }
+html:root .home.h2 form.search{animation: none; opacity: 1; background: rgba(255, 253, 246, .92);}
+html:root .home.h2 .lede{text-shadow: 0 0 10px rgba(255, 246, 226, .95), 0 0 26px rgba(255, 240, 210, .9), 0 0 44px rgba(255, 240, 210, .7);}
+.h2-hw{opacity: .5;}
+
+/* ---------- כניסת הכותרת בפתיח (חצי דקה להיום, הציטוט, המקור). כתב היד ברקע סטטי. hwanim.js קובע את ההשהיות ---------- */
+html.h2t-wait .h2-k, html.h2t-wait .h2-q, html.h2t-wait .h2-ref{opacity: 0;}
+.h2-k .w, .h2-q .w, .h2-ref .w{display: inline-block;}
+.hero.h2t-go:is([data-hta="a"], [data-hta="c"]) :is(.h2-k, .h2-q, .h2-ref) .w{animation: h2Write var(--du, 280ms) cubic-bezier(.25, .7, .2, 1) var(--d, 0ms) both;}
+.hero.h2t-go[data-hta="c"] :is(.h2-k, .h2-q, .h2-ref) .w{animation-name: h2Soft; animation-timing-function: cubic-bezier(.2, .6, .2, 1);}
+.hero.h2t-go[data-hta="b"] :is(.h2-k, .h2-q a, .h2-ref){animation: h2Wipe var(--du, 500ms) cubic-bezier(.3, .6, .2, 1) var(--d, 0ms) both;}
+@keyframes h2Write{from{opacity: 0; clip-path: inset(-40% 0 -40% 100%);} 35%{opacity: 1;} to{opacity: 1; clip-path: inset(-40% -8% -40% -8%);}}
+@keyframes h2Soft{from{opacity: 0; filter: blur(7px); transform: translateY(.22em);} to{opacity: 1; filter: blur(0); transform: none;}}
+@keyframes h2Wipe{from{opacity: 0; clip-path: inset(-60% 0 -60% 100%);} 15%{opacity: 1;} to{opacity: 1; clip-path: inset(-60% -12% -60% -12%);}}
+@media (prefers-reduced-motion: reduce) { .hero.h2t-go *{animation: none !important;} html.h2t-wait .h2-k, html.h2t-wait .h2-q, html.h2t-wait .h2-ref{opacity: 1;} }
+body.a-still .hero.h2t-go :is(.h2-k, .h2-q, .h2-q a, .h2-ref, .w){animation: none !important;}
+
+/* ================= 25.11: חצים למעבר בין הציטוטים + קישור לביאור =================
+   לא משנים את הפריסה של הפתיח: החצים צפים (absolute), ושורת "לביאור" בגובה אפס (מרווח שלילי) בתוך הרווח שמתחת למקור.
+   מתג data-ha: a = בצדי הציטוט / b = ליד "חצי דקה להיום" / c = ליד "לביאור". אחרי בחירה: לקבע ולמחוק את השאר. */
+.h2-nav{position: absolute; top: 50%; width: 48px; height: 48px; margin: -24px 0 0; padding: 0; border: 0; border-radius: 50%; background: none; color: #3a2710; cursor: pointer; display: grid; place-items: center; opacity: .7; transition: opacity .2s, transform .25s cubic-bezier(.2, .7, .2, 1); -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 0 8px #fff0d0) drop-shadow(0 0 20px #fff0d0);}
+.h2-nav svg{width: 28px; height: 28px; display: block;}
+.h2-nav.next svg{transform: scaleX(-1);}
+.h2-nav:hover{opacity: 1;}
+.h2-nav.prev:hover{transform: translateX(4px);}
+.h2-nav.next:hover{transform: translateX(-4px);}
+.h2-nav:active{transform: scale(.88);}
+.h2-nav:focus-visible{outline: 2px solid #3a2710; outline-offset: 2px; opacity: 1;}
+.h2-nav-c{position: static; margin: 0; width: 40px; height: 32px;}
+.h2-nav-c svg{width: 16px; height: 16px;}
+.h2-more{display: flex; align-items: center; justify-content: center; gap: 4px; height: 32px; margin: 8px 0 -40px; font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 32px; letter-spacing: .03em;}
+.h2-more a{color: #3a2710; padding: 0 8px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; text-shadow: 0 0 14px #fff0d0, 0 0 30px #fff0d0, 0 0 50px #fff0d0;}
+.h2-more a:hover{text-decoration-thickness: 2px;}
+html.h2t-wait .h2-more, html.h2t-wait .h2-nav{opacity: 0;}
+.hero.h2t-go .h2-more, .hero.h2t-go .h2-nav{animation: h2Fade .6s ease .75s both;}
+@keyframes h2Fade{from{opacity: 0;}}
+@media (max-width: 900px) {
+  .h2-more{margin-bottom: 0;}
+}
+
+/* ================= לוח שליטה ידני לנועם (דמו בלבד): מחשב וטלפון ================= */
+.h2c{position: fixed; z-index: 96; top: 76px; left: 12px; width: 268px; max-height: calc(100vh - 150px); overflow: auto; background: rgba(26, 17, 7, .98); color: #f3e2b9; border: 1px solid #b88a3e; font: 400 14px/1.3 "Heebo", Arial, sans-serif; box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .7); direction: rtl; text-align: right;}
+.h2c summary{cursor: pointer; padding: 11px 14px; font-weight: 700; font-size: 15px; background: linear-gradient(120deg, #c99a48, #f0d79c 45%, #c99a48); color: #24170b; list-style: none; position: sticky; top: 0; z-index: 1;}
+.h2c summary::-webkit-details-marker{display: none;}
+.h2c .bd{padding: 6px 14px 14px;}
+.h2c h4{font: 700 13px/1 "Heebo", Arial, sans-serif; color: #e9cf94; margin: 14px 0 6px; padding-bottom: 5px; border-bottom: 1px solid rgba(184, 138, 62, .45); letter-spacing: 0;}
+.h2c label{display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; margin: 7px 0;}
+.h2c label output{font-variant-numeric: tabular-nums; color: #cdb37c; font-size: 12.5px;}
+.h2c input[type="range"]{grid-column: 1 / -1; width: 100%; accent-color: #d9b467; height: 26px; margin: 0;}
+.h2c select{grid-column: 1 / -1; width: 100%; padding: 7px 8px; background: #2c1d0d; color: #f3e2b9; border: 1px solid #6b4f24; font: inherit;}
+.h2c .acts{display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px;}
+.h2c button{min-height: 40px; border: 1px solid #b88a3e; background: none; color: #f3e2b9; font: 700 14px "Heebo", Arial, sans-serif; cursor: pointer;}
+.h2c button.go{background: #d9b467; color: #24170b;}
+.h2c .tip{font-size: 12.5px; color: #cdb37c; margin: 10px 0 0;}
+@media (max-width: 900px) {
+  /* בטלפון: מגירה מלמטה, כדי שרואים את הפתיח למעלה בזמן שמכוונים */
+  .h2c{top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 46vh; border-width: 1px 0 0;}
+  .h2c:not([open]){left: auto; right: 50%; transform: translateX(50%); bottom: 8px; border-width: 1px;}
+  .h2c:not([open]) summary{padding: 9px 14px; font-size: 14px; white-space: nowrap;}
+  .hw-sw{display: none !important;} /* בטלפון שלוש הפריסות זהות; בחירת הפסקה נמצאת בלוח */
+}
+@media print { .h2c, .hw-sw{display: none;} }
+.h2c label.col{grid-template-columns: 1fr 64px;}
+.h2c input[type="color"]{width: 64px; height: 32px; padding: 0; border: 1px solid #6b4f24; background: #2c1d0d; cursor: pointer;}
+.h2-qm{position: absolute; pointer-events: none; user-select: none; font-family: var(--display); font-weight: 700; line-height: .7; white-space: nowrap; display: none;}
+.h2c .cyc{display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;}
+.h2c .cyc button{min-height: 40px; font-size: 13.5px;}
+.h2c .cyci{margin-top: 6px; min-height: 1.3em;}
