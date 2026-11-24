@@ -1376,3 +1376,21 @@ if (typeof module !== 'undefined') module.exports = SE;
 })();
 
 
+
+
+/* ליטושים 24.11.26: הקו שמתחת ל"נושאים קרובים" באותו גובה כמו הקו שמתחת לשורת הסינון */
+(function () {
+  function fit() {
+    var t = document.querySelector('.tools2'), s = document.querySelector('.side'), h = s && s.querySelector('nav h2');
+    if (!t || !h) return;
+    h.style.paddingTop = '';
+    if (window.innerWidth < 901) return;
+    var st = s.getBoundingClientRect(), tt = t.getBoundingClientRect();
+    if (Math.abs(st.top - tt.top) > 3) return; // רק כשהעמודה מתחילה באותו גובה, לצד הרשימה
+    var d = tt.bottom - h.getBoundingClientRect().bottom;
+    if (d > 0 && d < 60) h.style.paddingTop = d + 'px';
+  }
+  window.addEventListener('load', fit); window.addEventListener('resize', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  fit();
+})();
