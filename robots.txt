@@ -1,3 +1,2 @@
 User-agent: *
 Allow: /
-Sitemap: https://noamsucher-star.github.io/haravkook-archive/sitemap.xml
